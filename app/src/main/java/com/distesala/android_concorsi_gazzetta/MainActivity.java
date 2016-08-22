@@ -26,7 +26,7 @@ public class MainActivity extends ListActivity implements JSONResultReceiver.Rec
      * riferimento -> https://developer.android.com/training/basics/activity-lifecycle/recreating.html
      * la soluzione più moderna è far fare tutto a un fragment
      * vedi -> http://www.androiddesignpatterns.com/2013/04/retaining-objects-across-config-changes.html
-     *
+     * vedi -> http://stackoverflow.com/questions/16601286/android-save-and-restore-list-state-with-cursoradapter
      */
 
     @Override
