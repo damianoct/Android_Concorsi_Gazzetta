@@ -59,4 +59,19 @@ public class Concorso
     {
         return articoliBando;
     }
+
+    @Override
+    public String toString()
+    {
+        return "Concorso{" +
+                "idConcorso=" + idConcorso +
+                ", idGazzetta=" + idGazzetta +
+                ", emettitore='" + emettitore + '\'' +
+                ", areaDiInteresse='" + areaDiInteresse + '\'' +
+                ", titoloConcorso='" + titoloConcorso + '\'' +
+                ", codiceRedazionale='" + codiceRedazionale + '\'' +
+                ", numeroArticoli=" + numeroArticoli +
+                ", articoliBando=" + articoliBando +
+                '}';
+    }
 }
