@@ -48,9 +48,28 @@ public class GazzetteDataSource
         database.insertWithOnConflict(GazzetteSQLiteHelper.GazzettaEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
     }
 
+    public void insertGazzette(Gazzetta[] gazzette)
+    {
+        database.beginTransaction();
+        ContentValues values = new ContentValues();
+
+        for (int i = 0; i < gazzette.length; i++)
+        {
+            values.put(GazzetteSQLiteHelper.GazzettaEntry.COLUMN_ID_GAZZETTA, gazzette[i].getIdGazzetta());
+            values.put(GazzetteSQLiteHelper.GazzettaEntry.COLUMN_NUMBER_OF_PUBLICATION, gazzette[i].getNumberOfPublication());
+            values.put(GazzetteSQLiteHelper.GazzettaEntry.COLUMN_DATE_OF_PUBLICATION,  gazzette[i].getDateOfPublication());
+
+            database.insertWithOnConflict(GazzetteSQLiteHelper.GazzettaEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
+
+        }
+        database.setTransactionSuccessful();
+        database.endTransaction();
+    }
+
     public Cursor getGazzetteCursor()
     {
-        return database.query(GazzetteSQLiteHelper.GazzettaEntry.TABLE_NAME, allColumns, null, null, null, null, null);
+        //ordino per data di pubblicazione
+        return database.query(GazzetteSQLiteHelper.GazzettaEntry.TABLE_NAME, allColumns, null, null, null, null, GazzetteSQLiteHelper.GazzettaEntry.COLUMN_ID_GAZZETTA + " DESC");
     }
 
     public List<Gazzetta> getAllGazzette()
@@ -80,4 +99,5 @@ public class GazzetteDataSource
         gazzetta.setDateOfPublication(cursor.getString(2));
         return gazzetta;
     }
+
 }

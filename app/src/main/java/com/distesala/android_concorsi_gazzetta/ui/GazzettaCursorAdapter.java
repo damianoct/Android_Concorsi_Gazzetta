@@ -11,8 +11,6 @@ import android.widget.TextView;
 import com.distesala.android_concorsi_gazzetta.R;
 import com.distesala.android_concorsi_gazzetta.database.GazzetteSQLiteHelper;
 
-import java.io.Serializable;
-
 /**
  * Created by Marco on 22/08/16.
  */
@@ -35,7 +33,7 @@ public class GazzettaCursorAdapter extends CursorAdapter
         TextView numberOfPublication = (TextView) view.findViewById(R.id.numberOfPublication);
         TextView dateOfPublication = (TextView) view.findViewById(R.id.dateOfPublication);
 
-        numberOfPublication.setText(cursor.getColumnIndex(GazzetteSQLiteHelper.GazzettaEntry.COLUMN_NUMBER_OF_PUBLICATION));
-        dateOfPublication.setText(cursor.getColumnIndex(GazzetteSQLiteHelper.GazzettaEntry.COLUMN_DATE_OF_PUBLICATION));
+        numberOfPublication.setText(cursor.getString(cursor.getColumnIndex(GazzetteSQLiteHelper.GazzettaEntry.COLUMN_NUMBER_OF_PUBLICATION)));
+        dateOfPublication.setText(cursor.getString(cursor.getColumnIndex(GazzetteSQLiteHelper.GazzettaEntry.COLUMN_DATE_OF_PUBLICATION)));
     }
 }

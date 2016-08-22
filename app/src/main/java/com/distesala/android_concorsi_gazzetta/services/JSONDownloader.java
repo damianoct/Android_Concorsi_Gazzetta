@@ -72,20 +72,36 @@ public class JSONDownloader extends IntentService
                     GazzetteDataSource dataSource = new GazzetteDataSource(getApplicationContext());
                     dataSource.open();
 
+                    /*
+                        insertGazzetta mi serve per aggiungere una singola gazzetta
+
                     dataSource.insertGazzetta(gazzette[0]);
+                    */
+
+                    /*
+                        Se è il primo avvio e quindi ne devo aggiungere 60
+                        uso una transaction
+                     */
+
+                    dataSource.insertGazzette(gazzette);
+
                     /*
                     List<Gazzetta> gazzetteList = dataSource.getAllGazzette();
                     */
                     Cursor cursor = dataSource.getGazzetteCursor();
                     CursorEnvelope cursorEnvelope = new CursorEnvelope(cursor);
 
-                    //dataSource.close();
+
+                    Log.i("IntentService", String.valueOf(cursor.getCount()));
 
                     Intent localIntent = new Intent();
                     Bundle b = new Bundle();
                     //b.putSerializable("gazzette", (Serializable) gazzetteList);
                     b.putSerializable(CURSOR_GAZZETTA, cursorEnvelope);
                     rec.send(Activity.RESULT_OK, b);
+
+                    dataSource.close();
+
                 }
                 catch (Exception e)
                 {
