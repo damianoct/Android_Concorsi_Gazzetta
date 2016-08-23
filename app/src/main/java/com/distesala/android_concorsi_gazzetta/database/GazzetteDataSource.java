@@ -27,6 +27,15 @@ public class GazzetteDataSource
         dbHelper = new GazzetteSQLiteHelper(context);
     }
 
+    private Gazzetta cursorToGazzetta(Cursor cursor)
+    {
+        Gazzetta gazzetta = new Gazzetta();
+        gazzetta.setIdGazzetta(cursor.getInt(0));
+        gazzetta.setNumberOfPublication(cursor.getString(1));
+        gazzetta.setDateOfPublication(cursor.getString(2));
+        return gazzetta;
+    }
+
     public void open() throws SQLException
     {
         database = dbHelper.getWritableDatabase();
@@ -39,7 +48,6 @@ public class GazzetteDataSource
 
     public void insertGazzetta(Gazzetta gazzetta)
     {
-        //TODO: momentaneamente inserisco una singola gazzetta
         ContentValues values = new ContentValues();
         values.put(GazzetteSQLiteHelper.GazzettaEntry.COLUMN_ID_GAZZETTA, gazzetta.getIdGazzetta());
         values.put(GazzetteSQLiteHelper.GazzettaEntry.COLUMN_NUMBER_OF_PUBLICATION, gazzetta.getNumberOfPublication());
@@ -50,6 +58,8 @@ public class GazzetteDataSource
 
     public void insertGazzette(Gazzetta[] gazzette)
     {
+        // TODO: Inserire un comportamento per cui ci sia un limite massimo di record nel Database
+
         database.beginTransaction();
         ContentValues values = new ContentValues();
 
@@ -92,12 +102,14 @@ public class GazzetteDataSource
         return gazzette;
     }
 
-    private Gazzetta cursorToGazzetta(Cursor cursor) {
-        Gazzetta gazzetta = new Gazzetta();
-        gazzetta.setIdGazzetta(cursor.getInt(0));
-        gazzetta.setNumberOfPublication(cursor.getString(1));
-        gazzetta.setDateOfPublication(cursor.getString(2));
-        return gazzetta;
+    public boolean gazzettaExists(Gazzetta gazzetta)
+    {
+        Cursor cursor = database.query(GazzetteSQLiteHelper.GazzettaEntry.TABLE_NAME,
+                        new String[]{allColumns[0]},
+                        GazzetteSQLiteHelper.GazzettaEntry.COLUMN_ID_GAZZETTA + " = " + gazzetta.getIdGazzetta(),
+                        null, null, null, null);
+
+        return cursor.moveToFirst();
     }
 
 }

@@ -31,8 +31,10 @@ import java.util.List;
 public class JSONDownloader extends IntentService
 {
     private static final String URL_WS = "http://marsala.ddns.net:8080/gazzetteWithContests";
+    private static final String LATEST_GAZZETTA = "http://marsala.ddns.net:8080/latestGazzetta";
 
     public static final String DOWNLOAD_GAZZETTA = "com.distesala.android_concorsi_gazzetta.services.action.DownloadGazzetta";
+
 
     public static final String CURSOR_GAZZETTA = "cursor_gazzetta";
 
@@ -60,47 +62,33 @@ public class JSONDownloader extends IntentService
 
                 try
                 {
-                    String json = downloadGazzette();
-                    JSONObject jsonObject = new JSONObject(json);
-                    JSONArray gazzetteJsonArray = jsonObject.getJSONArray("gazzette");
+                    if (!updatedGazzette())
+                    {
 
-                    Gson gson = new Gson();
-                    Gazzetta[] gazzette = gson.fromJson(gazzetteJsonArray.toString(), Gazzetta[].class);
+                        String json = downloadGazzette(new URL(URL_WS));
+                        JSONObject jsonObject = new JSONObject(json);
+                        JSONArray gazzetteJsonArray = jsonObject.getJSONArray("gazzette");
 
-                    //GSON Finito
+                        Gson gson = new Gson();
+                        Gazzetta[] gazzette = gson.fromJson(gazzetteJsonArray.toString(), Gazzetta[].class);
 
-                    GazzetteDataSource dataSource = new GazzetteDataSource(getApplicationContext());
-                    dataSource.open();
+                        GazzetteDataSource dataSource = new GazzetteDataSource(getApplicationContext());
+                        dataSource.open();
 
-                    /*
-                        insertGazzetta mi serve per aggiungere una singola gazzetta
+                        dataSource.insertGazzette(gazzette);
 
-                    dataSource.insertGazzetta(gazzette[0]);
-                    */
-
-                    /*
-                        Se è il primo avvio e quindi ne devo aggiungere 60
-                        uso una transaction
-                     */
-
-                    dataSource.insertGazzette(gazzette);
-
-                    /*
-                    List<Gazzetta> gazzetteList = dataSource.getAllGazzette();
-                    */
-                    Cursor cursor = dataSource.getGazzetteCursor();
-                    CursorEnvelope cursorEnvelope = new CursorEnvelope(cursor);
+                        Cursor cursor = dataSource.getGazzetteCursor();
+                        CursorEnvelope cursorEnvelope = new CursorEnvelope(cursor);
 
 
-                    Log.i("IntentService", String.valueOf(cursor.getCount()));
+                        Log.i("IntentService", String.valueOf(cursor.getCount()));
 
-                    Intent localIntent = new Intent();
-                    Bundle b = new Bundle();
-                    //b.putSerializable("gazzette", (Serializable) gazzetteList);
-                    b.putSerializable(CURSOR_GAZZETTA, cursorEnvelope);
-                    rec.send(Activity.RESULT_OK, b);
+                        Bundle b = new Bundle();
+                        b.putSerializable(CURSOR_GAZZETTA, cursorEnvelope);
+                        rec.send(Activity.RESULT_OK, b);
 
-                    dataSource.close();
+                        dataSource.close();
+                    }
 
                 }
                 catch (Exception e)
@@ -111,13 +99,26 @@ public class JSONDownloader extends IntentService
         }
     }
 
-    private String downloadGazzette() throws Exception
+    private boolean updatedGazzette()
+    {
+        try
+        {
+            String json = downloadGazzette(new URL(LATEST_GAZZETTA));
+            Gson gson = new Gson();
+            Gazzetta latest = gson.fromJson(json, Gazzetta.class);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    private String downloadGazzette(URL url) throws Exception
     {
         String json = null;
 
         try
         {
-            URL url = new URL(URL_WS);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             int statusCode = urlConnection.getResponseCode();
             if (statusCode == 200)
@@ -160,5 +161,10 @@ public class JSONDownloader extends IntentService
         }
 
         return result;
+    }
+
+    private Gazzetta getLatestGazzetta()
+    {
+        // TODO: riprendere da qui
     }
 }
