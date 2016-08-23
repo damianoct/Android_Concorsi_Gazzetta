@@ -3,7 +3,6 @@ package com.distesala.android_concorsi_gazzetta.ui;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -66,6 +65,11 @@ public class MainFragment extends Fragment implements JSONResultReceiver.Receive
 
             mListener.onFragmentInteraction(savedCursor);
         }
+
+        if (resultCode == Activity.RESULT_CANCELED)
+        {
+            mListener.onError();
+        }
     }
 
     @Override
@@ -82,5 +86,7 @@ public class MainFragment extends Fragment implements JSONResultReceiver.Receive
     public interface GazzetteFragmentListener
     {
         void onFragmentInteraction(Cursor cursor);
+
+        void onError();
     }
 }

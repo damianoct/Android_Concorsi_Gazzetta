@@ -1,6 +1,4 @@
 <resources>
-    <string name="app_name">Android_Concorsi_Gazzetta</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
+    <string name="app_name">Concorsi Gazzetta</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
