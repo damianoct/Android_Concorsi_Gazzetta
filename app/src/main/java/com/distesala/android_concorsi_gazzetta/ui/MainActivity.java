@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Gazz
     {
         dismissLoader();
         GazzettaCursorAdapter adapter = new GazzettaCursorAdapter(this, cursor);
-        ListView listView =(ListView) findViewById(R.id.gazzetteList);
+        ListView listView = (ListView) findViewById(R.id.gazzetteList);
         listView.setAdapter(adapter);
     }
 

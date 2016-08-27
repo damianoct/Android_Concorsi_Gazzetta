@@ -9,19 +9,33 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/MyMaterialTheme">
         <activity android:name=".ui.MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
         </activity>
 
         <service
             android:name=".services.JSONDownloader"
             android:exported="false">
         </service>
+
+        <activity android:name=".ui.ConcorsiActivity">
+        </activity>
+        <activity android:name=".ui.HomeActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.GazzettaActivity"
+            android:label="Gazzetta del 1/01/2011"
+            android:parentActivityName=".ui.HomeActivity" >
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.HomeActivity" />
+        </activity>
     </application>
 
 </manifest>
