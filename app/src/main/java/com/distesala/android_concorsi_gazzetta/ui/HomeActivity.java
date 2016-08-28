@@ -19,10 +19,17 @@ import com.distesala.android_concorsi_gazzetta.R;
 
 public class HomeActivity extends AppCompatActivity implements GazzetteListFragment.GazzetteListFragmentListener
 {
+    private static final String HOME_FRAGMENT = String.valueOf(R.id.gazzette);
+
+    private static final String INIT_TRANSACTION = "INIT";
+    private static final String DRAWER_TRANSACTION = "DRAWER";
+    private static final String SEGUE_TRANSACTION = "SEGUE";
+
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private AppBarLayout appBarLayout;
+    private NavigationView navigationView;
 
     //nelle support library 23 è presente la funzione setExpanded()
     //nelle v22 si è costretti a dichiarare questo metodo
@@ -38,10 +45,10 @@ public class HomeActivity extends AppCompatActivity implements GazzetteListFragm
     private void setFragment(int tag)
     {
         //clear history of SEGUE transactions.
-        getSupportFragmentManager().popBackStackImmediate("SEGUE", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        getSupportFragmentManager().popBackStackImmediate(SEGUE_TRANSACTION, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
         //first drawer transaction?
-        String backStackTag = getSupportFragmentManager().getBackStackEntryCount() == 0 ? "INIT" : "DRAWER";
+        String backStackTag = getSupportFragmentManager().getBackStackEntryCount() == 0 ? INIT_TRANSACTION : DRAWER_TRANSACTION;
 
         Fragment fragmentToAdd = getSupportFragmentManager().findFragmentByTag(String.valueOf(tag));
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -65,15 +72,35 @@ public class HomeActivity extends AppCompatActivity implements GazzetteListFragm
 
     private void initNavigationDrawer()
     {
-        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
+
+        //pulsante navigation drawer
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
+        drawerLayout.setDrawerListener(actionBarDrawerToggle);
+
+        actionBarDrawerToggle.setToolbarNavigationClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+        actionBarDrawerToggle.syncState();
+
+        navigationView = (NavigationView) findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener()
         {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem)
             {
-                expandAppBarLayout();
-                setFragment(menuItem.getItemId());
+                if(!menuItem.isChecked())
+                {
+                    menuItem.setChecked(true);
+                    expandAppBarLayout();
+                    setFragment(menuItem.getItemId());
+                }
+
                 drawerLayout.closeDrawers();
+
                 return true;
             }
         });
@@ -88,43 +115,22 @@ public class HomeActivity extends AppCompatActivity implements GazzetteListFragm
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
         appBarLayout = (AppBarLayout) findViewById(R.id.appbarlayout);
 
-        //pulsante navigation drawer
-        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
-        drawerLayout.setDrawerListener(actionBarDrawerToggle);
-
-        actionBarDrawerToggle.setToolbarNavigationClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
-        actionBarDrawerToggle.syncState();
-
         initNavigationDrawer();
-
-        /*
-
-        int actualFragmentTag = (savedInstanceState != null) ?
-                                    Integer.parseInt(getSupportFragmentManager().getFragment(savedInstanceState, "currentFragment").getTag()) :
-                                        R.id.gazzette;
-
-        setFragment(actualFragmentTag);
-         */
 
         /* restore state if needed */
 
         if (savedInstanceState != null)
         {
-            setFragment(Integer.parseInt(getSupportFragmentManager()
-                                            .getFragment(savedInstanceState, "currentFragment")
-                                                .getTag()));
+            Fragment savedFragment = getSupportFragmentManager().getFragment(savedInstanceState, "currentFragment");
+            setFragment(Integer.parseInt(savedFragment.getTag()));
+            navigationView.getMenu().findItem(Integer.parseInt(savedFragment.getTag())).setChecked(true);
         }
         else //default fragment, first transition not added to backstack
         {
-            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, new GazzetteListFragment(), String.valueOf(R.id.gazzette)).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, new GazzetteListFragment(), HOME_FRAGMENT).commit();
+            navigationView.getMenu().findItem(R.id.gazzette).setChecked(true);
         }
 
         //only for debugging
@@ -147,21 +153,30 @@ public class HomeActivity extends AppCompatActivity implements GazzetteListFragm
     @Override
     public void onBackPressed()
     {
+        Fragment homeFragment = getSupportFragmentManager().findFragmentByTag(HOME_FRAGMENT);
+        if (homeFragment != null && homeFragment.isVisible()) //if I am in home fragment, quit application.
+            finish();
+
         if(getSupportFragmentManager().getBackStackEntryCount() > 0)
         {
-            String headOfStack = getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() -1).getName();
-            Log.i("backstack", "cima dello stack --> " + headOfStack);
-            if(headOfStack.equalsIgnoreCase("SEGUE")) //inner transaction
-                super.onBackPressed();
+            //get head of back stack
+            String headOfStack = getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName();
 
-            else if(headOfStack.equalsIgnoreCase("DRAWER")) //drawer transaction
-                getSupportFragmentManager().popBackStackImmediate("INIT", FragmentManager.POP_BACK_STACK_INCLUSIVE);
-
-            else if(headOfStack.equalsIgnoreCase("INIT")) //first drawer transaction
-                getSupportFragmentManager().popBackStack();
+            switch (headOfStack)
+            {
+                case SEGUE_TRANSACTION: //inner transaction
+                    super.onBackPressed();
+                    break;
+                case DRAWER_TRANSACTION: //nav drawer transaction
+                    getSupportFragmentManager().popBackStackImmediate(INIT_TRANSACTION, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                    break;
+                case INIT_TRANSACTION: //first nav drawer transaction
+                    getSupportFragmentManager().popBackStack();
+                    break;
+                default:
+                    super.onBackPressed();
+            }
         }
-        else
-            super.onBackPressed();
     }
 
     @Override
@@ -187,7 +202,5 @@ public class HomeActivity extends AppCompatActivity implements GazzetteListFragm
         getSupportActionBar().setTitle(R.string.app_name);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         actionBarDrawerToggle.setDrawerIndicatorEnabled(true);
-
-
     }
 }
