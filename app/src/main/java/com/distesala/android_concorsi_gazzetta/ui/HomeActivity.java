@@ -151,13 +151,13 @@ public class HomeActivity extends AppCompatActivity implements GazzetteListFragm
         {
             String headOfStack = getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() -1).getName();
             Log.i("backstack", "cima dello stack --> " + headOfStack);
-            if(headOfStack.equalsIgnoreCase("SEGUE"))
+            if(headOfStack.equalsIgnoreCase("SEGUE")) //inner transaction
                 super.onBackPressed();
 
-            else if(headOfStack.equalsIgnoreCase("DRAWER"))
+            else if(headOfStack.equalsIgnoreCase("DRAWER")) //drawer transaction
                 getSupportFragmentManager().popBackStackImmediate("INIT", FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
-            else if(headOfStack.equalsIgnoreCase("INIT"))
+            else if(headOfStack.equalsIgnoreCase("INIT")) //first drawer transaction
                 getSupportFragmentManager().popBackStack();
         }
         else
