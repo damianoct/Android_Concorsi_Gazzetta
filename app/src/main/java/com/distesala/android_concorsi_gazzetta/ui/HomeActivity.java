@@ -17,13 +17,16 @@ import android.view.View;
 
 import com.distesala.android_concorsi_gazzetta.R;
 
-public class HomeActivity extends AppCompatActivity implements GazzetteListFragment.GazzetteListFragmentListener
+public class HomeActivity extends AppCompatActivity implements FragmentListener
 {
     private static final String HOME_FRAGMENT = String.valueOf(R.id.gazzette);
+    private static final String SAVED_FRAGMENT = "currentFragment";
 
     private static final String INIT_TRANSACTION = "INIT";
     private static final String DRAWER_TRANSACTION = "DRAWER";
-    private static final String SEGUE_TRANSACTION = "SEGUE";
+
+    public static final String SEGUE_TRANSACTION = "SEGUE";
+
 
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
@@ -50,6 +53,7 @@ public class HomeActivity extends AppCompatActivity implements GazzetteListFragm
         //first drawer transaction?
         String backStackTag = getSupportFragmentManager().getBackStackEntryCount() == 0 ? INIT_TRANSACTION : DRAWER_TRANSACTION;
 
+        //check for existing fragment
         Fragment fragmentToAdd = getSupportFragmentManager().findFragmentByTag(String.valueOf(tag));
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         fragmentToAdd = (fragmentToAdd != null) ? fragmentToAdd : createFragmentForTag(tag);
@@ -121,10 +125,10 @@ public class HomeActivity extends AppCompatActivity implements GazzetteListFragm
 
         /* restore state if needed */
 
-        if (savedInstanceState != null)
+        if (savedInstanceState != null) //restore fragment, non added to backstack
         {
-            Fragment savedFragment = getSupportFragmentManager().getFragment(savedInstanceState, "currentFragment");
-            setFragment(Integer.parseInt(savedFragment.getTag()));
+            Fragment savedFragment = getSupportFragmentManager().getFragment(savedInstanceState, SAVED_FRAGMENT);
+            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, savedFragment, savedFragment.getTag()).commit();
             navigationView.getMenu().findItem(Integer.parseInt(savedFragment.getTag())).setChecked(true);
         }
         else //default fragment, first transition not added to backstack
@@ -150,6 +154,7 @@ public class HomeActivity extends AppCompatActivity implements GazzetteListFragm
     }
 
     //le ho provate tutte, non c'è altro modo di sistemare questa funzione per gestire il back button.
+
     @Override
     public void onBackPressed()
     {
@@ -185,14 +190,14 @@ public class HomeActivity extends AppCompatActivity implements GazzetteListFragm
         super.onSaveInstanceState(outState);
         //salvo lo stato
         Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-        getSupportFragmentManager().putFragment(outState, "currentFragment", currentFragment);
+        getSupportFragmentManager().putFragment(outState, SAVED_FRAGMENT, currentFragment);
     }
 
     @Override
-    public void onChoise()
+    public void onSegueTransaction()
     {
-        //actionBarDrawerToggle.setDrawerIndicatorEnabled(false);
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        actionBarDrawerToggle.setDrawerIndicatorEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         expandAppBarLayout();
     }
 

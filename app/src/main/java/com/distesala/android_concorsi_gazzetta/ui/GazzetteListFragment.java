@@ -5,19 +5,20 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.SharedElementCallback;
-import android.util.Log;
-import android.view.KeyEvent;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.support.annotation.Nullable;
+
 
 import com.distesala.android_concorsi_gazzetta.R;
 import com.distesala.android_concorsi_gazzetta.database.CursorEnvelope;
@@ -26,31 +27,23 @@ import com.distesala.android_concorsi_gazzetta.services.JSONResultReceiver;
 
 public class GazzetteListFragment extends Fragment implements JSONResultReceiver.Receiver
 {
-    private static final String FRAGMENT_TAG = "10";
+    private static final String FRAGMENT_TAG = "10"; //must be a number for setFragment function
 
     private JSONResultReceiver mReceiver;
     private ListView gazzetteList;
     private GazzettaCursorAdapter adapter;
-    private GazzetteListFragmentListener homeListener;
+    private FragmentListener homeListener;
 
     public GazzetteListFragment() {}
-
-    public interface GazzetteListFragmentListener
-    {
-        void onChoise();
-        void onBackHome();
-    }
 
     @Override
     public void onAttach(Activity activity)
     {
         super.onAttach(activity);
 
-        //pulisco il back stack essendo il fragment HOME.
-
-        if (activity instanceof GazzetteListFragmentListener)
+        if (activity instanceof FragmentListener)
         {
-            homeListener = (GazzetteListFragmentListener) activity;
+            homeListener = (FragmentListener) activity;
         }
         else
         {
@@ -59,11 +52,22 @@ public class GazzetteListFragment extends Fragment implements JSONResultReceiver
         }
     }
 
+    //modify app bar
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
+    {
+        super.onCreateOptionsMenu(menu, inflater);
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        assert actionBar != null;
+        actionBar.setTitle(R.string.app_name);
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
 
+        setHasOptionsMenu(true);
         mReceiver = new JSONResultReceiver(new Handler());
         mReceiver.setReceiver(this);
         Intent mServiceIntent = new Intent(getActivity(), JSONDownloader.class);
@@ -111,23 +115,14 @@ public class GazzetteListFragment extends Fragment implements JSONResultReceiver
                 getActivity().getSupportFragmentManager()
                                 .beginTransaction()
                                     .replace(R.id.content_frame, gazzettaFragment, FRAGMENT_TAG)
-                                        .addToBackStack("SEGUE")
+                                        .addToBackStack(HomeActivity.SEGUE_TRANSACTION)
                                             .commit();
 
                 //notifico alla home activity
-                homeListener.onChoise();
+                homeListener.onSegueTransaction();
             }
         });
 
-        //getActivity().getSupportFragmentManager().popBackStack("segue", FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        /*Log.i("BackStack", "---------------------------------------------------" );
-        Log.i("Backstack", "Count -> " + String.valueOf(getActivity().getSupportFragmentManager().getBackStackEntryCount()));
-        for(int i = 0; i < getActivity().getSupportFragmentManager().getBackStackEntryCount(); i++)
-        {
-            Log.i("Backstack", getActivity().getSupportFragmentManager().getBackStackEntryAt(i).toString());
-        }
-        Log.i("BackStack", "---------------------------------------------------" );
-        */
         return rootView;
     }
 

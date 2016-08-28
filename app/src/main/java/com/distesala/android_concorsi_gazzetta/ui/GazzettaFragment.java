@@ -11,16 +11,20 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.distesala.android_concorsi_gazzetta.R;
 
 public class GazzettaFragment extends Fragment
 {
-    TextView textView;
     private CharSequence numberOfPublication;
 
     public GazzettaFragment() { }
+
+    private ListView gazzetteList;
+    private ArrayAdapter<CharSequence> adapter;
 
     public static GazzettaFragment newInstance(CharSequence numberOfPublication)
     {
@@ -37,6 +41,7 @@ public class GazzettaFragment extends Fragment
         super.onCreate(savedInstanceState);
         //the fragment would update the app bar
         setHasOptionsMenu(true);
+
         Bundle bundle = this.getArguments();
 
         if (bundle != null)
@@ -62,10 +67,20 @@ public class GazzettaFragment extends Fragment
                              Bundle savedInstanceState)
     {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_gazzetta, container, false);
-        textView = (TextView) rootView.findViewById(R.id.textView2);
-        textView.setText("Lista Concorsi");
+        View rootView = inflater.inflate(R.layout.fragment_list_view, container, false);
+        gazzetteList = (ListView) rootView.findViewById(R.id.gazzetteList);
+
+        //necessario per far scomparire l'appbar quando si scrolla
+        gazzetteList.setNestedScrollingEnabled(true);
 
         return rootView;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
+    {
+        super.onViewCreated(view, savedInstanceState);
+        adapter = ArrayAdapter.createFromResource(getActivity(), R.array.days_names, R.layout.text_listview);
+        gazzetteList.setAdapter(adapter);
     }
 }

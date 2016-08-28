@@ -4,13 +4,13 @@
 
     <!-- Days -->
     <string-array name="days_names">
-        <item>Monday</item>
-        <item>Tuesday</item>
-        <item>Wednesday</item>
-        <item>Thursday</item>
-        <item>Friday</item>
-        <item>Saturday</item>
-        <item>Sunday</item>
+        <item>Concorso 1</item>
+        <item>Concorso 2</item>
+        <item>Concorso 3</item>
+        <item>Concorso 4</item>
+        <item>Concorso 5</item>
+        <item>Concorso 6</item>
+        <item>Concorso 7</item>
     </string-array>
 
     <string name="drawer_open">Open</string>
