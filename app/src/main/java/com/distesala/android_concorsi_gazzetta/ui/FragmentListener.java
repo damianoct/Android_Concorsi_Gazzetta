@@ -7,4 +7,5 @@ public interface FragmentListener
 {
     void onSegueTransaction();
     void onBackHome();
+    void onDisplayed(String fragmentTag);
 }

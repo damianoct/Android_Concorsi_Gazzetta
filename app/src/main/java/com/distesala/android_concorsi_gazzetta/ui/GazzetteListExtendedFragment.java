@@ -5,61 +5,45 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.support.annotation.Nullable;
-
 
 import com.distesala.android_concorsi_gazzetta.R;
 import com.distesala.android_concorsi_gazzetta.database.CursorEnvelope;
 import com.distesala.android_concorsi_gazzetta.services.JSONDownloader;
 import com.distesala.android_concorsi_gazzetta.services.JSONResultReceiver;
 
-public class GazzetteListFragment extends Fragment implements JSONResultReceiver.Receiver
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class GazzetteListExtendedFragment extends BaseFragment implements JSONResultReceiver.Receiver
 {
-    private static final String FRAGMENT_TAG = "10"; //must be a number for setFragment function
-
     private JSONResultReceiver mReceiver;
     private ListView gazzetteList;
     private GazzettaCursorAdapter adapter;
-    private FragmentListener homeListener;
-
-    public GazzetteListFragment() {}
 
     @Override
-    public void onAttach(Activity activity)
+    public String getFragmentName()
     {
-        super.onAttach(activity);
-
-        if (activity instanceof FragmentListener)
-        {
-            homeListener = (FragmentListener) activity;
-        }
-        else
-        {
-            throw new RuntimeException(activity.toString()
-                    + " must implement GazzetteFragmentListener");
-        }
+        return HomeActivity.HOME_FRAGMENT;
     }
 
-    //modify app bar
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
+    public String getFragmentTitle()
     {
-        super.onCreateOptionsMenu(menu, inflater);
-        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        assert actionBar != null;
-        actionBar.setTitle(R.string.app_name);
+        return "Concorsi Gazzetta";
+    }
+
+    public GazzetteListExtendedFragment()
+    {
     }
 
     @Override
@@ -67,7 +51,6 @@ public class GazzetteListFragment extends Fragment implements JSONResultReceiver
     {
         super.onCreate(savedInstanceState);
 
-        setHasOptionsMenu(true);
         mReceiver = new JSONResultReceiver(new Handler());
         mReceiver.setReceiver(this);
         Intent mServiceIntent = new Intent(getActivity(), JSONDownloader.class);
@@ -78,20 +61,11 @@ public class GazzetteListFragment extends Fragment implements JSONResultReceiver
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
-    {
-        super.onViewCreated(view, savedInstanceState);
-        if(adapter != null)
-            gazzetteList.setAdapter(adapter);
-
-        homeListener.onBackHome();
-
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
+        Log.d("ExtendendFragment", "onCreateView()");
+
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_gazzettelist, container, false);
         gazzetteList = (ListView) rootView.findViewById(R.id.gazzetteList);
@@ -99,10 +73,10 @@ public class GazzetteListFragment extends Fragment implements JSONResultReceiver
 
         gazzetteList.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {
-            @Override public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3)
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3)
             {
                 //si potrebbe lanciare una nuova activity al posto di un nuovo fragment, ma conviene?
-
 
                 //costruisco il bundle
                 Bundle bundle = new Bundle();
@@ -113,20 +87,26 @@ public class GazzetteListFragment extends Fragment implements JSONResultReceiver
 
                 //lancio un nuovo fragment (Up Navigation con Fragment)
                 getActivity().getSupportFragmentManager()
-                                .beginTransaction()
-                                    .replace(R.id.content_frame, gazzettaFragment, FRAGMENT_TAG)
-                                        .addToBackStack(HomeActivity.SEGUE_TRANSACTION)
-                                            .commit();
+                        .beginTransaction()
+                        .replace(R.id.content_frame, gazzettaFragment)
+                        .addToBackStack(HomeActivity.SEGUE_TRANSACTION)
+                        .commit();
 
                 //notifico alla home activity
-                homeListener.onSegueTransaction();
+                fragmentListener.onSegueTransaction();
             }
         });
 
         return rootView;
     }
 
-
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
+    {
+        super.onViewCreated(view, savedInstanceState);
+        assert adapter != null;
+        gazzetteList.setAdapter(adapter);
+    }
 
     @Override
     public void onReceiveResult(int resultCode, Bundle resultData)

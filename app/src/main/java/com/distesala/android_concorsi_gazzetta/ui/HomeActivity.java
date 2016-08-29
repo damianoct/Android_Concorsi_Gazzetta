@@ -19,14 +19,13 @@ import com.distesala.android_concorsi_gazzetta.R;
 
 public class HomeActivity extends AppCompatActivity implements FragmentListener
 {
-    private static final String HOME_FRAGMENT = String.valueOf(R.id.gazzette);
+    public static final String HOME_FRAGMENT = String.valueOf(R.id.gazzette);
     private static final String SAVED_FRAGMENT = "currentFragment";
 
     private static final String INIT_TRANSACTION = "INIT";
     private static final String DRAWER_TRANSACTION = "DRAWER";
 
     public static final String SEGUE_TRANSACTION = "SEGUE";
-
 
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
@@ -66,9 +65,11 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener
         switch (tag)
         {
             case R.id.gazzette:
-                return new GazzetteListFragment();
+                return new GazzetteListExtendedFragment();
             case R.id.concorsi:
-                return new ConcorsiFragment();
+                return new ConcorsiExtendedFragment() ;
+            case R.id.settings:
+                return new WebViewFragment();
             default:
                 return null;
         }
@@ -102,9 +103,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener
                     expandAppBarLayout();
                     setFragment(menuItem.getItemId());
                 }
-
                 drawerLayout.closeDrawers();
-
                 return true;
             }
         });
@@ -114,6 +113,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_home);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -129,12 +129,11 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener
         {
             Fragment savedFragment = getSupportFragmentManager().getFragment(savedInstanceState, SAVED_FRAGMENT);
             getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, savedFragment, savedFragment.getTag()).commit();
-            navigationView.getMenu().findItem(Integer.parseInt(savedFragment.getTag())).setChecked(true);
         }
         else //default fragment, first transition not added to backstack
         {
-            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, new GazzetteListFragment(), HOME_FRAGMENT).commit();
-            navigationView.getMenu().findItem(R.id.gazzette).setChecked(true);
+            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, new GazzetteListExtendedFragment()
+                    , HOME_FRAGMENT).commit();
         }
 
         //only for debugging
@@ -190,12 +189,14 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener
         super.onSaveInstanceState(outState);
         //salvo lo stato
         Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
+        Log.d("currentFragment", currentFragment.toString());
         getSupportFragmentManager().putFragment(outState, SAVED_FRAGMENT, currentFragment);
     }
 
     @Override
     public void onSegueTransaction()
     {
+        Log.d("FragmentListener", "onSegueTransaction()");
         actionBarDrawerToggle.setDrawerIndicatorEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         expandAppBarLayout();
@@ -207,5 +208,12 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener
         getSupportActionBar().setTitle(R.string.app_name);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         actionBarDrawerToggle.setDrawerIndicatorEnabled(true);
+    }
+
+    @Override
+    public void onDisplayed(String fragmentTag)
+    {
+        Log.d("onDisplayed", fragmentTag);
+        navigationView.getMenu().findItem(Integer.parseInt(fragmentTag)).setChecked(true);
     }
 }

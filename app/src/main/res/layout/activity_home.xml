@@ -32,11 +32,6 @@
                 app:layout_scrollFlags="scroll|enterAlways"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.ActionBar" />
 
-             <!--<View android:layout_width="match_parent"
-                  android:layout_height="4dp"
-                  android:background="@drawable/toolbar_dropshadow"/> -->
-
-
             <!--
             al posto di enterAlwayCollapsed posso mettere anche enterAlwaysCollapsed
             -->

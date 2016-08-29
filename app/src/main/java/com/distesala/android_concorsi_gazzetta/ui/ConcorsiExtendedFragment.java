@@ -1,5 +1,6 @@
 package com.distesala.android_concorsi_gazzetta.ui;
 
+
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,13 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -24,29 +19,33 @@ import com.distesala.android_concorsi_gazzetta.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConcorsiFragment extends Fragment
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class ConcorsiExtendedFragment extends BaseFragment
 {
+    private static String APPBAR_TITLE = "Concorsi";
+    private static final String CONCORSI_FRAGMENT = String.valueOf(R.id.concorsi);
+
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private AppBarLayout appBarLayout;
 
-    public ConcorsiFragment() { }
-
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState)
+    public String getFragmentName()
     {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
+        return CONCORSI_FRAGMENT;
     }
 
-    //modify app bar
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
+    public String getFragmentTitle()
     {
-        super.onCreateOptionsMenu(menu, inflater);
-        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        assert actionBar != null;
-        actionBar.setTitle("Concorsi");
+        return APPBAR_TITLE;
+    }
+
+    public ConcorsiExtendedFragment()
+    {
+        // Required empty public constructor
     }
 
     private void setupViewPager(ViewPager viewPager)
@@ -55,8 +54,8 @@ public class ConcorsiFragment extends Fragment
         //il relativo FragmentManager con getChildFragmentManager
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
-        adapter.addFragment(new RecyclerViewFragment(), "In Scadenza");
-        adapter.addFragment(new ListViewFragment(), "Preferiti");
+        adapter.addFragment(new ConcorsiExpiringFragment(), "In Scadenza");
+        adapter.addFragment(new RecyclerViewFragment(), "Preferiti");
         viewPager.setAdapter(adapter);
     }
 
@@ -75,11 +74,6 @@ public class ConcorsiFragment extends Fragment
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setTabTextColors(Color.WHITE, Color.WHITE);
 
-
-
-
-
-
         return rootView;
     }
 
@@ -96,18 +90,6 @@ public class ConcorsiFragment extends Fragment
             }
         });
         appBarLayout.setElevation(0);
-
-        //if (getActivity().getSupportFragmentManager().getBackStackEntryCount() > 0)
-        //getActivity().getSupportFragmentManager().executePendingTransactions();
-            //getActivity().getSupportFragmentManager().popBackStackImmediate("segue", FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        /*
-        Log.i("BackStack", "---------------------------------------------------" );
-        Log.i("Backstack", "Count -> " + String.valueOf(getActivity().getSupportFragmentManager().getBackStackEntryCount()));
-        for(int i = 0; i < getActivity().getSupportFragmentManager().getBackStackEntryCount(); i++)
-        {
-            Log.i("Backstack", getActivity().getSupportFragmentManager().getBackStackEntryAt(i).toString());
-        }
-        Log.i("BackStack", "---------------------------------------------------" );*/
 
     }
 

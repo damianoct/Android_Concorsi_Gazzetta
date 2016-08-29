@@ -67,7 +67,7 @@ public class GazzettaFragment extends Fragment
                              Bundle savedInstanceState)
     {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_list_view, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_gazzetta, container, false);
         gazzetteList = (ListView) rootView.findViewById(R.id.gazzetteList);
 
         //necessario per far scomparire l'appbar quando si scrolla
