@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ConcorsiExtendedFragment extends BaseFragment
+public class ConcorsiListFragment extends BaseFragment
 {
     private static String APPBAR_TITLE = "Concorsi";
     private static final String CONCORSI_FRAGMENT = String.valueOf(R.id.concorsi);
@@ -43,7 +43,7 @@ public class ConcorsiExtendedFragment extends BaseFragment
         return APPBAR_TITLE;
     }
 
-    public ConcorsiExtendedFragment()
+    public ConcorsiListFragment()
     {
         // Required empty public constructor
     }

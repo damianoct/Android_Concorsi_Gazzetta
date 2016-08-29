@@ -65,9 +65,9 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener
         switch (tag)
         {
             case R.id.gazzette:
-                return new GazzetteListExtendedFragment();
+                return new GazzetteListFragment();
             case R.id.concorsi:
-                return new ConcorsiExtendedFragment() ;
+                return new ConcorsiListFragment() ;
             case R.id.settings:
                 return new WebViewFragment();
             default:
@@ -132,7 +132,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener
         }
         else //default fragment, first transition not added to backstack
         {
-            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, new GazzetteListExtendedFragment()
+            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, new GazzetteListFragment()
                     , HOME_FRAGMENT).commit();
         }
 

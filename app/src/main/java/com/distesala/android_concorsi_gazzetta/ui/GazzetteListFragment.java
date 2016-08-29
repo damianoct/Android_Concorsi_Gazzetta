@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,11 +25,12 @@ import com.distesala.android_concorsi_gazzetta.services.JSONResultReceiver;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class GazzetteListExtendedFragment extends BaseFragment implements JSONResultReceiver.Receiver
+public class GazzetteListFragment extends BaseFragment implements JSONResultReceiver.Receiver
 {
     private JSONResultReceiver mReceiver;
     private ListView gazzetteList;
     private GazzettaCursorAdapter adapter;
+    private AppBarLayout appBarLayout;
 
     @Override
     public String getFragmentName()
@@ -42,7 +44,7 @@ public class GazzetteListExtendedFragment extends BaseFragment implements JSONRe
         return "Concorsi Gazzetta";
     }
 
-    public GazzetteListExtendedFragment()
+    public GazzetteListFragment()
     {
     }
 
@@ -68,6 +70,8 @@ public class GazzetteListExtendedFragment extends BaseFragment implements JSONRe
 
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_gazzettelist, container, false);
+        appBarLayout = (AppBarLayout) getActivity().findViewById(R.id.appbarlayout);
+
         gazzetteList = (ListView) rootView.findViewById(R.id.gazzetteList);
         gazzetteList.setNestedScrollingEnabled(true);
 
@@ -106,6 +110,7 @@ public class GazzetteListExtendedFragment extends BaseFragment implements JSONRe
         super.onViewCreated(view, savedInstanceState);
         assert adapter != null;
         gazzetteList.setAdapter(adapter);
+        appBarLayout.setElevation(5);
     }
 
     @Override

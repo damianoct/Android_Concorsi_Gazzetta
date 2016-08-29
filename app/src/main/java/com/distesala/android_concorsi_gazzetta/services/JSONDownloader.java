@@ -31,9 +31,11 @@ public class JSONDownloader extends IntentService
     private static final String URL_WS = "http://marsala.ddns.net:8080/gazzetteWithContests";
     private static final String LATEST_GAZZETTA = "http://marsala.ddns.net:8080/latestGazzetta";
     public static final String DOWNLOAD_GAZZETTA = "com.distesala.android_concorsi_gazzetta.services.action.DownloadGazzetta";
+    public static final String GET_CONTEST_FOR_GAZZETTA = "com.distesala.android_concorsi_gazzetta.services.action.GetContestForGazzetta";
 
 
     public static final String CURSOR_GAZZETTA = "cursor_gazzetta";
+    public static final String CURSOR_CONTESTS = "cursor_contests";
 
     private GazzetteDataSource dataSource; //lo devo mettere come campo per forza di cose
 
@@ -56,12 +58,14 @@ public class JSONDownloader extends IntentService
         if (intent != null)
         {
             final String action = intent.getAction();
+
+            dataSource = new GazzetteDataSource(getApplicationContext());
+
             if (DOWNLOAD_GAZZETTA.equals(action))
             {
                 ResultReceiver rec = intent.getParcelableExtra("receiverTag");
                 try
                 {
-                    dataSource = new GazzetteDataSource(getApplicationContext());
                     //apro il database
                     dataSource.open();
 
@@ -87,7 +91,7 @@ public class JSONDownloader extends IntentService
 
                     Cursor cursor = dataSource.getGazzetteCursor();
                     CursorEnvelope cursorEnvelope = new CursorEnvelope(cursor);
-                    Log.i("IntentService", String.valueOf(cursor.getCount()));
+                    Log.i("IntentService[GAZZETTE]", String.valueOf(cursor.getCount()));
                     Bundle b = new Bundle();
                     b.putSerializable(CURSOR_GAZZETTA, cursorEnvelope);
                     rec.send(Activity.RESULT_OK, b);
@@ -99,10 +103,30 @@ public class JSONDownloader extends IntentService
                 catch (Exception e)
                 {
                     Log.i("IntentService", "Errore");
+                    e.printStackTrace();
                     rec.send(Activity.RESULT_CANCELED, null);
                     dataSource.close();
                 }
             }
+
+            else if(action.equals(GET_CONTEST_FOR_GAZZETTA))
+            {
+                //TODO gestire l'intent per prendere i concorsi da una gazzetta
+                ResultReceiver rec = intent.getParcelableExtra("receiverTag");
+                String numberOfPublication = intent.getStringExtra("gazzettaNumberOfPublication");
+
+                dataSource.open();
+                Cursor cursor = dataSource.getContestsForGazzetta(numberOfPublication);
+                CursorEnvelope cursorEnvelope = new CursorEnvelope(cursor);
+                Log.i("IntentService [CONTEST]", String.valueOf(cursor.getCount()));
+                Bundle b = new Bundle();
+                b.putSerializable(CURSOR_CONTESTS, cursorEnvelope);
+                rec.send(Activity.RESULT_OK, b);
+
+                dataSource.close();
+            }
+
+
         }
     }
 

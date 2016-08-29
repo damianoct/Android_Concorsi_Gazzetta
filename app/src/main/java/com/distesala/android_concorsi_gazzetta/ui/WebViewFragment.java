@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -22,7 +21,7 @@ import com.distesala.android_concorsi_gazzetta.R;
  */
 public class WebViewFragment extends Fragment
 {
-    private WebView webview;
+    private WebView webView;
 
     public WebViewFragment() { }
 
@@ -38,7 +37,7 @@ public class WebViewFragment extends Fragment
     {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_web_view, container, false);
-        webview = (WebView) rootView.findViewById(R.id.webView);
+        webView = (WebView) rootView.findViewById(R.id.webView);
         return rootView;
     }
 
@@ -50,10 +49,10 @@ public class WebViewFragment extends Fragment
         // Let's display the progress in the activity title bar, like the
         // browser app does.
 
-        //webview.getSettings().setJavaScriptEnabled(true);
+        //webView.getSettings().setJavaScriptEnabled(true);
 
         final Activity activity = getActivity();
-        webview.setWebChromeClient(new WebChromeClient() {
+        webView.setWebChromeClient(new WebChromeClient() {
             public void onProgressChanged(WebView view, int progress)
             {
                 // Activities and WebViews measure progress with different scales.
@@ -63,15 +62,15 @@ public class WebViewFragment extends Fragment
             }
         });
 
-        webview.setWebViewClient(new WebViewClient() {
+        webView.setWebViewClient(new WebViewClient() {
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
                 Toast.makeText(activity, "Oh no! " + description, Toast.LENGTH_SHORT).show();
             }
         });
 
-        webview.setWebViewClient(new WebViewClient());
+        webView.setWebViewClient(new WebViewClient());
+        webView.getSettings().setBuiltInZoomControls(true);
 
-
-        webview.loadUrl("http://www.gazzettaufficiale.it/atto/vediMenuHTML?atto.dataPubblicazioneGazzetta=2016-08-26&atto.codiceRedazionale=16E04261&tipoSerie=concorsi&tipoVigenza=originario");
+        webView.loadUrl("http://www.gazzettaufficiale.it/atto/vediMenuHTML?atto.dataPubblicazioneGazzetta=2016-08-26&atto.codiceRedazionale=16E04261&tipoSerie=concorsi&tipoVigenza=originario");
     }
 }

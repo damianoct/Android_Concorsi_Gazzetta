@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.distesala.android_concorsi_gazzetta.model.Gazzetta;
 
@@ -18,9 +19,18 @@ public class GazzetteDataSource
 {
     private SQLiteDatabase database;
     private GazzetteSQLiteHelper dbHelper;
-    private String[] allColumns = { GazzetteSQLiteHelper.GazzettaEntry.COLUMN_ID_GAZZETTA,
-                                    GazzetteSQLiteHelper.GazzettaEntry.COLUMN_NUMBER_OF_PUBLICATION,
-                                    GazzetteSQLiteHelper.GazzettaEntry.COLUMN_DATE_OF_PUBLICATION};
+    private String[] allGazzettaColumns =   {   GazzetteSQLiteHelper.GazzettaEntry.COLUMN_ID_GAZZETTA,
+                                                GazzetteSQLiteHelper.GazzettaEntry.COLUMN_NUMBER_OF_PUBLICATION,
+                                                GazzetteSQLiteHelper.GazzettaEntry.COLUMN_DATE_OF_PUBLICATION
+                                            };
+
+    private String[] allContestColumns =    {   GazzetteSQLiteHelper.ContestEntry.COLUMN_ID_CONCORSO,
+                                                GazzetteSQLiteHelper.ContestEntry.COLUMN_GAZZETTA_NUMBER_OF_PUBLICATION,
+                                                GazzetteSQLiteHelper.ContestEntry.COLUMN_AREA,
+                                                GazzetteSQLiteHelper.ContestEntry.COLUMN_EMETTITORE,
+                                                GazzetteSQLiteHelper.ContestEntry.COLUMN_N_ARTICOLI,
+                                                GazzetteSQLiteHelper.ContestEntry.COLUMN_TITOLO
+                                            };
 
     public GazzetteDataSource(Context context)
     {
@@ -61,15 +71,36 @@ public class GazzetteDataSource
         // TODO: Inserire un comportamento per cui ci sia un limite massimo di record nel Database
 
         database.beginTransaction();
-        ContentValues values = new ContentValues();
+        ContentValues gazzetteValues = new ContentValues();
+        ContentValues contestValues = new ContentValues();
 
         for (int i = 0; i < gazzette.length; i++)
         {
-            values.put(GazzetteSQLiteHelper.GazzettaEntry.COLUMN_ID_GAZZETTA, gazzette[i].getIdGazzetta());
-            values.put(GazzetteSQLiteHelper.GazzettaEntry.COLUMN_NUMBER_OF_PUBLICATION, gazzette[i].getNumberOfPublication());
-            values.put(GazzetteSQLiteHelper.GazzettaEntry.COLUMN_DATE_OF_PUBLICATION,  gazzette[i].getDateOfPublication());
+            gazzetteValues.put(GazzetteSQLiteHelper.GazzettaEntry.COLUMN_ID_GAZZETTA, gazzette[i].getIdGazzetta());
+            gazzetteValues.put(GazzetteSQLiteHelper.GazzettaEntry.COLUMN_NUMBER_OF_PUBLICATION, gazzette[i].getNumberOfPublication());
+            gazzetteValues.put(GazzetteSQLiteHelper.GazzettaEntry.COLUMN_DATE_OF_PUBLICATION,  gazzette[i].getDateOfPublication());
 
-            database.insertWithOnConflict(GazzetteSQLiteHelper.GazzettaEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
+            database.beginTransaction();
+
+            //add contests for each gazzetta
+            for(int j = 0; j < gazzette[i].getConcorsi().size(); j++)
+            {
+                contestValues.put(GazzetteSQLiteHelper.ContestEntry.COLUMN_ID_CONCORSO, gazzette[i].getConcorsi().get(j).getCodiceRedazionale());
+                contestValues.put(GazzetteSQLiteHelper.ContestEntry.COLUMN_GAZZETTA_NUMBER_OF_PUBLICATION, gazzette[i].getNumberOfPublication());
+                contestValues.put(GazzetteSQLiteHelper.ContestEntry.COLUMN_TITOLO, gazzette[i].getConcorsi().get(j).getTitoloConcorso());
+                contestValues.put(GazzetteSQLiteHelper.ContestEntry.COLUMN_EMETTITORE, gazzette[i].getConcorsi().get(j).getEmettitore());
+                contestValues.put(GazzetteSQLiteHelper.ContestEntry.COLUMN_AREA, gazzette[i].getConcorsi().get(j).getAreaDiInteresse());
+                contestValues.put(GazzetteSQLiteHelper.ContestEntry.COLUMN_N_ARTICOLI, gazzette[i].getConcorsi().get(j).getAreaDiInteresse());
+
+                database.insertWithOnConflict(GazzetteSQLiteHelper.ContestEntry.TABLE_NAME, null, contestValues, SQLiteDatabase.CONFLICT_IGNORE);
+            }
+
+            database.setTransactionSuccessful();
+            database.endTransaction();
+
+            Log.i("Transaction", "Fine Transazione Concorsi per gazzetta con grandezza concorsi -> " + String.valueOf(gazzette[i].getConcorsi().size()));
+
+            database.insertWithOnConflict(GazzetteSQLiteHelper.GazzettaEntry.TABLE_NAME, null, gazzetteValues, SQLiteDatabase.CONFLICT_IGNORE);
 
         }
         database.setTransactionSuccessful();
@@ -79,7 +110,18 @@ public class GazzetteDataSource
     public Cursor getGazzetteCursor()
     {
         //ordino per data di pubblicazione
-        return database.query(GazzetteSQLiteHelper.GazzettaEntry.TABLE_NAME, allColumns, null, null, null, null, GazzetteSQLiteHelper.GazzettaEntry.COLUMN_ID_GAZZETTA + " DESC");
+        return database.query(GazzetteSQLiteHelper.GazzettaEntry.TABLE_NAME,
+                allGazzettaColumns, null, null, null, null,
+                            GazzetteSQLiteHelper.GazzettaEntry.COLUMN_ID_GAZZETTA + " DESC");
+    }
+
+    public Cursor getContestsForGazzetta(String numberOfPublication)
+    {
+        return database.query(GazzetteSQLiteHelper.ContestEntry.TABLE_NAME,
+                allContestColumns,
+                GazzetteSQLiteHelper.ContestEntry.COLUMN_GAZZETTA_NUMBER_OF_PUBLICATION + "=?", new String[] {numberOfPublication}, //selection
+                null, null, null);
+
     }
 
     public List<Gazzetta> getAllGazzette()
@@ -105,7 +147,7 @@ public class GazzetteDataSource
     public boolean gazzettaExists(Gazzetta gazzetta)
     {
         Cursor cursor = database.query(GazzetteSQLiteHelper.GazzettaEntry.TABLE_NAME,
-                        new String[]{allColumns[0]},
+                        new String[]{allGazzettaColumns[0]},
                         GazzetteSQLiteHelper.GazzettaEntry.COLUMN_ID_GAZZETTA + " = " + gazzetta.getIdGazzetta(),
                         null, null, null, null);
 
