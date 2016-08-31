@@ -8,6 +8,9 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +22,7 @@ import android.widget.Toast;
 
 import com.distesala.android_concorsi_gazzetta.R;
 import com.distesala.android_concorsi_gazzetta.adapter.GazzettaCursorAdapter;
+import com.distesala.android_concorsi_gazzetta.contentprovider.ConcorsiGazzettaContentProvider;
 import com.distesala.android_concorsi_gazzetta.database.CursorEnvelope;
 import com.distesala.android_concorsi_gazzetta.services.JSONDownloader;
 import com.distesala.android_concorsi_gazzetta.services.JSONResultReceiver;
@@ -26,7 +30,7 @@ import com.distesala.android_concorsi_gazzetta.services.JSONResultReceiver;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class GazzetteListFragment extends BaseFragment implements JSONResultReceiver.Receiver
+public class GazzetteListFragment extends BaseFragment implements JSONResultReceiver.Receiver, LoaderManager.LoaderCallbacks<Cursor>
 {
     private JSONResultReceiver mReceiver;
     private ListView gazzetteList;
@@ -43,6 +47,18 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
     public String getFragmentTitle()
     {
         return "Concorsi Gazzetta";
+    }
+
+    @Override
+    public void searchFor(String s)
+    {
+        getLoaderManager().initLoader(0, null, this);
+    }
+
+    @Override
+    public void onSearchFinished()
+    {
+
     }
 
     public GazzetteListFragment()
@@ -128,5 +144,24 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
         {
             Toast.makeText(getActivity(), "ERROR", Toast.LENGTH_LONG).show();
         }
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args)
+    {
+        return new CursorLoader(getActivity().getApplicationContext(), ConcorsiGazzettaContentProvider.GAZZETTE_URI,
+                null, null, new String[] { "10" } , null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data)
+    {
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader)
+    {
+
     }
 }

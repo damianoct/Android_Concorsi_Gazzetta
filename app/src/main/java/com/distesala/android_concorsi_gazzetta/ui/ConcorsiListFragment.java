@@ -43,6 +43,18 @@ public class ConcorsiListFragment extends BaseFragment
         return APPBAR_TITLE;
     }
 
+    @Override
+    public void searchFor(String s)
+    {
+
+    }
+
+    @Override
+    public void onSearchFinished()
+    {
+
+    }
+
     public ConcorsiListFragment()
     {
         // Required empty public constructor

@@ -1,14 +1,23 @@
 package com.distesala.android_concorsi_gazzetta.ui;
 
 import android.app.Activity;
+import android.app.SearchManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+
+import com.distesala.android_concorsi_gazzetta.R;
 
 public abstract class BaseFragment extends Fragment
 {
@@ -17,6 +26,10 @@ public abstract class BaseFragment extends Fragment
     public abstract String getFragmentName();
 
     public abstract String getFragmentTitle();
+
+    public abstract void searchFor(String s);
+
+    public abstract void onSearchFinished();
 
     public BaseFragment() { }
 
@@ -57,6 +70,49 @@ public abstract class BaseFragment extends Fragment
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         assert actionBar != null;
         actionBar.setTitle(getFragmentTitle());
+        inflater.inflate(R.menu.menu_options, menu);
+
+        MenuItem searchViewItem = menu.findItem(R.id.action_search);
+
+        MenuItemCompat.setOnActionExpandListener(searchViewItem, new MenuItemCompat.OnActionExpandListener()
+        {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item)
+            {
+                Log.d("search", "search expanded");
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item)
+            {
+                Log.d("search", "search collapsed");
+                onSearchFinished();
+                return true;
+            }
+        });
+
+        final SearchView searchViewAndroidActionBar = (SearchView) MenuItemCompat.getActionView(searchViewItem);
+
+
+        searchViewAndroidActionBar.setOnQueryTextListener(new SearchView.OnQueryTextListener()
+        {
+            @Override
+            public boolean onQueryTextSubmit(String query)
+            {
+                searchViewAndroidActionBar.clearFocus();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText)
+            {
+                searchFor(newText);
+                return true;
+            }
+        });
+
+
     }
 
     @Override
