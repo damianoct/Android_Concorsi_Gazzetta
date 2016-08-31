@@ -1,6 +1,5 @@
 package com.distesala.android_concorsi_gazzetta.ui;
 
-
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -8,6 +7,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -17,19 +19,21 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 
 import com.distesala.android_concorsi_gazzetta.R;
 import com.distesala.android_concorsi_gazzetta.adapter.ContestCursorAdapter;
+import com.distesala.android_concorsi_gazzetta.contentprovider.ConcorsiGazzettaContentProvider;
 import com.distesala.android_concorsi_gazzetta.database.CursorEnvelope;
+import com.distesala.android_concorsi_gazzetta.database.GazzetteSQLiteHelper;
 import com.distesala.android_concorsi_gazzetta.services.JSONDownloader;
 import com.distesala.android_concorsi_gazzetta.services.JSONResultReceiver;
 
-import java.io.Serializable;
-
-public class GazzettaFragment extends Fragment implements JSONResultReceiver.Receiver, LoaderHandler
+public class GazzettaFragment extends Fragment implements JSONResultReceiver.Receiver, LoaderManager.LoaderCallbacks<Cursor>
 {
     private JSONResultReceiver mReceiver;
     private ContestCursorAdapter adapter;
+    private SimpleCursorAdapter adapter1;
     private CharSequence numberOfPublication;
 
     public GazzettaFragment() { }
@@ -69,10 +73,23 @@ public class GazzettaFragment extends Fragment implements JSONResultReceiver.Rec
 
         //getActivity().startService(mServiceIntent);
 
-        Bundle b = new Bundle();
-        b.putSerializable("client", this);
-
         //Utilizzo il CursorLoader
+        LoaderManager lm = getLoaderManager();
+        lm.initLoader(0, null, this);
+
+        adapter1 = new SimpleCursorAdapter(getActivity().getApplicationContext(), R.layout.contest_item,
+                null,
+                new String[]    {
+                        GazzetteSQLiteHelper.ContestEntry.COLUMN_EMETTITORE,
+                        GazzetteSQLiteHelper.ContestEntry.COLUMN_TITOLO
+                },
+                new int[]    {
+                        R.id.emettitore,
+                        R.id.titolo
+                }
+                , 0);
+
+
 
         setRetainInstance(true);
 
@@ -106,8 +123,7 @@ public class GazzettaFragment extends Fragment implements JSONResultReceiver.Rec
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        assert adapter != null;
-        contestsList.setAdapter(adapter);
+        contestsList.setAdapter(adapter1);
     }
 
     @Override
@@ -122,8 +138,23 @@ public class GazzettaFragment extends Fragment implements JSONResultReceiver.Rec
     }
 
     @Override
-    public void onLoadFinished()
+    public Loader<Cursor> onCreateLoader(int id, Bundle args)
     {
-        Log.i("Loader", "loader finished");
+        Log.d("loader", "onCreateLoader");
+
+        return new CursorLoader(getActivity().getApplicationContext(), ConcorsiGazzettaContentProvider.CONTESTS_URI,
+                null, null, new String[] { numberOfPublication.toString() } , null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data)
+    {
+        adapter1.changeCursor(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader)
+    {
+
     }
 }
