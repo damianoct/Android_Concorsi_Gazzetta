@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,7 +24,9 @@ import com.distesala.android_concorsi_gazzetta.database.CursorEnvelope;
 import com.distesala.android_concorsi_gazzetta.services.JSONDownloader;
 import com.distesala.android_concorsi_gazzetta.services.JSONResultReceiver;
 
-public class GazzettaFragment extends Fragment implements JSONResultReceiver.Receiver
+import java.io.Serializable;
+
+public class GazzettaFragment extends Fragment implements JSONResultReceiver.Receiver, LoaderHandler
 {
     private JSONResultReceiver mReceiver;
     private ContestCursorAdapter adapter;
@@ -64,7 +67,12 @@ public class GazzettaFragment extends Fragment implements JSONResultReceiver.Rec
         mServiceIntent.putExtra("receiverTag", mReceiver);
         mServiceIntent.putExtra("gazzettaNumberOfPublication", numberOfPublication);
 
-        getActivity().startService(mServiceIntent);
+        //getActivity().startService(mServiceIntent);
+
+        Bundle b = new Bundle();
+        b.putSerializable("client", this);
+
+        //Utilizzo il CursorLoader
 
         setRetainInstance(true);
 
@@ -111,5 +119,11 @@ public class GazzettaFragment extends Fragment implements JSONResultReceiver.Rec
             adapter = new ContestCursorAdapter(getActivity(), savedCursor);
             contestsList.setAdapter(adapter);
         }
+    }
+
+    @Override
+    public void onLoadFinished()
+    {
+        Log.i("Loader", "loader finished");
     }
 }
