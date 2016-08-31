@@ -1,4 +1,4 @@
-package com.distesala.android_concorsi_gazzetta.ui;
+package com.distesala.android_concorsi_gazzetta.adapter;
 
 import android.content.Context;
 import android.database.Cursor;

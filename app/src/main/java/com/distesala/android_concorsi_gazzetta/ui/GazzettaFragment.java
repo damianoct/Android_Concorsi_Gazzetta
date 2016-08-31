@@ -10,16 +10,15 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.distesala.android_concorsi_gazzetta.R;
+import com.distesala.android_concorsi_gazzetta.adapter.ContestCursorAdapter;
 import com.distesala.android_concorsi_gazzetta.database.CursorEnvelope;
 import com.distesala.android_concorsi_gazzetta.services.JSONDownloader;
 import com.distesala.android_concorsi_gazzetta.services.JSONResultReceiver;
@@ -64,7 +63,9 @@ public class GazzettaFragment extends Fragment implements JSONResultReceiver.Rec
         mServiceIntent.setAction(JSONDownloader.GET_CONTEST_FOR_GAZZETTA);
         mServiceIntent.putExtra("receiverTag", mReceiver);
         mServiceIntent.putExtra("gazzettaNumberOfPublication", numberOfPublication);
+
         getActivity().startService(mServiceIntent);
+
         setRetainInstance(true);
 
     }

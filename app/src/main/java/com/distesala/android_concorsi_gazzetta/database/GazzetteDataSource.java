@@ -28,6 +28,8 @@ public class GazzetteDataSource
                                                 GazzetteSQLiteHelper.ContestEntry.COLUMN_GAZZETTA_NUMBER_OF_PUBLICATION,
                                                 GazzetteSQLiteHelper.ContestEntry.COLUMN_AREA,
                                                 GazzetteSQLiteHelper.ContestEntry.COLUMN_EMETTITORE,
+                                                GazzetteSQLiteHelper.ContestEntry.COLUMN_TIPOLOGIA,
+                                                GazzetteSQLiteHelper.ContestEntry.COLUMN_SCADENZA,
                                                 GazzetteSQLiteHelper.ContestEntry.COLUMN_N_ARTICOLI,
                                                 GazzetteSQLiteHelper.ContestEntry.COLUMN_TITOLO
                                             };
@@ -90,6 +92,9 @@ public class GazzetteDataSource
                 contestValues.put(GazzetteSQLiteHelper.ContestEntry.COLUMN_TITOLO, gazzette[i].getConcorsi().get(j).getTitoloConcorso());
                 contestValues.put(GazzetteSQLiteHelper.ContestEntry.COLUMN_EMETTITORE, gazzette[i].getConcorsi().get(j).getEmettitore());
                 contestValues.put(GazzetteSQLiteHelper.ContestEntry.COLUMN_AREA, gazzette[i].getConcorsi().get(j).getAreaDiInteresse());
+                contestValues.put(GazzetteSQLiteHelper.ContestEntry.COLUMN_TIPOLOGIA, gazzette[i].getConcorsi().get(j).getTipologia());
+                contestValues.put(GazzetteSQLiteHelper.ContestEntry.COLUMN_SCADENZA, gazzette[i].getConcorsi().get(j).getScadenza());
+
                 contestValues.put(GazzetteSQLiteHelper.ContestEntry.COLUMN_N_ARTICOLI, gazzette[i].getConcorsi().get(j).getAreaDiInteresse());
 
                 database.insertWithOnConflict(GazzetteSQLiteHelper.ContestEntry.TABLE_NAME, null, contestValues, SQLiteDatabase.CONFLICT_IGNORE);
@@ -97,8 +102,6 @@ public class GazzetteDataSource
 
             database.setTransactionSuccessful();
             database.endTransaction();
-
-            Log.i("Transaction", "Fine Transazione Concorsi per gazzetta con grandezza concorsi -> " + String.valueOf(gazzette[i].getConcorsi().size()));
 
             database.insertWithOnConflict(GazzetteSQLiteHelper.GazzettaEntry.TABLE_NAME, null, gazzetteValues, SQLiteDatabase.CONFLICT_IGNORE);
 
@@ -109,7 +112,7 @@ public class GazzetteDataSource
 
     public Cursor getGazzetteCursor()
     {
-        //ordino per data di pubblicazione
+        //sort by date of publication
         return database.query(GazzetteSQLiteHelper.GazzettaEntry.TABLE_NAME,
                 allGazzettaColumns, null, null, null, null,
                             GazzetteSQLiteHelper.GazzettaEntry.COLUMN_ID_GAZZETTA + " DESC");

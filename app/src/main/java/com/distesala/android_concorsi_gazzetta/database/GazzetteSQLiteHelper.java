@@ -29,6 +29,8 @@ public class GazzetteSQLiteHelper extends SQLiteOpenHelper
         public static final String COLUMN_EMETTITORE = "emettitore";
         public static final String COLUMN_AREA = "areaDiInteresse";
         public static final String COLUMN_TITOLO = "titoloConcorso";
+        public static final String COLUMN_TIPOLOGIA = "tipologia";
+        public static final String COLUMN_SCADENZA = "scadenza";
         public static final String COLUMN_N_ARTICOLI = "numeroArticoli";
 
     }
@@ -48,6 +50,8 @@ public class GazzetteSQLiteHelper extends SQLiteOpenHelper
                                                     ContestEntry.COLUMN_EMETTITORE + " text not null, " +
                                                     ContestEntry.COLUMN_AREA + " text not null, " +
                                                     ContestEntry.COLUMN_TITOLO + " text not null, " +
+                                                    ContestEntry.COLUMN_TIPOLOGIA + " text not null, " +
+                                                    ContestEntry.COLUMN_SCADENZA + " integer not null, " +
                                                     ContestEntry.COLUMN_N_ARTICOLI + " text not null);";
 
     public GazzetteSQLiteHelper(Context context)

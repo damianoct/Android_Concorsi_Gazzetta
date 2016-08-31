@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.distesala.android_concorsi_gazzetta.R;
+import com.distesala.android_concorsi_gazzetta.adapter.GazzettaCursorAdapter;
 import com.distesala.android_concorsi_gazzetta.database.CursorEnvelope;
 import com.distesala.android_concorsi_gazzetta.services.JSONDownloader;
 import com.distesala.android_concorsi_gazzetta.services.JSONResultReceiver;
@@ -125,7 +126,7 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
 
         if (resultCode == Activity.RESULT_CANCELED)
         {
-            Toast.makeText(getActivity(), "ERROR", Toast.LENGTH_LONG);
+            Toast.makeText(getActivity(), "ERROR", Toast.LENGTH_LONG).show();
         }
     }
 }

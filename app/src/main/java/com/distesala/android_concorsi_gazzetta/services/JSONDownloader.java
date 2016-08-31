@@ -8,11 +8,14 @@ import android.os.Bundle;
 import android.os.ResultReceiver;
 import android.util.Log;
 
+import com.distesala.android_concorsi_gazzetta.adapter.GsonContestAdapter;
 import com.distesala.android_concorsi_gazzetta.database.CursorEnvelope;
 import com.distesala.android_concorsi_gazzetta.database.GazzetteDataSource;
 import com.distesala.android_concorsi_gazzetta.execptions.HttpErrorException;
+import com.distesala.android_concorsi_gazzetta.model.Concorso;
 import com.distesala.android_concorsi_gazzetta.model.Gazzetta;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -26,13 +29,19 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.UnknownHostException;
 
+/**
+ * Questa classe inizia ad avere un pò troppe responsabilità.
+ * O si rinomina con qualcosa del tipo Worker*
+ * oppure si creano più classi IntentService
+ */
+
+
 public class JSONDownloader extends IntentService
 {
     private static final String URL_WS = "http://marsala.ddns.net:8080/gazzetteWithContests";
     private static final String LATEST_GAZZETTA = "http://marsala.ddns.net:8080/latestGazzetta";
     public static final String DOWNLOAD_GAZZETTA = "com.distesala.android_concorsi_gazzetta.services.action.DownloadGazzetta";
     public static final String GET_CONTEST_FOR_GAZZETTA = "com.distesala.android_concorsi_gazzetta.services.action.GetContestForGazzetta";
-
 
     public static final String CURSOR_GAZZETTA = "cursor_gazzetta";
     public static final String CURSOR_CONTESTS = "cursor_contests";
@@ -52,6 +61,8 @@ public class JSONDownloader extends IntentService
         context.startService(intent);
     }*/
 
+
+    //URGE REFACTORONE
     @Override
     protected void onHandleIntent(Intent intent)
     {
@@ -76,9 +87,12 @@ public class JSONDownloader extends IntentService
                         JSONObject jsonObject = new JSONObject(json);
                         JSONArray gazzetteJsonArray = jsonObject.getJSONArray("gazzette");
 
-                        Gson gson = new Gson();
-                        Gazzetta[] gazzette = gson.fromJson(gazzetteJsonArray.toString(), Gazzetta[].class);
+                        GsonBuilder gsonBuilder = new GsonBuilder();
+                        //custom adapter for deserialization
+                        gsonBuilder.registerTypeAdapter(Concorso.class, new GsonContestAdapter());
+                        Gson gson = gsonBuilder.create();
 
+                        Gazzetta[] gazzette = gson.fromJson(gazzetteJsonArray.toString(), Gazzetta[].class);
 
                         dataSource.insertGazzette(gazzette);
                     }
@@ -111,7 +125,6 @@ public class JSONDownloader extends IntentService
 
             else if(action.equals(GET_CONTEST_FOR_GAZZETTA))
             {
-                //TODO gestire l'intent per prendere i concorsi da una gazzetta
                 ResultReceiver rec = intent.getParcelableExtra("receiverTag");
                 String numberOfPublication = intent.getStringExtra("gazzettaNumberOfPublication");
 
@@ -125,8 +138,6 @@ public class JSONDownloader extends IntentService
 
                 dataSource.close();
             }
-
-
         }
     }
 

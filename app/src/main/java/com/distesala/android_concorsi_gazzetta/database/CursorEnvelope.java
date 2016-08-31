@@ -1,6 +1,5 @@
 package com.distesala.android_concorsi_gazzetta.database;
 
-import android.database.AbstractCursor;
 import android.database.Cursor;
 
 import java.io.Serializable;
