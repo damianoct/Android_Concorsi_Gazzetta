@@ -2,6 +2,7 @@ package com.distesala.android_concorsi_gazzetta.services;
 
 import android.app.Activity;
 import android.app.IntentService;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -9,8 +10,10 @@ import android.os.ResultReceiver;
 import android.util.Log;
 
 import com.distesala.android_concorsi_gazzetta.adapter.GsonContestAdapter;
+import com.distesala.android_concorsi_gazzetta.contentprovider.ConcorsiGazzettaContentProvider;
 import com.distesala.android_concorsi_gazzetta.database.CursorEnvelope;
 import com.distesala.android_concorsi_gazzetta.database.GazzetteDataSource;
+import com.distesala.android_concorsi_gazzetta.database.GazzetteSQLiteHelper;
 import com.distesala.android_concorsi_gazzetta.execptions.HttpErrorException;
 import com.distesala.android_concorsi_gazzetta.model.Concorso;
 import com.distesala.android_concorsi_gazzetta.model.Gazzetta;
@@ -18,6 +21,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -61,9 +65,87 @@ public class JSONDownloader extends IntentService
         context.startService(intent);
     }*/
 
+    private void insertGazzetteWithContests(Gazzetta[] gazzette)
+    {
+        ContentValues gazzetteContentValues[] = new ContentValues[gazzette.length];
+        Log.i("provider array size", String.valueOf(gazzetteContentValues.length));
+        for(int i = 0; i < gazzette.length; i++)
+        {
+            //gazzetteContentValues[i].put(GazzetteSQLiteHelper.GazzettaEntry.COLUMN_ID_GAZZETTA, gazzette[i].getIdGazzetta());
+            gazzetteContentValues[i].put(GazzetteSQLiteHelper.GazzettaEntry.COLUMN_NUMBER_OF_PUBLICATION, gazzette[i].getNumberOfPublication());
+            gazzetteContentValues[i].put(GazzetteSQLiteHelper.GazzettaEntry.COLUMN_DATE_OF_PUBLICATION,  gazzette[i].getDateOfPublication());
+
+            int numberOfContests = gazzette[i].getConcorsi().size();
+
+            ContentValues contestsContentValues[] = new ContentValues[numberOfContests];
+
+            for (int j = 0; j < gazzette[i].getConcorsi().size(); j++)
+            {
+                contestsContentValues[j].put(GazzetteSQLiteHelper.ContestEntry.COLUMN_ID_CONCORSO, gazzette[i].getConcorsi().get(j).getCodiceRedazionale());
+                contestsContentValues[j].put(GazzetteSQLiteHelper.ContestEntry.COLUMN_GAZZETTA_NUMBER_OF_PUBLICATION, gazzette[i].getNumberOfPublication());
+                contestsContentValues[j].put(GazzetteSQLiteHelper.ContestEntry.COLUMN_TITOLO, gazzette[i].getConcorsi().get(j).getTitoloConcorso());
+                contestsContentValues[j].put(GazzetteSQLiteHelper.ContestEntry.COLUMN_EMETTITORE, gazzette[i].getConcorsi().get(j).getEmettitore());
+                contestsContentValues[j].put(GazzetteSQLiteHelper.ContestEntry.COLUMN_AREA, gazzette[i].getConcorsi().get(j).getAreaDiInteresse());
+                contestsContentValues[j].put(GazzetteSQLiteHelper.ContestEntry.COLUMN_TIPOLOGIA, gazzette[i].getConcorsi().get(j).getTipologia());
+                contestsContentValues[j].put(GazzetteSQLiteHelper.ContestEntry.COLUMN_SCADENZA, gazzette[i].getConcorsi().get(j).getScadenza());
+                contestsContentValues[j].put(GazzetteSQLiteHelper.ContestEntry.COLUMN_N_ARTICOLI, gazzette[i].getConcorsi().get(j).getAreaDiInteresse());
+            }
+
+            //insert contentvalues array of contests for a single gazzetta
+            getContentResolver().bulkInsert(ConcorsiGazzettaContentProvider.CONTESTS_URI, contestsContentValues);
+
+        }
+
+        //insert array of gazzette
+
+        getContentResolver().bulkInsert(ConcorsiGazzettaContentProvider.GAZZETTE_URI, gazzetteContentValues);
+
+    }
+
+    @Override
+    protected void onHandleIntent(Intent intent)
+    {
+        if (intent != null)
+        {
+            final String action = intent.getAction();
+
+            if (DOWNLOAD_GAZZETTA.equals(action))
+            {
+                ResultReceiver rec = intent.getParcelableExtra("receiverTag");
+                try
+                {
+                    String json = downloadGazzette(new URL(URL_WS));
+                    JSONObject jsonObject = new JSONObject(json);
+                    JSONArray gazzetteJsonArray = jsonObject.getJSONArray("gazzette");
+
+                    GsonBuilder gsonBuilder = new GsonBuilder();
+                    //custom adapter for deserialization
+                    gsonBuilder.registerTypeAdapter(Concorso.class, new GsonContestAdapter());
+                    Gson gson = gsonBuilder.create();
+
+                    Gazzetta[] gazzette = gson.fromJson(gazzetteJsonArray.toString(), Gazzetta[].class);
+                    Log.i("provider date of pub", gazzette[0].getDateOfPublication());
+                    insertGazzetteWithContests(gazzette);
+
+                    Bundle b = new Bundle();
+                    b.putSerializable(CURSOR_GAZZETTA, null);
+                    rec.send(Activity.RESULT_OK, b);
+                    Log.i("provider", "service finito");
+                }
+
+                catch (Exception e)
+                {
+                    Log.i("IntentService", "Errore");
+                    e.printStackTrace();
+                    rec.send(Activity.RESULT_CANCELED, null);
+                }
+            }
+        }
+    }
+
 
     //URGE REFACTORONE
-    @Override
+    /*@Override
     protected void onHandleIntent(Intent intent)
     {
         if (intent != null)
@@ -139,7 +221,7 @@ public class JSONDownloader extends IntentService
                 dataSource.close();
             }
         }
-    }
+    }*/
 
     private boolean updatedGazzette()
     {
@@ -165,6 +247,7 @@ public class JSONDownloader extends IntentService
         try
         {
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            Log.i("provider", "download iniziato");
             int statusCode = urlConnection.getResponseCode();
             if (statusCode == 200)
             {

@@ -94,7 +94,6 @@ public class GazzetteDataSource
                 contestValues.put(GazzetteSQLiteHelper.ContestEntry.COLUMN_AREA, gazzette[i].getConcorsi().get(j).getAreaDiInteresse());
                 contestValues.put(GazzetteSQLiteHelper.ContestEntry.COLUMN_TIPOLOGIA, gazzette[i].getConcorsi().get(j).getTipologia());
                 contestValues.put(GazzetteSQLiteHelper.ContestEntry.COLUMN_SCADENZA, gazzette[i].getConcorsi().get(j).getScadenza());
-
                 contestValues.put(GazzetteSQLiteHelper.ContestEntry.COLUMN_N_ARTICOLI, gazzette[i].getConcorsi().get(j).getAreaDiInteresse());
 
                 database.insertWithOnConflict(GazzetteSQLiteHelper.ContestEntry.TABLE_NAME, null, contestValues, SQLiteDatabase.CONFLICT_IGNORE);

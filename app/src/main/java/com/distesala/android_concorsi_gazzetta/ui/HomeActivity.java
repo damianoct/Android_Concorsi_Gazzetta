@@ -67,7 +67,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener
             case R.id.gazzette:
                 return new GazzetteListFragment();
             case R.id.concorsi:
-                return new ConcorsiListFragment() ;
+                return new ConcorsiListFragment();
             case R.id.settings:
                 return new WebViewFragment();
             default:
@@ -107,6 +107,26 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener
                 return true;
             }
         });
+
+        //hide nav drawer icon if a SEGUE transaction exists on top of the stack
+        /*if(isSegueOnTop())
+        {
+            enableBackButton();
+        }*/
+    }
+
+    private boolean isSegueOnTop()
+    {
+        return getSupportFragmentManager().getBackStackEntryCount() > 0 &&
+                getSupportFragmentManager()
+                        .getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1)
+                            .getName().equals(SEGUE_TRANSACTION);
+    }
+
+    private void enableBackButton()
+    {
+        actionBarDrawerToggle.setDrawerIndicatorEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -196,9 +216,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener
     @Override
     public void onSegueTransaction()
     {
-        Log.d("FragmentListener", "onSegueTransaction()");
-        actionBarDrawerToggle.setDrawerIndicatorEnabled(false);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        enableBackButton();
         expandAppBarLayout();
     }
 

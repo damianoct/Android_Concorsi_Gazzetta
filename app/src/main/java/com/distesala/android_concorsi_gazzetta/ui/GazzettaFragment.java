@@ -29,12 +29,36 @@ import com.distesala.android_concorsi_gazzetta.database.GazzetteSQLiteHelper;
 import com.distesala.android_concorsi_gazzetta.services.JSONDownloader;
 import com.distesala.android_concorsi_gazzetta.services.JSONResultReceiver;
 
-public class GazzettaFragment extends Fragment implements JSONResultReceiver.Receiver, LoaderManager.LoaderCallbacks<Cursor>
+public class GazzettaFragment extends BaseFragment implements JSONResultReceiver.Receiver, LoaderManager.LoaderCallbacks<Cursor>
 {
     private JSONResultReceiver mReceiver;
     private ContestCursorAdapter adapter;
     private SimpleCursorAdapter adapterSimpleCursor;
     private CharSequence numberOfPublication;
+
+    @Override
+    public String getFragmentName()
+    {
+        return HomeActivity.HOME_FRAGMENT;
+    }
+
+    @Override
+    public String getFragmentTitle()
+    {
+        return "Gazzetta n. " + numberOfPublication;
+    }
+
+    @Override
+    public void searchFor(String s)
+    {
+
+    }
+
+    @Override
+    public void onSearchFinished()
+    {
+
+    }
 
     public GazzettaFragment() { }
 
@@ -92,7 +116,7 @@ public class GazzettaFragment extends Fragment implements JSONResultReceiver.Rec
 
     }
 
-    //modify app bar
+    /*
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
     {
@@ -101,6 +125,7 @@ public class GazzettaFragment extends Fragment implements JSONResultReceiver.Rec
         assert actionBar != null;
         actionBar.setTitle("Gazzetta n. " + numberOfPublication);
     }
+    */
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -119,7 +144,7 @@ public class GazzettaFragment extends Fragment implements JSONResultReceiver.Rec
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
     {
-        super.onViewCreated(view, savedInstanceState);
+        //super.onViewCreated(view, savedInstanceState);
         contestsList.setAdapter(adapterSimpleCursor);
     }
 
@@ -135,6 +160,13 @@ public class GazzettaFragment extends Fragment implements JSONResultReceiver.Rec
     }
 
     @Override
+    public void onResume()
+    {
+        super.onResume();
+        fragmentListener.onSegueTransaction();
+    }
+
+    @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args)
     {
         return new CursorLoader(getActivity().getApplicationContext(), ConcorsiGazzettaContentProvider.CONTESTS_URI,
@@ -144,6 +176,7 @@ public class GazzettaFragment extends Fragment implements JSONResultReceiver.Rec
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data)
     {
+        Log.i("loader", "gazzettafragment loadfinish");
         adapterSimpleCursor.changeCursor(data);
     }
 

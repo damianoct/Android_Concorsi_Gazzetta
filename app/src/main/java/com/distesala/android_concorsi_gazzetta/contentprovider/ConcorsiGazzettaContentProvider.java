@@ -1,12 +1,14 @@
 package com.distesala.android_concorsi_gazzetta.contentprovider;
 
 import android.content.ContentProvider;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.distesala.android_concorsi_gazzetta.database.GazzetteSQLiteHelper;
 
@@ -65,13 +67,17 @@ public class ConcorsiGazzettaContentProvider extends ContentProvider
         {
             case GAZZETTE:
             {
-                //TODO studiare meglio query con content provider.
+                c = db.query(GazzetteSQLiteHelper.GazzettaEntry.TABLE_NAME,
+                        projection,
+                        selection, selectionArgs, null, null,
+                        GazzetteSQLiteHelper.GazzettaEntry.COLUMN_ID_GAZZETTA + " DESC"); //order by
+
+                Log.i("loader content provider", "cursor -> " + String.valueOf(c.getCount()));
+                break;
             }
 
             case CONTESTS:
             {
-
-
                 c = db.query(GazzetteSQLiteHelper.ContestEntry.TABLE_NAME,
                         projection,
                         GazzetteSQLiteHelper.ContestEntry.COLUMN_GAZZETTA_NUMBER_OF_PUBLICATION + "=?", selectionArgs, //selection
@@ -93,7 +99,32 @@ public class ConcorsiGazzettaContentProvider extends ContentProvider
     @Override
     public Uri insert(Uri uri, ContentValues values)
     {
-        return null;
+
+        SQLiteDatabase db = database.getWritableDatabase();
+
+        Uri returnUri = null;
+
+        switch(sURIMatcher.match(uri))
+        {
+            case GAZZETTE:
+            {
+                long id = db.insertWithOnConflict(GazzetteSQLiteHelper.GazzettaEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
+                returnUri = ContentUris.withAppendedId(GAZZETTE_URI, id);
+                Log.d("provider INSERT", returnUri.toString());
+                break;
+            }
+
+            case CONTESTS:
+            {
+                long id = db.insertWithOnConflict(GazzetteSQLiteHelper.ContestEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
+                returnUri = ContentUris.withAppendedId(CONTESTS_URI, id);
+                Log.d("provider INSERT", returnUri.toString());
+                break;
+            }
+        }
+
+        return returnUri;
+
     }
 
     @Override
