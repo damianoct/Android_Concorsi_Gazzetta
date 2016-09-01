@@ -210,6 +210,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener
         actionBarDrawerToggle.setDrawerIndicatorEnabled(true);
     }
 
+    //restore menu checked item on backpress.
     @Override
     public void onDisplayed(String fragmentTag)
     {

@@ -16,6 +16,7 @@ import java.util.Locale;
 /**
  * Created by damiano on 31/08/16.
  */
+
 public class GsonContestAdapter implements JsonDeserializer<Concorso>
 {
     @Override

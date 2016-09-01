@@ -7,7 +7,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.distesala.android_concorsi_gazzetta.database.GazzetteSQLiteHelper;
 
@@ -45,7 +44,6 @@ public class ConcorsiGazzettaContentProvider extends ContentProvider
         sURIMatcher.addURI(AUTHORITY, GAZZETTE_PATH + "/#", GAZZETTA_ID);
         sURIMatcher.addURI(AUTHORITY, CONTESTS_PATH, CONTESTS);
         sURIMatcher.addURI(AUTHORITY, CONTESTS_PATH + "/#", CONTESTS_ID);
-
     }
 
     @Override
@@ -61,21 +59,23 @@ public class ConcorsiGazzettaContentProvider extends ContentProvider
     {
         Cursor c = null;
 
+        SQLiteDatabase db = database.getWritableDatabase();
+
         switch(sURIMatcher.match(uri))
         {
+            case GAZZETTE:
+            {
+                //TODO studiare meglio query con content provider.
+            }
+
             case CONTESTS:
             {
-                database.getWritableDatabase();
 
-                SQLiteDatabase db = database.getWritableDatabase();
 
                 c = db.query(GazzetteSQLiteHelper.ContestEntry.TABLE_NAME,
                         projection,
                         GazzetteSQLiteHelper.ContestEntry.COLUMN_GAZZETTA_NUMBER_OF_PUBLICATION + "=?", selectionArgs, //selection
                         null, null, null);
-
-                Log.d("loader", "count cursor -> " + c.getCount());
-
                 break;
             }
         }
