@@ -39,6 +39,9 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
     private SimpleCursorAdapter simpleCursorAdapter;
     private AppBarLayout appBarLayout;
 
+    private String whereClause = null;
+    private String[] whereArgs = null;
+
     @Override
     public String getFragmentName()
     {
@@ -54,13 +57,29 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
     @Override
     public void searchFor(String s)
     {
-        //getLoaderManager().initLoader(0, null, this);
+        //VERSIONE GREZZA ricerca fra il numero di pubblicazione e la data di pubblicazione
+        if(s != null)
+        {
+            whereClause = GazzetteSQLiteHelper.GazzettaEntry.COLUMN_NUMBER_OF_PUBLICATION + " LIKE? OR "
+                    + GazzetteSQLiteHelper.GazzettaEntry.COLUMN_DATE_OF_PUBLICATION + " LIKE? ";
+
+            whereArgs = new String[]{"%" + s + "%", "%" + s + "%"};
+        }
+        else
+        {
+            whereArgs = null;
+            whereClause = null;
+        }
+
+        getLoaderManager().restartLoader(0, null, this);
     }
 
     @Override
     public void onSearchFinished()
     {
-
+        whereArgs = null;
+        whereClause = null;
+        getLoaderManager().restartLoader(0, null, this);
     }
 
     public GazzetteListFragment()
@@ -77,7 +96,7 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
         Intent mServiceIntent = new Intent(getActivity(), JSONDownloader.class);
         mServiceIntent.setAction(JSONDownloader.DOWNLOAD_GAZZETTA);
         mServiceIntent.putExtra("receiverTag", mReceiver);
-        getActivity().startService(mServiceIntent);
+        //getActivity().startService(mServiceIntent);
 
         simpleCursorAdapter = new SimpleCursorAdapter(getActivity().getApplicationContext(), R.layout.gazzetta_item,
                 null, //cursor null
@@ -141,7 +160,7 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
         appBarLayout.setElevation(5);
         fragmentListener.onBackHome();
         gazzetteList.setAdapter(simpleCursorAdapter);
-        getLoaderManager().restartLoader(0, null, this);
+        getLoaderManager().initLoader(0, null, this);
     }
 
     @Override
@@ -163,13 +182,13 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args)
     {
-        return new CursorLoader(getActivity().getApplicationContext(), ConcorsiGazzettaContentProvider.GAZZETTE_URI, null, null, null, null);
+        return new CursorLoader(getActivity().getApplicationContext(), ConcorsiGazzettaContentProvider.GAZZETTE_URI, null, whereClause, whereArgs, null);
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data)
     {
-        Log.i("loader", "gazzette list finished, cursor -> " + String.valueOf(data.getCount()));
+        Log.i("gazzette loader", "gazzette list finished, cursor -> " + String.valueOf(data.getCount()));
         simpleCursorAdapter.swapCursor(data);
     }
 
