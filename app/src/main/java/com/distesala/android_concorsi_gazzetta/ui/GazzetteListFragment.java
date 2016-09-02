@@ -141,7 +141,7 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
         appBarLayout.setElevation(5);
         fragmentListener.onBackHome();
         gazzetteList.setAdapter(simpleCursorAdapter);
-        getLoaderManager().initLoader(0, null, this);
+        getLoaderManager().restartLoader(0, null, this);
     }
 
     @Override

@@ -156,6 +156,8 @@ public class GazzettaFragment extends BaseFragment implements JSONResultReceiver
             Cursor savedCursor = ((CursorEnvelope) resultData.getSerializable(JSONDownloader.CURSOR_CONTESTS)).getCursor();
             adapter = new ContestCursorAdapter(getActivity(), savedCursor);
             contestsList.setAdapter(adapter);
+            getLoaderManager().restartLoader(0, null, this);
+
         }
     }
 

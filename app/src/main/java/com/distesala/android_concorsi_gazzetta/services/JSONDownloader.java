@@ -32,6 +32,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Questa classe inizia ad avere un pò troppe responsabilità.
@@ -58,46 +60,85 @@ public class JSONDownloader extends IntentService
 
     }
 
-    /*public static void startDownloadGazzetta(Context context)
+    /*
+    private void insertGazzetteWithContests(Gazzetta[] gazzette)
     {
-        Intent intent = new Intent(context, JSONDownloader.class);
-        intent.setAction(DOWNLOAD_GAZZETTA);
-        context.startService(intent);
+        List<ContentValues> gazzetteValueList = new ArrayList<>();
+
+
+        for(int i = 0; i < gazzette.length; i++)
+        {
+
+            ContentValues gazzettaValues = new ContentValues();
+
+            gazzettaValues.put(GazzetteSQLiteHelper.GazzettaEntry.COLUMN_ID_GAZZETTA, gazzette[i].getIdGazzetta());
+            gazzettaValues.put(GazzetteSQLiteHelper.GazzettaEntry.COLUMN_NUMBER_OF_PUBLICATION, gazzette[i].getNumberOfPublication());
+            gazzettaValues.put(GazzetteSQLiteHelper.GazzettaEntry.COLUMN_DATE_OF_PUBLICATION,  gazzette[i].getDateOfPublication());
+
+            gazzetteValueList.add(gazzettaValues);
+        }
+
+        //completed list of gazzette
+        ContentValues[] gazzetteContentValues = gazzetteValueList.toArray(new ContentValues[0]);
+
+        for(ContentValues v: gazzetteValueList)
+            Log.i("adder", "lista -> " + v.get(GazzetteSQLiteHelper.GazzettaEntry.COLUMN_DATE_OF_PUBLICATION));
+
+        for(ContentValues v: gazzetteContentValues)
+            Log.i("adder", "array -> " + v.get(GazzetteSQLiteHelper.GazzettaEntry.COLUMN_DATE_OF_PUBLICATION));
+
+
     }*/
 
     private void insertGazzetteWithContests(Gazzetta[] gazzette)
     {
-        ContentValues gazzetteContentValues[] = new ContentValues[gazzette.length];
-        Log.i("provider array size", String.valueOf(gazzetteContentValues.length));
+
+        List<ContentValues> gazzetteValueList = new ArrayList<>();
+
         for(int i = 0; i < gazzette.length; i++)
         {
-            //gazzetteContentValues[i].put(GazzetteSQLiteHelper.GazzettaEntry.COLUMN_ID_GAZZETTA, gazzette[i].getIdGazzetta());
-            gazzetteContentValues[i].put(GazzetteSQLiteHelper.GazzettaEntry.COLUMN_NUMBER_OF_PUBLICATION, gazzette[i].getNumberOfPublication());
-            gazzetteContentValues[i].put(GazzetteSQLiteHelper.GazzettaEntry.COLUMN_DATE_OF_PUBLICATION,  gazzette[i].getDateOfPublication());
 
-            int numberOfContests = gazzette[i].getConcorsi().size();
+            ContentValues gazzettaValues = new ContentValues();
 
-            ContentValues contestsContentValues[] = new ContentValues[numberOfContests];
+            gazzettaValues.put(GazzetteSQLiteHelper.GazzettaEntry.COLUMN_ID_GAZZETTA, gazzette[i].getIdGazzetta());
+            gazzettaValues.put(GazzetteSQLiteHelper.GazzettaEntry.COLUMN_NUMBER_OF_PUBLICATION, gazzette[i].getNumberOfPublication());
+            gazzettaValues.put(GazzetteSQLiteHelper.GazzettaEntry.COLUMN_DATE_OF_PUBLICATION,  gazzette[i].getDateOfPublication());
+
+            List<ContentValues> contestsValueList = new ArrayList<>();
 
             for (int j = 0; j < gazzette[i].getConcorsi().size(); j++)
             {
-                contestsContentValues[j].put(GazzetteSQLiteHelper.ContestEntry.COLUMN_ID_CONCORSO, gazzette[i].getConcorsi().get(j).getCodiceRedazionale());
-                contestsContentValues[j].put(GazzetteSQLiteHelper.ContestEntry.COLUMN_GAZZETTA_NUMBER_OF_PUBLICATION, gazzette[i].getNumberOfPublication());
-                contestsContentValues[j].put(GazzetteSQLiteHelper.ContestEntry.COLUMN_TITOLO, gazzette[i].getConcorsi().get(j).getTitoloConcorso());
-                contestsContentValues[j].put(GazzetteSQLiteHelper.ContestEntry.COLUMN_EMETTITORE, gazzette[i].getConcorsi().get(j).getEmettitore());
-                contestsContentValues[j].put(GazzetteSQLiteHelper.ContestEntry.COLUMN_AREA, gazzette[i].getConcorsi().get(j).getAreaDiInteresse());
-                contestsContentValues[j].put(GazzetteSQLiteHelper.ContestEntry.COLUMN_TIPOLOGIA, gazzette[i].getConcorsi().get(j).getTipologia());
-                contestsContentValues[j].put(GazzetteSQLiteHelper.ContestEntry.COLUMN_SCADENZA, gazzette[i].getConcorsi().get(j).getScadenza());
-                contestsContentValues[j].put(GazzetteSQLiteHelper.ContestEntry.COLUMN_N_ARTICOLI, gazzette[i].getConcorsi().get(j).getAreaDiInteresse());
+                ContentValues contest = new ContentValues();
+
+                contest.put(GazzetteSQLiteHelper.ContestEntry.COLUMN_ID_CONCORSO, gazzette[i].getConcorsi().get(j).getCodiceRedazionale());
+                contest.put(GazzetteSQLiteHelper.ContestEntry.COLUMN_GAZZETTA_NUMBER_OF_PUBLICATION, gazzette[i].getNumberOfPublication());
+                contest.put(GazzetteSQLiteHelper.ContestEntry.COLUMN_TITOLO, gazzette[i].getConcorsi().get(j).getTitoloConcorso());
+                contest.put(GazzetteSQLiteHelper.ContestEntry.COLUMN_EMETTITORE, gazzette[i].getConcorsi().get(j).getEmettitore());
+                contest.put(GazzetteSQLiteHelper.ContestEntry.COLUMN_AREA, gazzette[i].getConcorsi().get(j).getAreaDiInteresse());
+                contest.put(GazzetteSQLiteHelper.ContestEntry.COLUMN_TIPOLOGIA, gazzette[i].getConcorsi().get(j).getTipologia());
+                contest.put(GazzetteSQLiteHelper.ContestEntry.COLUMN_SCADENZA, gazzette[i].getConcorsi().get(j).getScadenza());
+                contest.put(GazzetteSQLiteHelper.ContestEntry.COLUMN_N_ARTICOLI, gazzette[i].getConcorsi().get(j).getAreaDiInteresse());
+
+                contestsValueList.add(contest);
             }
+
+
+            //completed list of contests for gazzetta
+            ContentValues[] contestsContentValues = contestsValueList.toArray(new ContentValues[0]);
 
             //insert contentvalues array of contests for a single gazzetta
             getContentResolver().bulkInsert(ConcorsiGazzettaContentProvider.CONTESTS_URI, contestsContentValues);
 
+
+            //add gazzetta to list
+            gazzetteValueList.add(gazzettaValues);
+
         }
 
-        //insert array of gazzette
+        //completed list of gazzette
+        ContentValues[] gazzetteContentValues = gazzetteValueList.toArray(new ContentValues[0]);
 
+        //insert array of gazzette
         getContentResolver().bulkInsert(ConcorsiGazzettaContentProvider.GAZZETTE_URI, gazzetteContentValues);
 
     }

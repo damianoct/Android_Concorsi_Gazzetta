@@ -72,7 +72,7 @@ public class ConcorsiGazzettaContentProvider extends ContentProvider
                         selection, selectionArgs, null, null,
                         GazzetteSQLiteHelper.GazzettaEntry.COLUMN_ID_GAZZETTA + " DESC"); //order by
 
-                Log.i("loader content provider", "cursor -> " + String.valueOf(c.getCount()));
+                Log.i("provider", "cursor gazzette -> " + String.valueOf(c.getCount()));
                 break;
             }
 
@@ -82,9 +82,16 @@ public class ConcorsiGazzettaContentProvider extends ContentProvider
                         projection,
                         GazzetteSQLiteHelper.ContestEntry.COLUMN_GAZZETTA_NUMBER_OF_PUBLICATION + "=?", selectionArgs, //selection
                         null, null, null);
+
+                Log.i("provider","cursor contests -> " + String.valueOf(c.getCount()));
                 break;
             }
         }
+
+        //notify
+        assert c!= null;
+        c.setNotificationUri(getContext().getContentResolver(), uri);
+
         return c;
     }
 
@@ -93,6 +100,21 @@ public class ConcorsiGazzettaContentProvider extends ContentProvider
     public String getType(Uri uri)
     {
         return null;
+    }
+
+    @Override
+    public int bulkInsert(Uri uri, ContentValues[] values)
+    {
+        SQLiteDatabase db = database.getWritableDatabase();
+        db.beginTransaction();
+
+        for(int i = 0; i < values.length; i++)
+            this.insert(uri, values[i]);
+
+        db.setTransactionSuccessful();
+        db.endTransaction();
+
+        return values.length;
     }
 
     @Nullable
@@ -108,7 +130,7 @@ public class ConcorsiGazzettaContentProvider extends ContentProvider
         {
             case GAZZETTE:
             {
-                long id = db.insertWithOnConflict(GazzetteSQLiteHelper.GazzettaEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
+                long id = db.insertWithOnConflict(GazzetteSQLiteHelper.GazzettaEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
                 returnUri = ContentUris.withAppendedId(GAZZETTE_URI, id);
                 Log.d("provider INSERT", returnUri.toString());
                 break;
@@ -116,7 +138,7 @@ public class ConcorsiGazzettaContentProvider extends ContentProvider
 
             case CONTESTS:
             {
-                long id = db.insertWithOnConflict(GazzetteSQLiteHelper.ContestEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
+                long id = db.insertWithOnConflict(GazzetteSQLiteHelper.ContestEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
                 returnUri = ContentUris.withAppendedId(CONTESTS_URI, id);
                 Log.d("provider INSERT", returnUri.toString());
                 break;
