@@ -118,6 +118,7 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
     {
         Log.d("ExtendendFragment", "onCreateView()");
 
+        super.onCreateView(inflater, container, savedInstanceState);
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_gazzettelist, container, false);
         appBarLayout = (AppBarLayout) getActivity().findViewById(R.id.appbarlayout);
@@ -155,11 +156,12 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
     {
-        super.onViewCreated(view, savedInstanceState);
         appBarLayout.setElevation(5);
         fragmentListener.onBackHome();
         gazzetteList.setAdapter(simpleCursorAdapter);
         getLoaderManager().initLoader(0, null, this);
+        super.onViewCreated(view, savedInstanceState);
+
     }
 
     @Override
