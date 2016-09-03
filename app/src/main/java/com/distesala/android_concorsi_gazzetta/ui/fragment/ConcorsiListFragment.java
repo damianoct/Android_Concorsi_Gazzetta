@@ -1,4 +1,4 @@
-package com.distesala.android_concorsi_gazzetta.ui;
+package com.distesala.android_concorsi_gazzetta.ui.fragment;
 
 
 import android.graphics.Color;

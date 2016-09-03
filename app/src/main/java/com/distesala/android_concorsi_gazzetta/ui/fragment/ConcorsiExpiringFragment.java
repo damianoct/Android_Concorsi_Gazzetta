@@ -1,4 +1,4 @@
-package com.distesala.android_concorsi_gazzetta.ui;
+package com.distesala.android_concorsi_gazzetta.ui.fragment;
 
 
 import android.app.Activity;
@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.distesala.android_concorsi_gazzetta.R;
+import com.distesala.android_concorsi_gazzetta.ui.HomeActivity;
 
 /**
  * A simple {@link Fragment} subclass.

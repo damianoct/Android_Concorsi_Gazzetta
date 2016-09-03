@@ -1,38 +1,25 @@
-package com.distesala.android_concorsi_gazzetta.ui;
+package com.distesala.android_concorsi_gazzetta.ui.fragment;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
 import com.distesala.android_concorsi_gazzetta.R;
-import com.distesala.android_concorsi_gazzetta.adapter.ContestCursorAdapter;
 import com.distesala.android_concorsi_gazzetta.contentprovider.ConcorsiGazzettaContentProvider;
-import com.distesala.android_concorsi_gazzetta.database.CursorEnvelope;
 import com.distesala.android_concorsi_gazzetta.database.GazzetteSQLiteHelper;
-import com.distesala.android_concorsi_gazzetta.services.JSONDownloader;
-import com.distesala.android_concorsi_gazzetta.services.JSONResultReceiver;
+import com.distesala.android_concorsi_gazzetta.ui.HomeActivity;
 
-public class GazzettaFragment extends BaseFragment implements JSONResultReceiver.Receiver, LoaderManager.LoaderCallbacks<Cursor>
+public class GazzettaFragment extends BaseFragment implements LoaderManager.LoaderCallbacks<Cursor>
 {
-    private JSONResultReceiver mReceiver;
-    private ContestCursorAdapter adapter;
     private SimpleCursorAdapter adapterSimpleCursor;
     private CharSequence numberOfPublication;
 
@@ -88,15 +75,6 @@ public class GazzettaFragment extends BaseFragment implements JSONResultReceiver
             this.numberOfPublication = numberOfPublication;
         }
 
-        mReceiver = new JSONResultReceiver(new Handler());
-        mReceiver.setReceiver(this);
-        Intent mServiceIntent = new Intent(getActivity(), JSONDownloader.class);
-        mServiceIntent.setAction(JSONDownloader.GET_CONTEST_FOR_GAZZETTA);
-        mServiceIntent.putExtra("receiverTag", mReceiver);
-        mServiceIntent.putExtra("gazzettaNumberOfPublication", numberOfPublication);
-
-        //getActivity().startService(mServiceIntent);
-
         //Utilizzo il CursorLoader
         getLoaderManager().initLoader(0, null, this);
 
@@ -115,17 +93,6 @@ public class GazzettaFragment extends BaseFragment implements JSONResultReceiver
         setRetainInstance(true);
 
     }
-
-    /*
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
-    {
-        super.onCreateOptionsMenu(menu, inflater);
-        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        assert actionBar != null;
-        actionBar.setTitle("Gazzetta n. " + numberOfPublication);
-    }
-    */
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -146,19 +113,6 @@ public class GazzettaFragment extends BaseFragment implements JSONResultReceiver
     {
         //super.onViewCreated(view, savedInstanceState);
         contestsList.setAdapter(adapterSimpleCursor);
-    }
-
-    @Override
-    public void onReceiveResult(int resultCode, Bundle resultData)
-    {
-        if (resultCode == Activity.RESULT_OK)
-        {
-            Cursor savedCursor = ((CursorEnvelope) resultData.getSerializable(JSONDownloader.CURSOR_CONTESTS)).getCursor();
-            adapter = new ContestCursorAdapter(getActivity(), savedCursor);
-            contestsList.setAdapter(adapter);
-            getLoaderManager().restartLoader(0, null, this);
-
-        }
     }
 
     @Override

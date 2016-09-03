@@ -16,6 +16,10 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.distesala.android_concorsi_gazzetta.R;
+import com.distesala.android_concorsi_gazzetta.ui.fragment.ConcorsiListFragment;
+import com.distesala.android_concorsi_gazzetta.ui.fragment.FragmentListener;
+import com.distesala.android_concorsi_gazzetta.ui.fragment.GazzetteListFragment;
+import com.distesala.android_concorsi_gazzetta.ui.fragment.WebViewFragment;
 
 public class HomeActivity extends AppCompatActivity implements FragmentListener
 {

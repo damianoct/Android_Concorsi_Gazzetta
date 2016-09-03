@@ -8,15 +8,21 @@ import java.util.List;
  */
 public class Concorso
 {
+    private String gazzettaNumberOfPublication; //gazzetta di appartenenza
     private String emettitore;
     private String areaDiInteresse;
     private String titoloConcorso;
     private String tipologia;
     private String codiceRedazionale;
     private int numeroArticoli;
-    private long scadenza; //date in UNIX date format.
+    private String scadenza;
 
     public Concorso() {}
+
+    public String getGazzettaNumberOfPublication()
+    {
+        return gazzettaNumberOfPublication;
+    }
 
     public String getEmettitore()
     {
@@ -43,7 +49,7 @@ public class Concorso
         return tipologia;
     }
 
-    public long getScadenza()
+    public String getScadenza()
     {
         return scadenza;
     }
@@ -51,6 +57,11 @@ public class Concorso
     public int getNumeroArticoli()
     {
         return numeroArticoli;
+    }
+
+    public void setGazzettaNumberOfPublication(String gazzettaNumberOfPublication)
+    {
+        this.gazzettaNumberOfPublication = gazzettaNumberOfPublication;
     }
 
     public void setEmettitore(String emettitore)
@@ -83,7 +94,7 @@ public class Concorso
         this.numeroArticoli = numeroArticoli;
     }
 
-    public void setScadenza(long scadenza)
+    public void setScadenza(String scadenza)
     {
         this.scadenza = scadenza;
     }

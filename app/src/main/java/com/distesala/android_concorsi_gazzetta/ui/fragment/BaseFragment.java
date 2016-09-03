@@ -1,12 +1,9 @@
-package com.distesala.android_concorsi_gazzetta.ui;
+package com.distesala.android_concorsi_gazzetta.ui.fragment;
 
 import android.app.Activity;
-import android.app.SearchManager;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.MenuCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -93,7 +90,6 @@ public abstract class BaseFragment extends Fragment
 
         final SearchView searchViewAndroidActionBar = (SearchView) MenuItemCompat.getActionView(searchViewItem);
 
-
         searchViewAndroidActionBar.setOnQueryTextListener(new SearchView.OnQueryTextListener()
         {
             @Override
@@ -110,8 +106,6 @@ public abstract class BaseFragment extends Fragment
                 return true;
             }
         });
-
-
     }
 
     @Override

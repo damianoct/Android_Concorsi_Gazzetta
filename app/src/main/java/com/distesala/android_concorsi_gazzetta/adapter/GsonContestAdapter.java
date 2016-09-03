@@ -1,5 +1,7 @@
 package com.distesala.android_concorsi_gazzetta.adapter;
 
+import android.util.Log;
+
 import com.distesala.android_concorsi_gazzetta.model.Concorso;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -11,6 +13,7 @@ import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 /**
@@ -22,6 +25,9 @@ public class GsonContestAdapter implements JsonDeserializer<Concorso>
     @Override
     public Concorso deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
     {
+
+        Log.i("deserialize", "CONTEST");
+
         final JsonObject jsonObject = json.getAsJsonObject();
 
         final String areaDiInteresse = jsonObject.get("areaDiInteresse").getAsString();
@@ -31,7 +37,7 @@ public class GsonContestAdapter implements JsonDeserializer<Concorso>
         final String titoloConcorso = jsonObject.get("titoloConcorso").getAsString();
 
         String tipologia = null;
-        long scadenza = 0; //no scadenza
+        String scadenza = null; //no scadenza
 
         String type = jsonObject.get("tipologia").getAsString();
 
@@ -39,8 +45,11 @@ public class GsonContestAdapter implements JsonDeserializer<Concorso>
         {
             String dateString = type.substring(type.indexOf(".") + 1, type.indexOf(")"));
             tipologia =  type.substring(0, type.indexOf(" "));
+
             DateFormat formatter = new SimpleDateFormat(" dd MMMM yyyy", Locale.ITALY);
-            scadenza = formatter.parse(dateString).getTime();
+            Date d = formatter.parse(dateString);
+            DateFormat dfInsert = new SimpleDateFormat("yyyy-MM-dd", Locale.ITALY);
+            scadenza = dfInsert.format(d);
         }
         catch(IndexOutOfBoundsException e) //è un concorso senza scadenza
         {

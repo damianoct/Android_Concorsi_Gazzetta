@@ -1,4 +1,4 @@
-package com.distesala.android_concorsi_gazzetta.ui;
+package com.distesala.android_concorsi_gazzetta.ui.fragment;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;

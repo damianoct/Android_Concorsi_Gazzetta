@@ -3,7 +3,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
-                tools:context=".ui.RecyclerViewFragment">
+                tools:context=".ui.fragment.RecyclerViewFragment">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/days_list_2"

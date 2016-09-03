@@ -1,4 +1,4 @@
-package com.distesala.android_concorsi_gazzetta.ui;
+package com.distesala.android_concorsi_gazzetta.ui.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -22,12 +22,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.distesala.android_concorsi_gazzetta.R;
-import com.distesala.android_concorsi_gazzetta.adapter.GazzettaCursorAdapter;
 import com.distesala.android_concorsi_gazzetta.contentprovider.ConcorsiGazzettaContentProvider;
-import com.distesala.android_concorsi_gazzetta.database.CursorEnvelope;
 import com.distesala.android_concorsi_gazzetta.database.GazzetteSQLiteHelper;
 import com.distesala.android_concorsi_gazzetta.services.JSONDownloader;
 import com.distesala.android_concorsi_gazzetta.services.JSONResultReceiver;
+import com.distesala.android_concorsi_gazzetta.ui.HomeActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -96,7 +95,7 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
         Intent mServiceIntent = new Intent(getActivity(), JSONDownloader.class);
         mServiceIntent.setAction(JSONDownloader.DOWNLOAD_GAZZETTA);
         mServiceIntent.putExtra("receiverTag", mReceiver);
-        //getActivity().startService(mServiceIntent);
+        getActivity().startService(mServiceIntent);
 
         simpleCursorAdapter = new SimpleCursorAdapter(getActivity().getApplicationContext(), R.layout.gazzetta_item,
                 null, //cursor null
@@ -168,7 +167,6 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
     {
         if (resultCode == Activity.RESULT_OK)
         {
-
             getLoaderManager().initLoader(0, null, this);
         }
 

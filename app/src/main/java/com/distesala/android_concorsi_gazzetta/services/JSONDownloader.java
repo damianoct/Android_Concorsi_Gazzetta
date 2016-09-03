@@ -4,15 +4,11 @@ import android.app.Activity;
 import android.app.IntentService;
 import android.content.ContentValues;
 import android.content.Intent;
-import android.database.Cursor;
-import android.os.Bundle;
 import android.os.ResultReceiver;
 import android.util.Log;
 
-import com.distesala.android_concorsi_gazzetta.adapter.GsonContestAdapter;
+import com.distesala.android_concorsi_gazzetta.adapter.GsonGazzettaAdapter;
 import com.distesala.android_concorsi_gazzetta.contentprovider.ConcorsiGazzettaContentProvider;
-import com.distesala.android_concorsi_gazzetta.database.CursorEnvelope;
-import com.distesala.android_concorsi_gazzetta.database.GazzetteDataSource;
 import com.distesala.android_concorsi_gazzetta.database.GazzetteSQLiteHelper;
 import com.distesala.android_concorsi_gazzetta.execptions.HttpErrorException;
 import com.distesala.android_concorsi_gazzetta.model.Concorso;
@@ -21,7 +17,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -35,110 +30,37 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Questa classe inizia ad avere un pò troppe responsabilità.
- * O si rinomina con qualcosa del tipo Worker*
- * oppure si creano più classi IntentService
- */
-
-
 public class JSONDownloader extends IntentService
 {
     private static final String URL_WS = "http://marsala.ddns.net:8080/gazzetteWithContests";
     private static final String LATEST_GAZZETTA = "http://marsala.ddns.net:8080/latestGazzetta";
     public static final String DOWNLOAD_GAZZETTA = "com.distesala.android_concorsi_gazzetta.services.action.DownloadGazzetta";
-    public static final String GET_CONTEST_FOR_GAZZETTA = "com.distesala.android_concorsi_gazzetta.services.action.GetContestForGazzetta";
-
-    public static final String CURSOR_GAZZETTA = "cursor_gazzetta";
-    public static final String CURSOR_CONTESTS = "cursor_contests";
-
-    private GazzetteDataSource dataSource; //lo devo mettere come campo per forza di cose
 
     public JSONDownloader()
     {
         super("JSONDownloader");
-
     }
 
-    /*
     private void insertGazzetteWithContests(Gazzetta[] gazzette)
     {
         List<ContentValues> gazzetteValueList = new ArrayList<>();
 
-
-        for(int i = 0; i < gazzette.length; i++)
+        for(Gazzetta g: gazzette)
         {
-
-            ContentValues gazzettaValues = new ContentValues();
-
-            gazzettaValues.put(GazzetteSQLiteHelper.GazzettaEntry.COLUMN_ID_GAZZETTA, gazzette[i].getIdGazzetta());
-            gazzettaValues.put(GazzetteSQLiteHelper.GazzettaEntry.COLUMN_NUMBER_OF_PUBLICATION, gazzette[i].getNumberOfPublication());
-            gazzettaValues.put(GazzetteSQLiteHelper.GazzettaEntry.COLUMN_DATE_OF_PUBLICATION,  gazzette[i].getDateOfPublication());
-
-            gazzetteValueList.add(gazzettaValues);
-        }
-
-        //completed list of gazzette
-        ContentValues[] gazzetteContentValues = gazzetteValueList.toArray(new ContentValues[0]);
-
-        for(ContentValues v: gazzetteValueList)
-            Log.i("adder", "lista -> " + v.get(GazzetteSQLiteHelper.GazzettaEntry.COLUMN_DATE_OF_PUBLICATION));
-
-        for(ContentValues v: gazzetteContentValues)
-            Log.i("adder", "array -> " + v.get(GazzetteSQLiteHelper.GazzettaEntry.COLUMN_DATE_OF_PUBLICATION));
-
-
-    }*/
-
-    private void insertGazzetteWithContests(Gazzetta[] gazzette)
-    {
-
-        List<ContentValues> gazzetteValueList = new ArrayList<>();
-
-        for(int i = 0; i < gazzette.length; i++)
-        {
-
-            ContentValues gazzettaValues = new ContentValues();
-
-            gazzettaValues.put(GazzetteSQLiteHelper.GazzettaEntry.COLUMN_ID_GAZZETTA, gazzette[i].getIdGazzetta());
-            gazzettaValues.put(GazzetteSQLiteHelper.GazzettaEntry.COLUMN_NUMBER_OF_PUBLICATION, gazzette[i].getNumberOfPublication());
-            gazzettaValues.put(GazzetteSQLiteHelper.GazzettaEntry.COLUMN_DATE_OF_PUBLICATION,  gazzette[i].getDateOfPublication());
+            ContentValues gazzettaValues = GazzetteSQLiteHelper.createContentValuesForGazzetta(g);
 
             List<ContentValues> contestsValueList = new ArrayList<>();
 
-            for (int j = 0; j < gazzette[i].getConcorsi().size(); j++)
-            {
-                ContentValues contest = new ContentValues();
+            for(Concorso c: g.getConcorsi())
+                contestsValueList.add(GazzetteSQLiteHelper.createContentValuesForContest(c));
 
-                contest.put(GazzetteSQLiteHelper.ContestEntry.COLUMN_ID_CONCORSO, gazzette[i].getConcorsi().get(j).getCodiceRedazionale());
-                contest.put(GazzetteSQLiteHelper.ContestEntry.COLUMN_GAZZETTA_NUMBER_OF_PUBLICATION, gazzette[i].getNumberOfPublication());
-                contest.put(GazzetteSQLiteHelper.ContestEntry.COLUMN_TITOLO, gazzette[i].getConcorsi().get(j).getTitoloConcorso());
-                contest.put(GazzetteSQLiteHelper.ContestEntry.COLUMN_EMETTITORE, gazzette[i].getConcorsi().get(j).getEmettitore());
-                contest.put(GazzetteSQLiteHelper.ContestEntry.COLUMN_AREA, gazzette[i].getConcorsi().get(j).getAreaDiInteresse());
-                contest.put(GazzetteSQLiteHelper.ContestEntry.COLUMN_TIPOLOGIA, gazzette[i].getConcorsi().get(j).getTipologia());
-                contest.put(GazzetteSQLiteHelper.ContestEntry.COLUMN_SCADENZA, gazzette[i].getConcorsi().get(j).getScadenza());
-                contest.put(GazzetteSQLiteHelper.ContestEntry.COLUMN_N_ARTICOLI, gazzette[i].getConcorsi().get(j).getAreaDiInteresse());
-
-                contestsValueList.add(contest);
-            }
-
-
-            //completed list of contests for gazzetta
             ContentValues[] contestsContentValues = contestsValueList.toArray(new ContentValues[0]);
-
-            //insert contentvalues array of contests for a single gazzetta
             getContentResolver().bulkInsert(ConcorsiGazzettaContentProvider.CONTESTS_URI, contestsContentValues);
 
-
-            //add gazzetta to list
             gazzetteValueList.add(gazzettaValues);
-
         }
 
-        //completed list of gazzette
         ContentValues[] gazzetteContentValues = gazzetteValueList.toArray(new ContentValues[0]);
-
-        //insert array of gazzette
         getContentResolver().bulkInsert(ConcorsiGazzettaContentProvider.GAZZETTE_URI, gazzetteContentValues);
 
     }
@@ -160,17 +82,21 @@ public class JSONDownloader extends IntentService
                     JSONArray gazzetteJsonArray = jsonObject.getJSONArray("gazzette");
 
                     GsonBuilder gsonBuilder = new GsonBuilder();
+
                     //custom adapter for deserialization
-                    gsonBuilder.registerTypeAdapter(Concorso.class, new GsonContestAdapter());
+
+                    // questo deserializzatore viene chiamato all'interno
+                    // del serializzatore delle gazzette
+                    //gsonBuilder.registerTypeAdapter(Concorso.class, new GsonContestAdapter());
+
+                    gsonBuilder.registerTypeAdapter(Gazzetta.class, new GsonGazzettaAdapter());
                     Gson gson = gsonBuilder.create();
 
                     Gazzetta[] gazzette = gson.fromJson(gazzetteJsonArray.toString(), Gazzetta[].class);
-                    Log.i("provider date of pub", gazzette[0].getDateOfPublication());
+
                     insertGazzetteWithContests(gazzette);
 
-                    Bundle b = new Bundle();
-                    b.putSerializable(CURSOR_GAZZETTA, null);
-                    rec.send(Activity.RESULT_OK, b);
+                    rec.send(Activity.RESULT_OK, null);
                     Log.i("provider", "service finito");
                 }
 
@@ -184,85 +110,7 @@ public class JSONDownloader extends IntentService
         }
     }
 
-
-    //URGE REFACTORONE
-    /*@Override
-    protected void onHandleIntent(Intent intent)
-    {
-        if (intent != null)
-        {
-            final String action = intent.getAction();
-
-            dataSource = new GazzetteDataSource(getApplicationContext());
-
-            if (DOWNLOAD_GAZZETTA.equals(action))
-            {
-                ResultReceiver rec = intent.getParcelableExtra("receiverTag");
-                try
-                {
-                    //apro il database
-                    dataSource.open();
-
-                    if (!updatedGazzette())
-                    {
-
-                        String json = downloadGazzette(new URL(URL_WS));
-                        JSONObject jsonObject = new JSONObject(json);
-                        JSONArray gazzetteJsonArray = jsonObject.getJSONArray("gazzette");
-
-                        GsonBuilder gsonBuilder = new GsonBuilder();
-                        //custom adapter for deserialization
-                        gsonBuilder.registerTypeAdapter(Concorso.class, new GsonContestAdapter());
-                        Gson gson = gsonBuilder.create();
-
-                        Gazzetta[] gazzette = gson.fromJson(gazzetteJsonArray.toString(), Gazzetta[].class);
-
-                        dataSource.insertGazzette(gazzette);
-                    }
-                    else
-                    {
-                        Log.i("IntentService", "Archivio aggiornato!");
-                    }
-
-                    //creo il cursor da mandare all'activity
-
-                    Cursor cursor = dataSource.getGazzetteCursor();
-                    CursorEnvelope cursorEnvelope = new CursorEnvelope(cursor);
-                    Log.i("IntentService[GAZZETTE]", String.valueOf(cursor.getCount()));
-                    Bundle b = new Bundle();
-                    b.putSerializable(CURSOR_GAZZETTA, cursorEnvelope);
-                    rec.send(Activity.RESULT_OK, b);
-
-                    //il lavoro del service è finito, posso chiudere il database
-                    dataSource.close();
-
-                }
-                catch (Exception e)
-                {
-                    Log.i("IntentService", "Errore");
-                    e.printStackTrace();
-                    rec.send(Activity.RESULT_CANCELED, null);
-                    dataSource.close();
-                }
-            }
-
-            else if(action.equals(GET_CONTEST_FOR_GAZZETTA))
-            {
-                ResultReceiver rec = intent.getParcelableExtra("receiverTag");
-                String numberOfPublication = intent.getStringExtra("gazzettaNumberOfPublication");
-
-                dataSource.open();
-                Cursor cursor = dataSource.getContestsForGazzetta(numberOfPublication);
-                CursorEnvelope cursorEnvelope = new CursorEnvelope(cursor);
-                Log.i("IntentService [CONTEST]", String.valueOf(cursor.getCount()));
-                Bundle b = new Bundle();
-                b.putSerializable(CURSOR_CONTESTS, cursorEnvelope);
-                rec.send(Activity.RESULT_OK, b);
-
-                dataSource.close();
-            }
-        }
-    }*/
+    //TODO implementare la NUOVA updatedGazzette()
 
     private boolean updatedGazzette()
     {
@@ -271,7 +119,7 @@ public class JSONDownloader extends IntentService
             String json = downloadGazzette(new URL(LATEST_GAZZETTA));
             Gson gson = new Gson();
             Gazzetta latest = gson.fromJson(json, Gazzetta.class);
-            return dataSource.gazzettaExists(latest);
+            return false;
         }
 
         catch (Exception e)
@@ -335,7 +183,6 @@ public class JSONDownloader extends IntentService
         {
             inputStream.close();
         }
-
         return result;
     }
 }
