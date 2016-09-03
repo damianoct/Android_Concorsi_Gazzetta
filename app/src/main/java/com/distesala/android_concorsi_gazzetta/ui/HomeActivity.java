@@ -225,7 +225,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener
     }
 
     @Override
-    public void onBackHome()
+    public void onHomeTransaction()
     {
         getSupportActionBar().setTitle(R.string.app_name);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
@@ -234,7 +234,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener
 
     //restore menu checked item on backpress.
     @Override
-    public void onDisplayed(String fragmentTag)
+    public void onFragmentDisplayed(String fragmentTag)
     {
         Log.d("onDisplayed", fragmentTag);
         navigationView.getMenu().findItem(Integer.parseInt(fragmentTag)).setChecked(true);

@@ -41,6 +41,8 @@ public class JSONDownloader extends IntentService
         super("JSONDownloader");
     }
 
+    //TODO bisognerebbe gestire dalle SharedPreferences un valore MAX per le gazzette che si possono conservare nel DB
+
     private void insertGazzetteWithContests(Gazzetta[] gazzette)
     {
         List<ContentValues> gazzetteValueList = new ArrayList<>();

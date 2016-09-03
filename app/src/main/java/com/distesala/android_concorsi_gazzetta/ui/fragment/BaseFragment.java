@@ -21,6 +21,8 @@ import com.distesala.android_concorsi_gazzetta.R;
 public abstract class BaseFragment extends Fragment implements MenuItemCompat.OnActionExpandListener
 {
     protected static final String SEARCH_KEY = "search";
+    protected static final String WHERE_CLAUSE = "whereClause";
+    protected static final String WHERE_ARGS = "whereArgs";
 
     protected FragmentListener fragmentListener;
 
@@ -136,7 +138,7 @@ public abstract class BaseFragment extends Fragment implements MenuItemCompat.On
     public void onResume()
     {
         super.onResume();
-        fragmentListener.onDisplayed(getFragmentName());
+        fragmentListener.onFragmentDisplayed(getFragmentName());
     }
 
     @Override

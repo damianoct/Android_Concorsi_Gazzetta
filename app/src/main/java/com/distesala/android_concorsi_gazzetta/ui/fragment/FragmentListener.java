@@ -6,6 +6,6 @@ package com.distesala.android_concorsi_gazzetta.ui.fragment;
 public interface FragmentListener
 {
     void onSegueTransaction();
-    void onBackHome();
-    void onDisplayed(String fragmentTag);
+    void onHomeTransaction();
+    void onFragmentDisplayed(String fragmentTag);
 }
