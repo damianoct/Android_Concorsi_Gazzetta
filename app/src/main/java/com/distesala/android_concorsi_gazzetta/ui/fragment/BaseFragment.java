@@ -42,6 +42,8 @@ public abstract class BaseFragment extends Fragment implements MenuItemCompat.On
 
         final SearchView searchViewAndroidActionBar = (SearchView) MenuItemCompat.getActionView(searchViewItem);
 
+        searchViewAndroidActionBar.setMaxWidth(Integer.MAX_VALUE);
+
         if(querySearch != null)
         {
             MenuItemCompat.expandActionView(searchViewItem);
