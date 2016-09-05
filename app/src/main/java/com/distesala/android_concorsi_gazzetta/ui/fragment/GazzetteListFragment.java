@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,6 +38,7 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
     private ListView gazzetteList;
     private SimpleCursorAdapter simpleCursorAdapter;
     private AppBarLayout appBarLayout;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Override
     public String getFragmentName()
@@ -89,10 +91,7 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
 
         mReceiver = new JSONResultReceiver(new Handler());
         mReceiver.setReceiver(this);
-        Intent mServiceIntent = new Intent(getActivity(), JSONDownloader.class);
-        mServiceIntent.setAction(JSONDownloader.DOWNLOAD_GAZZETTA);
-        mServiceIntent.putExtra("receiverTag", mReceiver);
-        getActivity().startService(mServiceIntent);
+        updateGazzette();
 
         simpleCursorAdapter = new SimpleCursorAdapter(getActivity().getApplicationContext(), R.layout.gazzetta_item,
                 null, //cursor null
@@ -107,6 +106,14 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
                 , 0);
 
         setRetainInstance(true);
+    }
+
+    private void updateGazzette()
+    {
+        Intent mServiceIntent = new Intent(getActivity(), JSONDownloader.class);
+        mServiceIntent.setAction(JSONDownloader.DOWNLOAD_GAZZETTA);
+        mServiceIntent.putExtra("receiverTag", mReceiver);
+        getActivity().startService(mServiceIntent);
     }
 
     @Override
@@ -146,6 +153,16 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
             }
         });
 
+        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swiperefresh);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
+        {
+            @Override
+            public void onRefresh()
+            {
+                updateGazzette();
+            }
+        });
 
         return rootView;
     }
@@ -174,6 +191,8 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
             Toast.makeText(getActivity(), "ERROR", Toast.LENGTH_LONG).show();
             getLoaderManager().initLoader(0, null, this);
         }
+
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
