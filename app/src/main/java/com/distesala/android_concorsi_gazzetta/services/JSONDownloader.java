@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.IntentService;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.ResultReceiver;
 import android.util.Log;
 
@@ -77,37 +78,38 @@ public class JSONDownloader extends IntentService
             if (DOWNLOAD_GAZZETTA.equals(action))
             {
                 ResultReceiver rec = intent.getParcelableExtra("receiverTag");
-                try
+
+                if (!updatedGazzette())
                 {
-                    String json = downloadGazzette(new URL(URL_WS));
-                    JSONObject jsonObject = new JSONObject(json);
-                    JSONArray gazzetteJsonArray = jsonObject.getJSONArray("gazzette");
+                    Log.i("INTENT SERVICE", "Sto aggionando il Database");
 
-                    GsonBuilder gsonBuilder = new GsonBuilder();
+                    try
+                    {
+                        String json = downloadGazzette(new URL(URL_WS));
+                        JSONObject jsonObject = new JSONObject(json);
+                        JSONArray gazzetteJsonArray = jsonObject.getJSONArray("gazzette");
 
-                    //custom adapter for deserialization
+                        GsonBuilder gsonBuilder = new GsonBuilder();
 
-                    // questo deserializzatore viene chiamato all'interno
-                    // del serializzatore delle gazzette
-                    //gsonBuilder.registerTypeAdapter(Concorso.class, new GsonContestAdapter());
+                        gsonBuilder.registerTypeAdapter(Gazzetta.class, new GsonGazzettaAdapter());
+                        Gson gson = gsonBuilder.create();
 
-                    gsonBuilder.registerTypeAdapter(Gazzetta.class, new GsonGazzettaAdapter());
-                    Gson gson = gsonBuilder.create();
+                        Gazzetta[] gazzette = gson.fromJson(gazzetteJsonArray.toString(), Gazzetta[].class);
 
-                    Gazzetta[] gazzette = gson.fromJson(gazzetteJsonArray.toString(), Gazzetta[].class);
+                        insertGazzetteWithContests(gazzette);
 
-                    insertGazzetteWithContests(gazzette);
+                    }
 
-                    rec.send(Activity.RESULT_OK, null);
-                    Log.i("provider", "service finito");
+                    catch (Exception e)
+                    {
+                        Log.i("IntentService", "Errore");
+                        e.printStackTrace();
+                        rec.send(Activity.RESULT_CANCELED, null);
+                    }
                 }
 
-                catch (Exception e)
-                {
-                    Log.i("IntentService", "Errore");
-                    e.printStackTrace();
-                    rec.send(Activity.RESULT_CANCELED, null);
-                }
+                rec.send(Activity.RESULT_OK, null);
+                Log.i("provider", "service finito");
             }
         }
     }
@@ -120,8 +122,19 @@ public class JSONDownloader extends IntentService
         {
             String json = downloadGazzette(new URL(LATEST_GAZZETTA));
             Gson gson = new Gson();
+
+
             Gazzetta latest = gson.fromJson(json, Gazzetta.class);
-            return false;
+            Cursor cursor = getContentResolver().query(
+                    ConcorsiGazzettaContentProvider.GAZZETTE_URI,
+                    null,
+                    GazzetteSQLiteHelper.GazzettaEntry.COLUMN_NUMBER_OF_PUBLICATION + " =?",
+                    new String[]{latest.getNumberOfPublication()},
+                    null);
+
+            Log.d("DEBUG", String.valueOf(cursor.getCount()));
+            Log.d("DDEBUG", latest.getNumberOfPublication());
+            return cursor.moveToNext();
         }
 
         catch (Exception e)

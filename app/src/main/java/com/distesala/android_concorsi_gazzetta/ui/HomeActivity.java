@@ -59,7 +59,9 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener
         //check for existing fragment
         Fragment fragmentToAdd = getSupportFragmentManager().findFragmentByTag(String.valueOf(tag));
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        fragmentToAdd = (fragmentToAdd != null) ? fragmentToAdd : createFragmentForTag(tag);
+        if (fragmentToAdd == null)
+            fragmentToAdd = createFragmentForTag(tag);
+
         transaction.addToBackStack(backStackTag).replace(R.id.content_frame, fragmentToAdd, String.valueOf(tag)).commit();
     }
 

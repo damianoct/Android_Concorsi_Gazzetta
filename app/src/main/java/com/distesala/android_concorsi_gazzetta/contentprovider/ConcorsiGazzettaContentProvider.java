@@ -133,7 +133,6 @@ public class ConcorsiGazzettaContentProvider extends ContentProvider
                 long id = db.insertWithOnConflict(GazzetteSQLiteHelper.GazzettaEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
                 returnUri = ContentUris.withAppendedId(GAZZETTE_URI, id);
 
-                Log.d("provider INSERT", returnUri.toString());
                 break;
             }
 
@@ -141,7 +140,6 @@ public class ConcorsiGazzettaContentProvider extends ContentProvider
             {
                 long id = db.insertWithOnConflict(GazzetteSQLiteHelper.ContestEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
                 returnUri = ContentUris.withAppendedId(CONTESTS_URI, id);
-                Log.d("provider INSERT", returnUri.toString());
                 break;
             }
         }
