@@ -75,6 +75,8 @@ public class ConcorsiListFragment extends BaseFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
+        super.onCreateView(inflater, container, savedInstanceState);
+
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_concorsi, container, false);
         appBarLayout = (AppBarLayout) getActivity().findViewById(R.id.appbarlayout);

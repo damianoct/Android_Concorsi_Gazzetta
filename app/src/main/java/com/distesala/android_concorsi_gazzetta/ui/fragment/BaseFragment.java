@@ -92,11 +92,12 @@ public abstract class BaseFragment extends Fragment implements MenuItemCompat.On
     @Override
     public void onSaveInstanceState(Bundle outState)
     {
-        super.onSaveInstanceState(outState);
         if (querySearch != null)
         {
             outState.putString(SEARCH_KEY, querySearch);
         }
+
+        super.onSaveInstanceState(outState);
     }
 
     @Override

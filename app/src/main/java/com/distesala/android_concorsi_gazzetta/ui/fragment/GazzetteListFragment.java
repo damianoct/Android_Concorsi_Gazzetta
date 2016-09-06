@@ -174,8 +174,6 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
         fragmentListener.onHomeTransaction();
         gazzetteList.setAdapter(simpleCursorAdapter);
         getLoaderManager().initLoader(0, null, this);
-        super.onViewCreated(view, savedInstanceState);
-
     }
 
     @Override
