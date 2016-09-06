@@ -108,5 +108,10 @@
     <string name="action_settings">Settings</string>
     <string name="search_title">Cerca</string>
     <string name="search_hint">Cerca qualcosa...</string>
+    <string name="settings_title">Impostaccioni</string>
+    <string name="utilizzo_dati">Utilizza anche con rete dati</string>
+    <string name="connettività">Connettività</string>
+    <string name="summary_rete_dati">L\'applicazione utilizzerà la rete dati per scaricare le nuove gazzette.</string>
+    <string name="rete_dati_title">Utilizza rete dati</string>
 
 </resources>

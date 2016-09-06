@@ -1,5 +1,6 @@
 package com.distesala.android_concorsi_gazzetta.ui;
 
+import android.content.Intent;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
@@ -107,18 +108,17 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener
                 {
                     menuItem.setChecked(true);
                     expandAppBarLayout();
-                    setFragment(menuItem.getItemId());
+
+                    if(menuItem.getItemId() != R.id.settings)
+                        setFragment(menuItem.getItemId());
+                    else
+                        startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+
                 }
                 drawerLayout.closeDrawers();
                 return true;
             }
         });
-
-        //hide nav drawer icon if a SEGUE transaction exists on top of the stack
-        /*if(isSegueOnTop())
-        {
-            enableBackButton();
-        }*/
     }
 
     private boolean isSegueOnTop()
@@ -229,7 +229,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener
     @Override
     public void onHomeTransaction()
     {
-        getSupportActionBar().setTitle(R.string.app_name);
+        //getSupportActionBar().setTitle(R.string.app_name);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         actionBarDrawerToggle.setDrawerIndicatorEnabled(true);
     }

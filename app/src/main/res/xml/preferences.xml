@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/connettività">
+        <CheckBoxPreference android:key="utilizzo_rete_dati"
+                            android:summary="@string/summary_rete_dati"
+                            android:title="@string/rete_dati_title"
+                            android:defaultValue="true"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

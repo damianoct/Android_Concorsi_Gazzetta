@@ -10,29 +10,35 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/MyMaterialTheme">
-
         <service
             android:name=".services.JSONDownloader"
             android:exported="false">
         </service>
 
         <activity android:name=".ui.HomeActivity">
-            <meta-data android:name="android.app.searchable"
-                       android:resource="@xml/searchable" />
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable"/>
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
+
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
+                <action android:name="android.intent.action.SEARCH"/>
             </intent-filter>
         </activity>
 
         <provider
             android:name=".contentprovider.ConcorsiGazzettaContentProvider"
-            android:authorities="com.distesala.android_concorsi_gazzetta.contentprovider" >
+            android:authorities="com.distesala.android_concorsi_gazzetta.contentprovider">
         </provider>
+
+        <activity android:name=".ui.SettingsActivity"
+                  android:label="@string/settings_title"
+                  android:theme="@style/PreferenceTheme">
+        </activity>
 
     </application>
 

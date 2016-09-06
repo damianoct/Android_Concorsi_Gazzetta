@@ -17,4 +17,13 @@
 
     <style name="MyMaterialTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
+    <style name="PreferenceTheme" parent="MyMaterialTheme">
+        <item name="android:checkboxStyle">@style/PreferenceCheckBox</item>
+        <item name="android:colorAccent">@color/colorPrimary</item>
+    </style>
+
+    <style name="PreferenceCheckBox" parent="@android:style/Widget.CompoundButton.CheckBox">
+        <item name="android:buttonTint">@color/colorPrimary</item>
+    </style>
+
 </resources>
