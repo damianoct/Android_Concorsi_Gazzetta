@@ -113,5 +113,7 @@
     <string name="connettività">Connettività</string>
     <string name="summary_rete_dati">L\'applicazione utilizzerà la rete dati per scaricare le nuove gazzette.</string>
     <string name="rete_dati_title">Utilizza rete dati</string>
+    <string name="archiviazione">Archiviaccione</string>
+    <string name="limite_gazzette">Limite Gazzette</string>
 
 </resources>

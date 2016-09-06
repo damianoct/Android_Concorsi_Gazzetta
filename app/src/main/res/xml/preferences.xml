@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <PreferenceCategory android:title="@string/archiviazione">
+        <com.distesala.android_concorsi_gazzetta.preferences.GazzettePickerPreference
+            android:key="num_gazzette"
+            android:title="@string/limite_gazzette"
+            android:defaultValue="30"
+            android:summary="ereoto">
+
+        </com.distesala.android_concorsi_gazzetta.preferences.GazzettePickerPreference>
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="@string/connettività">
         <CheckBoxPreference android:key="utilizzo_rete_dati"
                             android:summary="@string/summary_rete_dati"
