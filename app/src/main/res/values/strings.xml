@@ -115,5 +115,7 @@
     <string name="rete_dati_title">Utilizza rete dati</string>
     <string name="archiviazione">Archiviaccione</string>
     <string name="limite_gazzette">Limite Gazzette</string>
+    <string name="visualizzazione">Visualizzaccione</string>
+    <string name="soglia_scadenza">Soglia Gazzette in scadenza</string>
 
 </resources>

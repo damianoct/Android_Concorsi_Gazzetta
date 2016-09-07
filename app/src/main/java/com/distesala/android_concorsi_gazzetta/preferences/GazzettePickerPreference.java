@@ -15,20 +15,23 @@ import android.widget.NumberPicker;
  */
 public class GazzettePickerPreference extends DialogPreference
 {
-    private static final int MIN_VALUE = 5;
-    private static final int MAX_VALUE = 60;
+    private static final String NAMESPACE_ATTRS = "http://schemas.android.com/apk/res-auto";
 
-    private int value;
+    private final int minValue;
+    private final int maxValue;
+    private final int step;
+
+    private int valueIndex;
     private NumberPicker picker = null;
 
-    public GazzettePickerPreference(Context context, AttributeSet attrs, int defStyleAttr)
-    {
-        super(context, attrs, defStyleAttr);
-    }
 
     public GazzettePickerPreference(Context context, AttributeSet attrs)
     {
         super(context, attrs);
+
+        this.minValue = attrs.getAttributeIntValue(NAMESPACE_ATTRS, "min_value", 15);
+        this.maxValue = attrs.getAttributeIntValue(NAMESPACE_ATTRS, "max_value", 60);
+        this.step = attrs.getAttributeIntValue(NAMESPACE_ATTRS, "step", 1);
     }
 
     @Override
@@ -51,11 +54,12 @@ public class GazzettePickerPreference extends DialogPreference
     {
         super.onBindDialogView(view);
 
-        picker.setMinValue(MIN_VALUE);
-        picker.setMaxValue(MAX_VALUE);
+        picker.setMinValue(0);
+        picker.setMaxValue((maxValue - minValue)/step);
+        picker.setDisplayedValues(getValuesToDisplay());
         picker.setWrapSelectorWheel(true);
 
-        picker.setValue(getValue());
+        picker.setValue(getValueIndex());
     }
 
     @Override
@@ -67,7 +71,7 @@ public class GazzettePickerPreference extends DialogPreference
             int newValue = picker.getValue();
             if (callChangeListener(newValue))
             {
-                setValue(newValue);
+                setValueIndex(newValue);
             }
         }
 
@@ -76,25 +80,35 @@ public class GazzettePickerPreference extends DialogPreference
     @Override
     protected Object onGetDefaultValue(TypedArray a, int index)
     {
-        return a.getInt(index, MIN_VALUE);
+        return a.getInt(index, minValue);
     }
 
     @Override
     protected void onSetInitialValue(boolean restorePersistedValue, Object defaultValue)
     {
-        setValue(restorePersistedValue ? getPersistedInt(MIN_VALUE) : (Integer) defaultValue);
+        setValueIndex(restorePersistedValue ? getPersistedInt(0) : (((Integer) defaultValue) - minValue)/step);
     }
 
-    private void setValue(int value)
+    private void setValueIndex(int valueIndex)
     {
-        this.value = value;
-        persistInt(value);
+        this.valueIndex = valueIndex;
+        persistInt(valueIndex);
     }
 
-    private int getValue()
+    private int getValueIndex()
     {
-        return this.value;
+        return this.valueIndex;
     }
 
+    private String[] getValuesToDisplay()
+    {
+        String[] values = new String[((maxValue - minValue)/step) +1];
 
+        for (int i = 0; i < values.length; i++)
+        {
+            values[i] = String.valueOf(minValue + step*i);
+        }
+
+        return values;
+    }
 }

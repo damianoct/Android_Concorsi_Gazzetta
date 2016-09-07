@@ -1,6 +1,8 @@
 package com.distesala.android_concorsi_gazzetta.ui;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
@@ -142,6 +144,8 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener
 
         setContentView(R.layout.activity_home);
 
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -177,8 +181,6 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener
             }
         });
     }
-
-    //le ho provate tutte, non c'è altro modo di sistemare questa funzione per gestire il back button.
 
     @Override
     public void onBackPressed()

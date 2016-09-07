@@ -13,6 +13,9 @@ import com.distesala.android_concorsi_gazzetta.R;
 /**
  * A simple {@link Fragment} subclass.
  */
+
+//TODO: Aggiungere il divider
+
 public class SettingsFragment extends PreferenceFragment
 {
 
@@ -28,6 +31,8 @@ public class SettingsFragment extends PreferenceFragment
         super.onCreate(savedInstanceState);
 
         addPreferencesFromResource(R.xml.preferences);
+
+
     }
 
 }
