@@ -32,6 +32,8 @@ import com.distesala.android_concorsi_gazzetta.ui.HomeActivity;
 /**
  * A simple {@link Fragment} subclass.
  */
+
+//TODO: Importante -- implementare TAB Layout
 public class GazzetteListFragment extends BaseFragment implements JSONResultReceiver.Receiver, LoaderManager.LoaderCallbacks<Cursor>
 {
     private JSONResultReceiver mReceiver;

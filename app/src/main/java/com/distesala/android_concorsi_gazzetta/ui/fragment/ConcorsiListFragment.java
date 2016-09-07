@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ConcorsiListFragment extends BaseFragment
+public class ConcorsiListFragment extends Fragment
 {
     private static String APPBAR_TITLE = "Concorsi";
     private static final String CONCORSI_FRAGMENT = String.valueOf(R.id.concorsi);
@@ -31,40 +31,18 @@ public class ConcorsiListFragment extends BaseFragment
     private ViewPager viewPager;
     private AppBarLayout appBarLayout;
 
-    @Override
     public String getFragmentName()
     {
         return CONCORSI_FRAGMENT;
     }
 
-    @Override
     public String getFragmentTitle()
     {
         return APPBAR_TITLE;
     }
 
-    @Override
-    public void searchFor(String s)
-    {
-
-    }
-
-    @Override
-    public void onSearchFinished()
-    {
-
-    }
-
-    public ConcorsiListFragment()
-    {
-        // Required empty public constructor
-    }
-
     private void setupViewPager(ViewPager viewPager)
     {
-        //devo aggiungere Fragment dentro questo Fragment quindi devo prendere
-        //il relativo FragmentManager con getChildFragmentManager
-
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
         adapter.addFragment(new ConcorsiExpiringFragment(), "In Scadenza");
         adapter.addFragment(new RecyclerViewFragment(), "Preferiti");

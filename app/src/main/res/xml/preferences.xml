@@ -8,7 +8,7 @@
             android:title="@string/limite_gazzette"
             android:defaultValue="30"
             android:summary="@string/summary_num_gazzette"
-            picker:min_value="15"
+            picker:min_value="5"
             picker:max_value="60"
             picker:step="5">
         </com.distesala.android_concorsi_gazzetta.preferences.GazzettePickerPreference>
@@ -33,7 +33,7 @@
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/archiviazione">
-        <Preference>ereoto</Preference>
+        <!-- TODO: Implementare lo svuotamento del database -->
     </PreferenceCategory>
 
 </PreferenceScreen>

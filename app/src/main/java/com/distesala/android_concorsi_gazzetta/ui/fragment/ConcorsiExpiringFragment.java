@@ -19,16 +19,35 @@ import com.distesala.android_concorsi_gazzetta.ui.HomeActivity;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ConcorsiExpiringFragment extends Fragment
+public class ConcorsiExpiringFragment extends BaseFragment
 {
 
     private ListView concorsiExpiring;
     private ArrayAdapter<CharSequence> adapter;
     private FragmentListener homeListener;
 
-    public ConcorsiExpiringFragment()
+    @Override
+    public String getFragmentName()
     {
-        // Required empty public constructor
+        return ((ConcorsiListFragment) getParentFragment()).getFragmentName();
+    }
+
+    @Override
+    public String getFragmentTitle()
+    {
+        return ((ConcorsiListFragment) getParentFragment()).getFragmentTitle();
+    }
+
+    @Override
+    public void searchFor(String s)
+    {
+        //TODO: Da implementare la ricerca nei concorsi in scadenza
+    }
+
+    @Override
+    public void onSearchFinished()
+    {
+        //TODO: Da implementare
     }
 
     @Override
@@ -51,6 +70,8 @@ public class ConcorsiExpiringFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
+        super.onCreateView(inflater, container, savedInstanceState);
+
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_concorsi_expiring, container, false);
         concorsiExpiring = (ListView) rootView.findViewById(R.id.concorsiExpiring);
