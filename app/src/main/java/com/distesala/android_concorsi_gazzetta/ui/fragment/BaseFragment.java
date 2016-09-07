@@ -158,4 +158,9 @@ public abstract class BaseFragment extends Fragment implements MenuItemCompat.On
         return true;
     }
 
+    protected boolean isSearchActive()
+    {
+        return querySearch != null;
+    }
+
 }

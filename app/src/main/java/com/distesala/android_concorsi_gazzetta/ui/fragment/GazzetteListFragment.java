@@ -57,6 +57,14 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
     {
         //TODO QUERY GREZZA ricerca fra il numero di pubblicazione e la data di pubblicazione, da sistemare
 
+        Bundle args = getBundle(s);
+
+        getLoaderManager().restartLoader(0, args, this);
+    }
+
+    @Nullable
+    private Bundle getBundle(String s)
+    {
         Bundle args = null;
 
         if(s != null)
@@ -70,8 +78,7 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
             args.putStringArray(WHERE_ARGS, whereArgs);
             args.putString(WHERE_CLAUSE, whereClause);
         }
-
-        getLoaderManager().restartLoader(0, args, this);
+        return args;
     }
 
     @Override
@@ -217,5 +224,15 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
         Log.i("loader", "gazzette list loader RESET");
         simpleCursorAdapter.swapCursor(null);
 
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+
+        Bundle args = isSearchActive() ? getBundle(querySearch) : null;
+
+        getLoaderManager().restartLoader(0, args, this);
     }
 }

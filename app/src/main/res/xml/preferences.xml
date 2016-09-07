@@ -2,7 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
                   xmlns:picker="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory android:title="@string/archiviazione">
+    <PreferenceCategory android:title="@string/visualizzazione">
         <com.distesala.android_concorsi_gazzetta.preferences.GazzettePickerPreference
             android:key="@string/key_num_gazzette"
             android:title="@string/limite_gazzette"
@@ -12,9 +12,7 @@
             picker:max_value="60"
             picker:step="5">
         </com.distesala.android_concorsi_gazzetta.preferences.GazzettePickerPreference>
-    </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/visualizzazione">
         <com.distesala.android_concorsi_gazzetta.preferences.GazzettePickerPreference
             android:key="@string/key_scadenza_threshold"
             android:title="@string/soglia_scadenza"
@@ -32,6 +30,10 @@
                             android:title="@string/rete_dati_title"
                             android:defaultValue="true"/>
 
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/archiviazione">
+        <Preference>ereoto</Preference>
     </PreferenceCategory>
 
 </PreferenceScreen>

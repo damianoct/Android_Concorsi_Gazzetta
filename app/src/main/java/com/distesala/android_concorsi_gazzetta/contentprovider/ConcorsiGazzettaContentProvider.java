@@ -7,9 +7,11 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.distesala.android_concorsi_gazzetta.R;
 import com.distesala.android_concorsi_gazzetta.database.GazzetteSQLiteHelper;
 
 /**
@@ -67,10 +69,13 @@ public class ConcorsiGazzettaContentProvider extends ContentProvider
         {
             case GAZZETTE:
             {
+                String key = getContext().getString(R.string.key_num_gazzette);
+                int nRow = PreferenceManager.getDefaultSharedPreferences(getContext()).getInt(key, 0);
+
                 c = db.query(GazzetteSQLiteHelper.GazzettaEntry.TABLE_NAME,
                         projection,
                         selection, selectionArgs, null, null,
-                        GazzetteSQLiteHelper.GazzettaEntry.COLUMN_ID_GAZZETTA + " DESC"); //order by
+                        GazzetteSQLiteHelper.GazzettaEntry.COLUMN_ID_GAZZETTA + " DESC" + " LIMIT " + nRow);
 
                 Log.i("provider", "cursor gazzette -> " + String.valueOf(c.getCount()));
                 break;
