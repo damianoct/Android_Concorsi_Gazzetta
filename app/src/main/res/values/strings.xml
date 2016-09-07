@@ -111,11 +111,17 @@
     <string name="settings_title">Impostaccioni</string>
     <string name="utilizzo_dati">Utilizza anche con rete dati</string>
     <string name="connettività">Connettività</string>
-    <string name="summary_rete_dati">L\'applicazione utilizzerà la rete dati per scaricare le nuove gazzette.</string>
+    <string name="summary_rete_dati">L\'applicazione utilizzerà la rete dati per scaricare le nuove gazzette se non è disponibile una rete Wifi.</string>
+    <string name="summary_rete_wifi">L\'applicazione utilizzerà esclusivamente la rete Wifi per scaricare le nuove gazzette.</string>
     <string name="rete_dati_title">Utilizza rete dati</string>
     <string name="archiviazione">Archiviaccione</string>
     <string name="limite_gazzette">Limite Gazzette</string>
     <string name="visualizzazione">Visualizzaccione</string>
-    <string name="soglia_scadenza">Soglia Gazzette in scadenza</string>
+    <string name="soglia_scadenza">Soglia concorsi in scadenza</string>
+    <string name="key_num_gazzette">num_gazzette</string>
+    <string name="key_scadenza_threshold">scadenza_threshold</string>
+    <string name="key_utilizzo_rete_dati">utilizzo_rete_dati</string>
+    <string name="summary_num_gazzette">Verranno salvate e visualizzate fino a un massimo di 30 gazzette.</string>
+    <string name="summary_scadenza_threshold">Saranno visualizzate solo i concorsi che scadono entro 10 giorni.</string>
 
 </resources>

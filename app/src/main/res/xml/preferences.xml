@@ -4,10 +4,10 @@
 
     <PreferenceCategory android:title="@string/archiviazione">
         <com.distesala.android_concorsi_gazzetta.preferences.GazzettePickerPreference
-            android:key="num_gazzette"
+            android:key="@string/key_num_gazzette"
             android:title="@string/limite_gazzette"
             android:defaultValue="30"
-            android:summary="ereoto"
+            android:summary="@string/summary_num_gazzette"
             picker:min_value="15"
             picker:max_value="60"
             picker:step="5">
@@ -16,10 +16,10 @@
 
     <PreferenceCategory android:title="@string/visualizzazione">
         <com.distesala.android_concorsi_gazzetta.preferences.GazzettePickerPreference
-            android:key="scadenza_threshold"
+            android:key="@string/key_scadenza_threshold"
             android:title="@string/soglia_scadenza"
             android:defaultValue="10"
-            android:summary="Stai attento che scadono"
+            android:summary="@string/summary_scadenza_threshold"
             picker:min_value="5"
             picker:max_value="15"
             picker:step="1">
@@ -27,10 +27,10 @@
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/connettività">
-        <CheckBoxPreference android:key="utilizzo_rete_dati"
+        <CheckBoxPreference android:key="@string/key_utilizzo_rete_dati"
                             android:summary="@string/summary_rete_dati"
                             android:title="@string/rete_dati_title"
-                            android:defaultValue="false"/>
+                            android:defaultValue="true"/>
 
     </PreferenceCategory>
 

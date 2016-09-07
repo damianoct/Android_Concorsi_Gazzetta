@@ -86,13 +86,13 @@ public class GazzettePickerPreference extends DialogPreference
     @Override
     protected void onSetInitialValue(boolean restorePersistedValue, Object defaultValue)
     {
-        setValueIndex(restorePersistedValue ? getPersistedInt(0) : (((Integer) defaultValue) - minValue)/step);
+        setValueIndex(restorePersistedValue ? (getPersistedInt(0)-minValue)/step : (((Integer) defaultValue) - minValue)/step);
     }
 
     private void setValueIndex(int valueIndex)
     {
         this.valueIndex = valueIndex;
-        persistInt(valueIndex);
+        persistInt(minValue + valueIndex*step);
     }
 
     private int getValueIndex()
