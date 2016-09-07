@@ -76,11 +76,10 @@ public class SettingsFragment extends PreferenceFragment
         getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
     }
 
+
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key)
     {
-        //TODO: Provare con concat()
-
         //Con sole tre preferences possiamo essere perdonati
         updatePreferenceSummaries();
 

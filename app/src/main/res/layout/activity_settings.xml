@@ -13,23 +13,16 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         android:id="@+id/appbarlayout">
 
+
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/ThemeOverlay.AppCompat.ActionBar" />
-
-        <!--
-        al posto di enterAlwayCollapsed posso mettere anche enterAlwaysCollapsed
-        -->
 
     </android.support.design.widget.AppBarLayout>
 
-    <!-- Content View -->
-    <!-- il "layout_behaviour" specificato serve a disporre
-        il framelayout al di sotto dell'app bar -->
 
     <FrameLayout
         android:id="@+id/content_frame"
