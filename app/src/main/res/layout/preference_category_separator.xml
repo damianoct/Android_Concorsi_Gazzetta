@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_marginTop="4dp"
+        android:layout_height="0.3dp"
+        android:background="@color/colorPrimary">
+
+    </View>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:textSize="14.5sp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:id="@+android:id/title"
+        android:paddingLeft="16dip"
+        android:text="Registraccioni"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:textColor="@color/colorPrimary"
+        android:fontFamily="sans-serif-light"
+        android:textStyle="bold"
+        />
+
+
+
+</RelativeLayout>

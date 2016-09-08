@@ -2,7 +2,12 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
                   xmlns:picker="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory android:title="@string/visualizzazione">
+    <PreferenceCategory
+        android:title="@string/visualizzazione"
+
+        >
+
+
         <com.distesala.android_concorsi_gazzetta.preferences.GazzettePickerPreference
             android:key="@string/key_num_gazzette"
             android:title="@string/limite_gazzette"
@@ -22,18 +27,30 @@
             picker:max_value="15"
             picker:step="1">
         </com.distesala.android_concorsi_gazzetta.preferences.GazzettePickerPreference>
+
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/connettività">
-        <CheckBoxPreference android:key="@string/key_utilizzo_rete_dati"
+    <PreferenceCategory
+        android:title="@string/connettività"
+        android:layout="@layout/preference_category_separator">
+
+        <!-- TODO provare texton e textoff per evitare di cambiare il summary programmaticamente -->
+        <SwitchPreference android:key="@string/key_utilizzo_rete_dati"
                             android:summary="@string/summary_rete_dati"
                             android:title="@string/rete_dati_title"
                             android:defaultValue="true"/>
 
+
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/archiviazione">
+
+    <PreferenceCategory
+        android:title="@string/archiviazione"
+        android:layout="@layout/preference_category_separator">
+
         <!-- TODO: Implementare lo svuotamento del database -->
+
+
     </PreferenceCategory>
 
 </PreferenceScreen>
