@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,9 +20,9 @@ import com.distesala.android_concorsi_gazzetta.ui.HomeActivity;
 /**
  * A simple {@link Fragment} subclass.
  */
+
 public class ConcorsiExpiringFragment extends BaseFragment
 {
-
     private ListView concorsiExpiring;
     private ArrayAdapter<CharSequence> adapter;
     private FragmentListener homeListener;
@@ -41,13 +42,12 @@ public class ConcorsiExpiringFragment extends BaseFragment
     @Override
     public void searchFor(String s)
     {
-        //TODO: Da implementare la ricerca nei concorsi in scadenza
     }
 
     @Override
     public void onSearchFinished()
     {
-        //TODO: Da implementare
+
     }
 
     @Override
@@ -64,6 +64,13 @@ public class ConcorsiExpiringFragment extends BaseFragment
             throw new RuntimeException(activity.toString()
                     + " must implement FragmentListener");
         }
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        Log.i("expiring","creato");
     }
 
     @Override

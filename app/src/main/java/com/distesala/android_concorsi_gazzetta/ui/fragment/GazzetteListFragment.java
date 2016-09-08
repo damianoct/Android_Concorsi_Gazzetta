@@ -59,13 +59,13 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
     {
         //TODO QUERY GREZZA ricerca fra il numero di pubblicazione e la data di pubblicazione, da sistemare
 
-        Bundle args = getBundle(s);
+        Bundle args = getSearchBundle(s);
 
         getLoaderManager().restartLoader(0, args, this);
     }
 
     @Nullable
-    private Bundle getBundle(String s)
+    private Bundle getSearchBundle(String s)
     {
         Bundle args = null;
 
@@ -233,7 +233,7 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
     {
         super.onResume();
 
-        Bundle args = isSearchActive() ? getBundle(querySearch) : null;
+        Bundle args = isSearchActive() ? getSearchBundle(querySearch) : null;
 
         getLoaderManager().restartLoader(0, args, this);
     }

@@ -1,7 +1,7 @@
 package com.distesala.android_concorsi_gazzetta.ui;
 
+import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -17,14 +17,17 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.distesala.android_concorsi_gazzetta.R;
+import com.distesala.android_concorsi_gazzetta.ui.fragment.BaseFragment;
 import com.distesala.android_concorsi_gazzetta.ui.fragment.ConcorsiListFragment;
 import com.distesala.android_concorsi_gazzetta.ui.fragment.FragmentListener;
 import com.distesala.android_concorsi_gazzetta.ui.fragment.GazzetteListFragment;
 import com.distesala.android_concorsi_gazzetta.ui.fragment.WebViewFragment;
 
-public class HomeActivity extends AppCompatActivity implements FragmentListener
+public class HomeActivity extends AppCompatActivity implements FragmentListener,
+                                                                NavigationView.OnNavigationItemSelectedListener
 {
     public static final String HOME_FRAGMENT = String.valueOf(R.id.gazzette);
     private static final String SAVED_FRAGMENT = "currentFragment";
@@ -68,7 +71,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener
         transaction.addToBackStack(backStackTag).replace(R.id.content_frame, fragmentToAdd, String.valueOf(tag)).commit();
     }
 
-    //SERVE UN FACTORY.....
+    //MAYBE NEED A FACTORY.....
     private Fragment createFragmentForTag(int tag)
     {
         switch (tag)
@@ -88,9 +91,26 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener
     {
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
 
-        //pulsante navigation drawer
-        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close)
+        {
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset)
+            {
+                super.onDrawerSlide(drawerView, slideOffset);
+            }
+
+            //hide keyboard on navigation drawer opened.
+            @Override
+            public void onDrawerOpened(View drawerView)
+            {
+                super.onDrawerOpened(drawerView);
+                InputMethodManager inputMethodManager = (InputMethodManager)
+                        getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+            }
+        };
         drawerLayout.setDrawerListener(actionBarDrawerToggle);
+
 
         actionBarDrawerToggle.setToolbarNavigationClickListener(new View.OnClickListener() {
             @Override
@@ -101,34 +121,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener
         actionBarDrawerToggle.syncState();
 
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener()
-        {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem menuItem)
-            {
-                if(!menuItem.isChecked())
-                {
-                    menuItem.setChecked(true);
-                    expandAppBarLayout();
-
-                    if(menuItem.getItemId() != R.id.settings)
-                        setFragment(menuItem.getItemId());
-                    else
-                        startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
-
-                }
-                drawerLayout.closeDrawers();
-                return true;
-            }
-        });
-    }
-
-    private boolean isSegueOnTop()
-    {
-        return getSupportFragmentManager().getBackStackEntryCount() > 0 &&
-                getSupportFragmentManager()
-                        .getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1)
-                            .getName().equals(SEGUE_TRANSACTION);
+        navigationView.setNavigationItemSelectedListener(this);
     }
 
     private void enableBackButton()
@@ -242,5 +235,22 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener
     {
         Log.d("onDisplayed", fragmentTag);
         navigationView.getMenu().findItem(Integer.parseInt(fragmentTag)).setChecked(true);
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem menuItem)
+    {
+        if(!menuItem.isChecked())
+        {
+            menuItem.setChecked(true);
+            expandAppBarLayout();
+
+            if(menuItem.getItemId() != R.id.settings)
+                setFragment(menuItem.getItemId());
+            else
+                startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+        }
+        drawerLayout.closeDrawers();
+        return true;
     }
 }

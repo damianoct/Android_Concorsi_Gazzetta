@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,8 +42,21 @@ public class ConcorsiListFragment extends Fragment
         return APPBAR_TITLE;
     }
 
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(false);
+    }
+
     private void setupViewPager(ViewPager viewPager)
     {
+
+        //anche se la createView è chiamata ogni volta che si apre questo fragment
+        //i fragmenti figli gestiti dal ViewPagerAdapter non vengono creati ogni volta
+        //li gestisce sicuramente il ViewPagerAdapter.
+
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
         adapter.addFragment(new ConcorsiExpiringFragment(), "In Scadenza");
         adapter.addFragment(new RecyclerViewFragment(), "Preferiti");

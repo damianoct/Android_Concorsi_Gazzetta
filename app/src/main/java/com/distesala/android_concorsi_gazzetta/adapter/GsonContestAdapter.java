@@ -26,8 +26,6 @@ public class GsonContestAdapter implements JsonDeserializer<Concorso>
     public Concorso deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
     {
 
-        Log.i("deserialize", "CONTEST");
-
         final JsonObject jsonObject = json.getAsJsonObject();
 
         final String areaDiInteresse = jsonObject.get("areaDiInteresse").getAsString();
