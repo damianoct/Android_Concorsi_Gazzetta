@@ -13,10 +13,26 @@
         <item>Concorso 7</item>
     </string-array>
 
+    <string-array name="contests_categories_titles">
+        <item>Concorsi</item>
+        <item>Avvisi</item>
+        <item>Graduatorie</item>
+        <item>Rettifiche</item>
+        <item>Diari</item>
+        <item>Nomine</item>
+    </string-array>
+
+    <string-array name="contests_categories">
+        <item>Concorso</item>
+        <item>Avviso</item>
+        <item>Graduatoria</item>
+        <item>Rettifica</item>
+        <item>Diario</item>
+        <item>Nomina</item>
+    </string-array>
+
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
-    <string name="title_activity_scrolling">ScrollingActivity</string>
-
     <string name="action_settings">Settings</string>
     <string name="search_title">Cerca</string>
     <string name="search_hint">Cerca qualcosa...</string>

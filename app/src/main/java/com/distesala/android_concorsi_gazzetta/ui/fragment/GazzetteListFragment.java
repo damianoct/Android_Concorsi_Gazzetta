@@ -150,13 +150,14 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
                 Bundle bundle = new Bundle();
                 CharSequence numberOfPublication = ((TextView) arg1.findViewById(R.id.numberOfPublication)).getText();
 
-                GazzettaFragment gazzettaFragment = GazzettaFragment.newInstance(numberOfPublication);
+                //GazzettaFragment gazzettaFragment = GazzettaFragment.newInstance(numberOfPublication);
+                ContestForGazzettaFragment contestForGazzettaFragment = ContestForGazzettaFragment.newInstance(numberOfPublication);
 
 
                 //lancio un nuovo fragment (Up Navigation con Fragment)
                 getActivity().getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.content_frame, gazzettaFragment)
+                        .replace(R.id.content_frame, contestForGazzettaFragment)
                         .addToBackStack(HomeActivity.SEGUE_TRANSACTION)
                         .commit();
             }

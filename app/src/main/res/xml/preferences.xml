@@ -34,7 +34,6 @@
         android:title="@string/connettività"
         android:layout="@layout/preference_category_separator">
 
-        <!-- TODO provare texton e textoff per evitare di cambiare il summary programmaticamente -->
         <SwitchPreference android:key="@string/key_utilizzo_rete_dati"
                             android:summary="@string/summary_rete_dati"
                             android:title="@string/rete_dati_title"

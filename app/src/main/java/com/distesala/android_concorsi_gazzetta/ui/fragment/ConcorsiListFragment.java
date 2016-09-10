@@ -10,7 +10,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,7 +46,6 @@ public class ConcorsiListFragment extends Fragment
     public void onCreate(@Nullable Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(false);
     }
 
     private void setupViewPager(ViewPager viewPager)
@@ -59,7 +57,7 @@ public class ConcorsiListFragment extends Fragment
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
         adapter.addFragment(new ConcorsiExpiringFragment(), "In Scadenza");
-        adapter.addFragment(new RecyclerViewFragment(), "Preferiti");
+        adapter.addFragment(new ConcorsiExpiringFragment(), "Preferiti");
         viewPager.setAdapter(adapter);
     }
 
@@ -70,7 +68,7 @@ public class ConcorsiListFragment extends Fragment
         super.onCreateView(inflater, container, savedInstanceState);
 
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_concorsi, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_concorsi_list, container, false);
         appBarLayout = (AppBarLayout) getActivity().findViewById(R.id.appbarlayout);
 
         viewPager = (ViewPager) rootView.findViewById(R.id.viewpager);
@@ -96,7 +94,6 @@ public class ConcorsiListFragment extends Fragment
             }
         });
         appBarLayout.setElevation(0);
-
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter

@@ -17,12 +17,9 @@ import com.distesala.android_concorsi_gazzetta.R;
  * A simple {@link Fragment} subclass.
  */
 
-//TODO: Aggiungere il divider
-
 public class SettingsFragment extends PreferenceFragment
                               implements SharedPreferences.OnSharedPreferenceChangeListener
 {
-
 
     public SettingsFragment()
     {
@@ -82,6 +79,5 @@ public class SettingsFragment extends PreferenceFragment
     {
         //Con sole tre preferences possiamo essere perdonati
         updatePreferenceSummaries();
-
     }
 }
