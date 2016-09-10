@@ -72,6 +72,7 @@ public class ContestForGazzettaFragment extends Fragment
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setTabTextColors(Color.WHITE, Color.WHITE);
 
+
         return rootView;
 
     }
@@ -89,6 +90,26 @@ public class ContestForGazzettaFragment extends Fragment
             }
         });
         appBarLayout.setElevation(0);
+
+        //restore viewpager selected item.
+        if (savedInstanceState != null)
+        {
+            final int position = savedInstanceState.getInt("currentViewPagerItem");
+            viewPager.postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+                    viewPager.setCurrentItem(position);
+                }
+            }, 100);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState)
+    {
+        super.onSaveInstanceState(outState);
+        outState.putInt("currentViewPagerItem", viewPager.getCurrentItem());
     }
 
     private void setupViewPager(ViewPager viewPager)

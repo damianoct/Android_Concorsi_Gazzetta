@@ -83,9 +83,4 @@ public class ContestCategoryFragment extends BaseFragment
         return inflater.inflate(R.layout.fragment_contest_category, container, false);
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState)
-    {
-        Log.i("state", "bastardo state " + category);
-    }
 }
