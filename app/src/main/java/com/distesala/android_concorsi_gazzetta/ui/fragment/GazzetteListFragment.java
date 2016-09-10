@@ -33,9 +33,11 @@ import com.distesala.android_concorsi_gazzetta.ui.HomeActivity;
  * A simple {@link Fragment} subclass.
  */
 
-//TODO: Importante -- implementare TAB Layout
 public class GazzetteListFragment extends BaseFragment implements JSONResultReceiver.Receiver, LoaderManager.LoaderCallbacks<Cursor>
 {
+    //TODO dato che questo fragment ha lo stato retained provare a farlo ascoltare il cambiamento delle preference
+    //in modo tale da togliere il restartLoader forzato dalla onResume() ma farlo solo quando cambia quella specifica reference.
+
     private JSONResultReceiver mReceiver;
     private ListView gazzetteList;
     private SimpleCursorAdapter simpleCursorAdapter;
@@ -189,6 +191,7 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
     @Override
     public void onReceiveResult(int resultCode, Bundle resultData)
     {
+        //TODO questi risultati servono solo a stoppare un possibile indicatore di progresso -> IMPLEMENTARE
         if (resultCode == Activity.RESULT_OK)
         {
             getLoaderManager().initLoader(0, null, this);
@@ -236,6 +239,7 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
 
         Bundle args = isSearchActive() ? getSearchBundle(querySearch) : null;
 
+        //force restart for preference changed.
         getLoaderManager().restartLoader(0, args, this);
     }
 }

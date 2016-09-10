@@ -49,8 +49,10 @@ public abstract class BaseFragment extends Fragment implements MenuItemCompat.On
 
         searchViewAndroidActionBar.setMaxWidth(Integer.MAX_VALUE);
 
+
         if(querySearch != null)
         {
+            Log.i("category", "EXPANDO");
             MenuItemCompat.expandActionView(searchViewItem);
             searchViewAndroidActionBar.setQuery(querySearch, true);
         }
@@ -59,6 +61,15 @@ public abstract class BaseFragment extends Fragment implements MenuItemCompat.On
 
         searchViewAndroidActionBar.setOnQueryTextListener(this);
 
+    }
+
+    protected void dismissSearch()
+    {
+        //if(querySearch != null)
+        //{
+            MenuItemCompat.collapseActionView(searchViewItem);
+            querySearch = null;
+       // }
     }
 
     public BaseFragment() { }
@@ -115,8 +126,8 @@ public abstract class BaseFragment extends Fragment implements MenuItemCompat.On
 
             /*
                 Ogni volta che da un fragment (con la searchView aperta)
-                passavo tramite Drawer a un altro Fragment si settava la query
-                search VUOTA ma non nulla, di conseguenza
+                passavo tramite Drawer a un altro Fragment si setta la query
+                search VUOTA ma non nulla (non so il perchè), di conseguenza
                 i Fragment di merda sono riutilizzati (non vengono istanziati tutte le volte)
                 quindi la querySearch rimaneva VUOTA.
                 e il metodo initSearchView la apriva.
@@ -184,6 +195,10 @@ public abstract class BaseFragment extends Fragment implements MenuItemCompat.On
     {
         querySearch = newText;
         searchFor(newText);
+
+        Log.i("category", "querySearch -> [ " + querySearch + " ]");
+
+
         return true;
     }
 
