@@ -1,6 +1,7 @@
 package com.distesala.android_concorsi_gazzetta.adapter;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -19,13 +20,15 @@ import java.util.List;
 public class TabsViewPagerAdapter<T extends Fragment> extends FragmentStatePagerAdapter
 {
 
+    private Context context;
     private final List<T> mFragmentList = new ArrayList<>();
     private final List<String> mFragmentTitleList = new ArrayList<>();
 
 
-    public TabsViewPagerAdapter(FragmentManager fm)
+    public TabsViewPagerAdapter(FragmentManager fm, Context context, Bundle[] bundles, int resourceIdTitles)
     {
         super(fm);
+        this.context = context;
     }
 
     @Override

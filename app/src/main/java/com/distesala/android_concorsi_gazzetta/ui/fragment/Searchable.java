@@ -5,5 +5,5 @@ package com.distesala.android_concorsi_gazzetta.ui.fragment;
  */
 public interface Searchable
 {
-    public void performSearch(String querySearch);
+    void performSearch(String querySearch);
 }

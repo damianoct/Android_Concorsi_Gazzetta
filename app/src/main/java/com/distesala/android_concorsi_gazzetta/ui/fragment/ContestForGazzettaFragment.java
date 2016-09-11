@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,7 +80,6 @@ public class ContestForGazzettaFragment extends BaseFragment
 
 
         return rootView;
-
     }
 
     @Override
@@ -155,25 +155,6 @@ public class ContestForGazzettaFragment extends BaseFragment
          */
 
         viewPager.setAdapter(new TabAdapter(getChildFragmentManager()));
-
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener()
-        {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
-            {
-
-            }
-
-            @Override
-            public void onPageSelected(int position)
-            {
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state)
-            {
-            }
-        });
     }
 
     //si potrebbe fare pure un adapter generico (fatto nel package adapter), ma non posso sfruttare la creazione con gli array.
@@ -191,7 +172,11 @@ public class ContestForGazzettaFragment extends BaseFragment
         {
             CharSequence category = getResources().getStringArray(R.array.contests_categories_titles)[position];
             Fragment f = ContestCategoryFragment.newInstance(numberOfPublication, category);
-            searchablesList.add((Searchable) f);
+
+            //I can use this adapter for non searchable fragments too.
+            if(f instanceof Searchable)
+                searchablesList.add((Searchable) f);
+
             return f;
         }
 

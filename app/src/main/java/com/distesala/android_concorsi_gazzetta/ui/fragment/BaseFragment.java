@@ -63,15 +63,6 @@ public abstract class BaseFragment extends Fragment implements MenuItemCompat.On
 
     }
 
-    protected void dismissSearch()
-    {
-        //if(querySearch != null)
-        //{
-            MenuItemCompat.collapseActionView(searchViewItem);
-            querySearch = null;
-       // }
-    }
-
     public BaseFragment() { }
 
     @Override

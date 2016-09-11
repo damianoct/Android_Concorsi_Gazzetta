@@ -65,8 +65,6 @@ public class ContestCategoryFragment extends Fragment implements Searchable, Loa
         Log.i("category", "[ " + category + " ] performSearch.");
     }
 
-    //TODO implementare CursorLoader...
-
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args)
     {
