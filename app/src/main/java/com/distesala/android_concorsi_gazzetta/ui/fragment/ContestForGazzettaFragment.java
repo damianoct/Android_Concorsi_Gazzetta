@@ -1,14 +1,10 @@
 package com.distesala.android_concorsi_gazzetta.ui.fragment;
 
-
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,26 +14,13 @@ import com.distesala.android_concorsi_gazzetta.R;
 import com.distesala.android_concorsi_gazzetta.database.GazzetteSQLiteHelper;
 import com.distesala.android_concorsi_gazzetta.ui.HomeActivity;
 
-import java.util.LinkedList;
-import java.util.List;
 
-
-public class ContestForGazzettaFragment extends BaseFragment
+public class ContestForGazzettaFragment extends HostSearchablesFragment
 {
     private CharSequence numberOfPublication;
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private AppBarLayout appBarLayout;
-    private List<Searchable> searchablesList;
-
-    private void notifySearchables()
-    {
-        //TODO PROBLEMA: Quando switcho tab non ancora istanziate devo far cercare anche loro
-        //bisogna gestire onPageSelected nel listener di viewpager adapter.
-        for(Searchable s: searchablesList)
-            s.performSearch(querySearch);
-    }
-
 
     public static ContestForGazzettaFragment newInstance(CharSequence numberOfPublication)
     {
@@ -49,11 +32,18 @@ public class ContestForGazzettaFragment extends BaseFragment
     }
 
     @Override
+    protected SearchableFragment getChild(int position)
+    {
+        CharSequence category = getResources().getStringArray(R.array.contests_categories)[position];
+        Bundle itemBundle = buildQueryBundleForCategory(category);
+
+        return new ContestCategoryFragment().newInstance(itemBundle);
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
-        searchablesList = new LinkedList<>();
 
         Bundle bundle = this.getArguments();
 
@@ -88,7 +78,6 @@ public class ContestForGazzettaFragment extends BaseFragment
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setTabTextColors(Color.WHITE, Color.WHITE);
 
-
         return rootView;
     }
 
@@ -118,15 +107,6 @@ public class ContestForGazzettaFragment extends BaseFragment
                 }
             }, 100);
         }
-
-    }
-
-
-    @Override
-    public void searchFor(String s)
-    {
-        //update all "active" (retained in memory) searchable tabs.
-        notifySearchables();
     }
 
     @Override
@@ -139,6 +119,12 @@ public class ContestForGazzettaFragment extends BaseFragment
     public String getFragmentTitle()
     {
         return "Gazzetta n. " + numberOfPublication;
+    }
+
+    @Override
+    public void searchFor(String s)
+    {
+        notifyChildrenForSearch();
     }
 
     @Override
@@ -164,7 +150,9 @@ public class ContestForGazzettaFragment extends BaseFragment
             Results? More than one searchView in the appbar :-)
          */
 
-        viewPager.setAdapter(new TabAdapter(getChildFragmentManager()));
+        //viewPager.setAdapter(new TabAdapter(getChildFragmentManager()));
+
+        viewPager.setAdapter(new SearchableTabsAdapter(getChildFragmentManager(), getResources().getStringArray(R.array.contests_categories_titles)));
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener()
         {
@@ -179,7 +167,7 @@ public class ContestForGazzettaFragment extends BaseFragment
             {
                 //onPageSelected notify new Searchable item for search.
                 if(isSearchActive())
-                    notifySearchables();
+                    notifyChildrenForSearch();
             }
 
             @Override
@@ -190,25 +178,23 @@ public class ContestForGazzettaFragment extends BaseFragment
         });
     }
 
-    //si potrebbe fare pure un adapter generico (fatto nel package adapter), ma non posso sfruttare la creazione con gli array.
-    //dovrei già istanziare tutto in memoria invece in questo modo istanzio solo quello che mi serve.
-
-    class TabAdapter extends FragmentStatePagerAdapter
+    private Bundle buildQueryBundleForCategory(CharSequence category)
     {
-        private Bundle buildQueryBundleForCategory(CharSequence category)
-        {
-            Bundle args = new Bundle(2);
+        Bundle args = new Bundle(2);
 
-            String whereClause = GazzetteSQLiteHelper.ContestEntry.COLUMN_GAZZETTA_NUMBER_OF_PUBLICATION + " =? AND "
-                    + GazzetteSQLiteHelper.ContestEntry.COLUMN_TIPOLOGIA + " LIKE? ";
+        String whereClause = GazzetteSQLiteHelper.ContestEntry.COLUMN_GAZZETTA_NUMBER_OF_PUBLICATION + " =? AND "
+                + GazzetteSQLiteHelper.ContestEntry.COLUMN_TIPOLOGIA + " LIKE? ";
 
-            String[] whereArgs = new String[]{numberOfPublication.toString(), "%" + category + "%"};
+        String[] whereArgs = new String[]{numberOfPublication.toString(), "%" + category + "%"};
 
-            args.putString(WHERE_CLAUSE, whereClause);
-            args.putStringArray(WHERE_ARGS, whereArgs);
+        args.putString(WHERE_CLAUSE, whereClause);
+        args.putStringArray(WHERE_ARGS, whereArgs);
 
-            return args;
-        }
+        return args;
+    }
+
+    /*class TabAdapter extends FragmentStatePagerAdapter
+    {
 
         public TabAdapter(FragmentManager fm)
         {
@@ -218,7 +204,6 @@ public class ContestForGazzettaFragment extends BaseFragment
         @Override
         public Fragment getItem(int position)
         {
-
             CharSequence category = getResources().getStringArray(R.array.contests_categories)[position];
 
             //build query bundle for child fragment and instantiate.
@@ -226,7 +211,7 @@ public class ContestForGazzettaFragment extends BaseFragment
 
             //We can use this adapter for non searchable fragments too, so check if it's a Searchable tab.
             if(f instanceof Searchable)
-                searchablesList.add((Searchable) f);
+                searchables.add((Searchable) f);
 
             return f;
         }
@@ -247,8 +232,7 @@ public class ContestForGazzettaFragment extends BaseFragment
         public void destroyItem(ViewGroup container, int position, Object object)
         {
             super.destroyItem(container, position, object);
-            searchablesList.remove(object);
+            searchables.remove(object);
         }
-    }
-
+    }*/
 }

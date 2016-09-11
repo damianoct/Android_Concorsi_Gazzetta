@@ -3,7 +3,6 @@ package com.distesala.android_concorsi_gazzetta.ui.fragment;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -23,7 +22,7 @@ import com.distesala.android_concorsi_gazzetta.database.GazzetteSQLiteHelper;
 //Problemissimi con la searchView che quando si switcha tab si mette la query a VUOTA. Dio santo
 //vedi -> http://stackoverflow.com/questions/18148761/searchview-in-actionbar-problems-with-the-up-button
 
-public class ContestCategoryFragment extends Fragment implements Searchable, LoaderManager.LoaderCallbacks<Cursor>
+public class ContestCategoryFragment extends SearchableFragment implements LoaderManager.LoaderCallbacks<Cursor>
 {
     private CharSequence numberOfPublication;
     private CharSequence category;
@@ -40,6 +39,8 @@ public class ContestCategoryFragment extends Fragment implements Searchable, Loa
 
         return f;
     }
+
+    public ContestCategoryFragment() { }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState)
@@ -72,7 +73,6 @@ public class ContestCategoryFragment extends Fragment implements Searchable, Loa
                         R.id.titolo
                 }
                 , 0);
-
     }
 
     @Override
