@@ -85,7 +85,7 @@ public class ConcorsiGazzettaContentProvider extends ContentProvider
             {
                 c = db.query(GazzetteSQLiteHelper.ContestEntry.TABLE_NAME,
                         projection,
-                        GazzetteSQLiteHelper.ContestEntry.COLUMN_GAZZETTA_NUMBER_OF_PUBLICATION + "=?", selectionArgs, //selection
+                        selection, selectionArgs,
                         null, null, null);
 
                 Log.i("provider","cursor contests -> " + String.valueOf(c.getCount()));

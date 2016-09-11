@@ -22,6 +22,8 @@ public class GazzettaFragment extends BaseFragment implements LoaderManager.Load
 {
     private SimpleCursorAdapter adapterSimpleCursor;
     private CharSequence numberOfPublication;
+    private ListView contestsList;
+
 
     @Override
     public String getFragmentName()
@@ -49,8 +51,6 @@ public class GazzettaFragment extends BaseFragment implements LoaderManager.Load
 
     public GazzettaFragment() { }
 
-    private ListView contestsList;
-
     public static GazzettaFragment newInstance(CharSequence numberOfPublication)
     {
         GazzettaFragment gf = new GazzettaFragment();
@@ -75,9 +75,6 @@ public class GazzettaFragment extends BaseFragment implements LoaderManager.Load
             this.numberOfPublication = numberOfPublication;
         }
 
-        //Utilizzo il CursorLoader
-        getLoaderManager().initLoader(0, null, this);
-
         adapterSimpleCursor = new SimpleCursorAdapter(getActivity().getApplicationContext(), R.layout.contest_item,
                 null, //cursor null
                 new String[]    {
@@ -89,6 +86,8 @@ public class GazzettaFragment extends BaseFragment implements LoaderManager.Load
                                     R.id.titolo
                                 }
                 , 0);
+
+        getLoaderManager().initLoader(0, null, this);
 
         setRetainInstance(true);
 
@@ -102,7 +101,7 @@ public class GazzettaFragment extends BaseFragment implements LoaderManager.Load
         View rootView = inflater.inflate(R.layout.fragment_gazzetta, container, false);
         contestsList = (ListView) rootView.findViewById(R.id.contestsList);
 
-        //necessario per far scomparire l'appbar quando si scrolla
+        //necessary to hide appbar when scrolling
         contestsList.setNestedScrollingEnabled(true);
 
         return rootView;

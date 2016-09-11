@@ -38,6 +38,9 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
     //TODO dato che questo fragment ha lo stato retained provare a farlo ascoltare il cambiamento delle preference
     //in modo tale da togliere il restartLoader forzato dalla onResume() ma farlo solo quando cambia quella specifica reference.
 
+    //TODO provare a spostare le chiamate al loaderManager.init nei metodi onActivityCreated()
+    //vedere -> http://stackoverflow.com/questions/14559573/getting-called-dostart-when-already-started-from-loadermanager-why
+
     private JSONResultReceiver mReceiver;
     private ListView gazzetteList;
     private SimpleCursorAdapter simpleCursorAdapter;
@@ -79,8 +82,9 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
 
             String[] whereArgs = new String[]{"%" + s + "%", "%" + s + "%"};
 
-            args.putStringArray(WHERE_ARGS, whereArgs);
             args.putString(WHERE_CLAUSE, whereClause);
+            args.putStringArray(WHERE_ARGS, whereArgs);
+
         }
         return args;
     }
@@ -185,7 +189,7 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
         appBarLayout.setElevation(5);
         fragmentListener.onHomeTransaction();
         gazzetteList.setAdapter(simpleCursorAdapter);
-        getLoaderManager().initLoader(0, null, this);
+        getLoaderManager().initLoader(0, null, this); //TODO c'è quello in onResume, si può togliere? penso di sì.
     }
 
     @Override

@@ -15,7 +15,7 @@
 
     <!-- identificativo "android:empty" importantissimo -->
 
-    <TextView android:id="@id/android:empty"
+    <!--<TextView android:id="@id/android:empty"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
               android:background="#ffffff"
@@ -23,6 +23,6 @@
               android:textSize="16dip"
               android:textColor="@color/colorPrimaryDark"
               android:layout_gravity="center_horizontal"
-              android:gravity="center_vertical|center_horizontal"/>
+              android:gravity="center_vertical|center_horizontal"/> -->
 
 </FrameLayout>
