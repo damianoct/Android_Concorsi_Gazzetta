@@ -47,7 +47,12 @@
         android:title="@string/archiviazione"
         android:layout="@layout/preference_category_separator">
 
-        <!-- TODO: Implementare lo svuotamento del database -->
+        <Preference android:layout="@layout/clear_db_pref_layout"
+                    android:key="@string/key_clear_db"
+                    android:title="@string/clear_db"
+                    android:summary="Il database contiene attualmente 30 gazzette."/>
+
+
 
 
     </PreferenceCategory>

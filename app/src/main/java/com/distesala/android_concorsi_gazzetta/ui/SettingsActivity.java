@@ -4,7 +4,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.distesala.android_concorsi_gazzetta.R;
 import com.distesala.android_concorsi_gazzetta.ui.fragment.SettingsFragment;
@@ -38,5 +40,11 @@ public class SettingsActivity extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    //TODO unico modo per acchiappare questo bottone
+    public void onClearDBButtonClick(View v)
+    {
+        Log.i("button", "onClearDBButtonClick()");
     }
 }
