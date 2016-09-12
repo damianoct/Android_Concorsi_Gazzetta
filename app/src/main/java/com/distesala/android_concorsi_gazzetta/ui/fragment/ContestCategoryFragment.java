@@ -18,14 +18,8 @@ import com.distesala.android_concorsi_gazzetta.contentprovider.ConcorsiGazzettaC
 import com.distesala.android_concorsi_gazzetta.database.GazzetteSQLiteHelper;
 
 
-//Se ogni child fragment estente BaseFragment
-//Problemissimi con la searchView che quando si switcha tab si mette la query a VUOTA. Dio santo
-//vedi -> http://stackoverflow.com/questions/18148761/searchview-in-actionbar-problems-with-the-up-button
-
 public class ContestCategoryFragment extends SearchableFragment implements LoaderManager.LoaderCallbacks<Cursor>
 {
-    private CharSequence numberOfPublication;
-    private CharSequence category;
     private ListView contestsList;
     private SimpleCursorAdapter adapterSimpleCursor;
     private Bundle queryBundle;
@@ -33,9 +27,7 @@ public class ContestCategoryFragment extends SearchableFragment implements Loade
     public static ContestCategoryFragment newInstance(Bundle queryBundle)
     {
         ContestCategoryFragment f = new ContestCategoryFragment();
-        Bundle b = new Bundle();
-        b.putBundle("queryBundle", queryBundle);
-        f.setArguments(b);
+        f.setArguments(queryBundle);
 
         return f;
     }
@@ -46,7 +38,7 @@ public class ContestCategoryFragment extends SearchableFragment implements Loade
     public void onActivityCreated(@Nullable Bundle savedInstanceState)
     {
         super.onActivityCreated(savedInstanceState);
-        Log.i("activitycreated", "[ " + queryBundle.getStringArray(BaseFragment.WHERE_ARGS)[1] + " ] onActivityCreated().");
+
         getLoaderManager().initLoader(0, queryBundle, this);
     }
 
@@ -55,12 +47,7 @@ public class ContestCategoryFragment extends SearchableFragment implements Loade
     {
         super.onCreate(savedInstanceState);
 
-        Bundle bundle = this.getArguments();
-
-        if (bundle != null)
-        {
-            this.queryBundle = bundle.getBundle("queryBundle");
-        }
+        queryBundle = getArguments();
 
         adapterSimpleCursor = new SimpleCursorAdapter(getActivity().getApplicationContext(), R.layout.contest_item,
                 null, //cursor null
@@ -98,16 +85,11 @@ public class ContestCategoryFragment extends SearchableFragment implements Loade
     @Override
     public void performSearch(String s)
     {
-        Log.i("category", "[ " + queryBundle.getStringArray(BaseFragment.WHERE_ARGS)[1] + " ] performSearch on -> [ " + s + " ]");
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args)
     {
-        for(String s: args.getStringArray(BaseFragment.WHERE_ARGS))
-        {
-            Log.i("query", s);
-        }
         return new CursorLoader(getActivity().getApplicationContext(), //context
                 ConcorsiGazzettaContentProvider.CONTESTS_URI, //uri
                 null, //ALL COLUMNS

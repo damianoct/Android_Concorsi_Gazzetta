@@ -150,14 +150,13 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3)
             {
-                //si potrebbe lanciare una nuova activity al posto di un nuovo fragment, ma conviene?
 
-                //costruisco il bundle
-                Bundle bundle = new Bundle();
                 CharSequence numberOfPublication = ((TextView) arg1.findViewById(R.id.numberOfPublication)).getText();
 
-                //GazzettaFragment gazzettaFragment = GazzettaFragment.newInstance(numberOfPublication);
-                ContestForGazzettaFragment contestForGazzettaFragment = ContestForGazzettaFragment.newInstance(numberOfPublication);
+                Bundle creationBundle = new Bundle();
+                creationBundle.putCharSequence("numberOfPublication", numberOfPublication);
+                creationBundle.putBoolean(IS_FROM_SEGUE, true);
+                ContestForGazzettaFragment contestForGazzettaFragment = ContestForGazzettaFragment.newInstance(creationBundle);
 
 
                 //lancio un nuovo fragment (Up Navigation con Fragment)

@@ -21,14 +21,19 @@ import com.distesala.android_concorsi_gazzetta.R;
 public abstract class BaseFragment extends Fragment implements MenuItemCompat.OnActionExpandListener,
                                                                 SearchView.OnQueryTextListener
 {
+    protected static final String IS_FROM_SEGUE = "isFromSegue";
+
     protected static final String SEARCH_KEY = "search";
     protected static final String WHERE_CLAUSE = "whereClause";
     protected static final String WHERE_ARGS = "whereArgs";
+
 
     //communication Fragment -> Host
     protected FragmentListener fragmentListener;
 
     protected String querySearch = null;
+
+    private boolean isFromSegue = false;
 
     //every BaseFragment class has searchViewItem on AppBar.
     private MenuItem searchViewItem;
@@ -99,6 +104,9 @@ public abstract class BaseFragment extends Fragment implements MenuItemCompat.On
     {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        Bundle bundle = this.getArguments();
+        isFromSegue = bundle != null && bundle.getBoolean(IS_FROM_SEGUE);
+
     }
 
     @Nullable
@@ -151,6 +159,8 @@ public abstract class BaseFragment extends Fragment implements MenuItemCompat.On
     {
         super.onResume();
         fragmentListener.onFragmentDisplayed(getFragmentName());
+        if (isFromSegue)
+            fragmentListener.onSegueTransaction();
     }
 
     @Override

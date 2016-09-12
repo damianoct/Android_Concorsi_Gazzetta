@@ -24,11 +24,24 @@ public abstract class HostSearchablesFragment extends BaseFragment
     private List<SearchableFragment> searchables;
 
     protected abstract SearchableFragment getChild(int position);
+    protected abstract String[] getTabTitles();
 
     public void notifyChildrenForSearch()
     {
         for(SearchableFragment sf: searchables)
             sf.performSearch(querySearch);
+    }
+
+    @Override
+    public final void searchFor(String s)
+    {
+        notifyChildrenForSearch();
+    }
+
+    @Override
+    public final void onSearchFinished()
+    {
+        //Future implementations
     }
 
     @Override
@@ -50,7 +63,9 @@ public abstract class HostSearchablesFragment extends BaseFragment
 
     protected void setupViewPager(final ViewPager viewPager)
     {
-        viewPager.setAdapter(new SearchableTabsAdapter(getChildFragmentManager(), getResources().getStringArray(R.array.contests_categories_titles)));
+        //viewPager.setAdapter(new SearchableTabsAdapter(getChildFragmentManager(), getResources().getStringArray(R.array.contests_categories_titles)));
+        viewPager.setAdapter(   new SearchableTabsAdapter(getChildFragmentManager(),
+                                getTabTitles()));
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener()
         {

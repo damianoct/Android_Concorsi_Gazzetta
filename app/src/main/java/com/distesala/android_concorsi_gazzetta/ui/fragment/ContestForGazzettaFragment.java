@@ -22,12 +22,13 @@ public class ContestForGazzettaFragment extends HostSearchablesFragment
     private ViewPager viewPager;
     private AppBarLayout appBarLayout;
 
-    public static ContestForGazzettaFragment newInstance(CharSequence numberOfPublication)
+    public static ContestForGazzettaFragment newInstance(Bundle bundle)
     {
         ContestForGazzettaFragment f = new ContestForGazzettaFragment();
-        Bundle b = new Bundle();
-        b.putCharSequence("numberOfPublication", numberOfPublication);
-        f.setArguments(b);
+        //Bundle b = new Bundle();
+        //b.putCharSequence("numberOfPublication", numberOfPublication);
+        //b.putBundle("CreationBundle", bundle);
+        f.setArguments(bundle);
         return f;
     }
 
@@ -55,10 +56,9 @@ public class ContestForGazzettaFragment extends HostSearchablesFragment
     }
 
     @Override
-    public void onResume()
+    protected String[] getTabTitles()
     {
-        super.onResume();
-        fragmentListener.onSegueTransaction();
+        return getResources().getStringArray(R.array.contests_categories_titles);
     }
 
     @Override
@@ -122,25 +122,11 @@ public class ContestForGazzettaFragment extends HostSearchablesFragment
     }
 
     @Override
-    public void searchFor(String s)
-    {
-        notifyChildrenForSearch();
-    }
-
-    @Override
-    public void onSearchFinished()
-    {
-
-    }
-
-    @Override
     public void onSaveInstanceState(Bundle outState)
     {
         super.onSaveInstanceState(outState);
         outState.putInt("currentViewPagerItem", viewPager.getCurrentItem());
     }
-
-
 
     private Bundle buildQueryBundleForCategory(CharSequence category)
     {

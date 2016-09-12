@@ -3,6 +3,7 @@ package com.distesala.android_concorsi_gazzetta.ui.fragment;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.distesala.android_concorsi_gazzetta.R;
+import com.distesala.android_concorsi_gazzetta.database.GazzetteSQLiteHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,12 +24,25 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ConcorsiListFragment extends Fragment
+public class ConcorsiListFragment extends HostSearchablesFragment
 {
     private static String APPBAR_TITLE = "Concorsi";
     private static final String CONCORSI_FRAGMENT = String.valueOf(R.id.concorsi);
+    private static final String IN_SCADENZA = "In Scadenza";
+    private static final String PREFERITI = "Preferiti";
+
+    private static final String[] childTitles = new String[]{   IN_SCADENZA,
+                                                                PREFERITI
+                                                            };
 
     private TabLayout tabLayout;
+
+    @Override
+    protected String[] getTabTitles()
+    {
+        return childTitles;
+    }
+
     private ViewPager viewPager;
     private AppBarLayout appBarLayout;
 
@@ -43,22 +58,46 @@ public class ConcorsiListFragment extends Fragment
 
 
     @Override
+    protected SearchableFragment getChild(int position)
+    {
+        CharSequence tagTitle = childTitles[position];
+        Bundle bundle = getQueryBundleFromTitle(tagTitle);
+
+        return ContestCategoryFragment.newInstance(bundle);
+    }
+
+    private Bundle getQueryBundleFromTitle(CharSequence tagTitle)
+    {
+        Bundle args = new Bundle(2);
+        String whereClause = null;
+        String whereArgs = null;
+
+        switch (tagTitle.toString())
+        {
+            case IN_SCADENZA:
+                String key = getString(R.string.key_scadenza_threshold);
+                String threshold = String.valueOf(PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt(key, 0));
+                whereClause = GazzetteSQLiteHelper.ContestEntry.COLUMN_SCADENZA + " <= date('now', '+" + threshold +
+                                                                                " days') AND " +
+                        GazzetteSQLiteHelper.ContestEntry.COLUMN_SCADENZA + " >= date('now')";
+                break;
+            case PREFERITI:
+                //TODO: implementare dopo aver cambiato il database per aggiungere i preferiti
+                //args.putStringArray(WHERE_ARGS, whereArgs);
+                break;
+        }
+
+        args.putString(WHERE_CLAUSE, whereClause);
+
+
+        return args;
+    }
+
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-    }
-
-    private void setupViewPager(ViewPager viewPager)
-    {
-
-        //anche se la createView è chiamata ogni volta che si apre questo fragment
-        //i fragmenti figli gestiti dal ViewPagerAdapter non vengono creati ogni volta
-        //li gestisce sicuramente il ViewPagerAdapter.
-
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
-        adapter.addFragment(new ConcorsiExpiringFragment(), "In Scadenza");
-        adapter.addFragment(new ConcorsiExpiringFragment(), "Preferiti");
-        viewPager.setAdapter(adapter);
     }
 
     @Override
