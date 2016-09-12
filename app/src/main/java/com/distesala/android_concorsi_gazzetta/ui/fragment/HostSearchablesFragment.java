@@ -2,10 +2,15 @@ package com.distesala.android_concorsi_gazzetta.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.ViewGroup;
+
+import com.distesala.android_concorsi_gazzetta.R;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -16,8 +21,6 @@ import java.util.List;
 
 public abstract class HostSearchablesFragment extends BaseFragment
 {
-    //TODO se questo design è conveniente si deve aggiungere anche la gestione del viewpager e del tablayout
-
     private List<SearchableFragment> searchables;
 
     protected abstract SearchableFragment getChild(int position);
@@ -43,6 +46,28 @@ public abstract class HostSearchablesFragment extends BaseFragment
     public void removeSearchable(Object o)
     {
         searchables.remove(o);
+    }
+
+    protected void setupViewPager(final ViewPager viewPager)
+    {
+        viewPager.setAdapter(new SearchableTabsAdapter(getChildFragmentManager(), getResources().getStringArray(R.array.contests_categories_titles)));
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener()
+        {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels){}
+
+            @Override
+            public void onPageSelected(int position)
+            {
+                //onPageSelected notify new Searchable item for search.
+                if(isSearchActive())
+                    notifyChildrenForSearch();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state){}
+        });
     }
 
     class SearchableTabsAdapter extends FragmentStatePagerAdapter

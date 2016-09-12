@@ -140,43 +140,7 @@ public class ContestForGazzettaFragment extends HostSearchablesFragment
         outState.putInt("currentViewPagerItem", viewPager.getCurrentItem());
     }
 
-    private void setupViewPager(final ViewPager viewPager)
-    {
-        /*
-            IMPORTANT: We must use getChildFragmentManager and not getFragmentManager!
-            because we need to place fragment inside this Fragment.
-            If we use getFragmentManager the framework manages the tab fragments like any other
-            fragments in the application.
-            Results? More than one searchView in the appbar :-)
-         */
 
-        //viewPager.setAdapter(new TabAdapter(getChildFragmentManager()));
-
-        viewPager.setAdapter(new SearchableTabsAdapter(getChildFragmentManager(), getResources().getStringArray(R.array.contests_categories_titles)));
-
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener()
-        {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
-            {
-
-            }
-
-            @Override
-            public void onPageSelected(int position)
-            {
-                //onPageSelected notify new Searchable item for search.
-                if(isSearchActive())
-                    notifyChildrenForSearch();
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state)
-            {
-
-            }
-        });
-    }
 
     private Bundle buildQueryBundleForCategory(CharSequence category)
     {
@@ -192,47 +156,4 @@ public class ContestForGazzettaFragment extends HostSearchablesFragment
 
         return args;
     }
-
-    /*class TabAdapter extends FragmentStatePagerAdapter
-    {
-
-        public TabAdapter(FragmentManager fm)
-        {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position)
-        {
-            CharSequence category = getResources().getStringArray(R.array.contests_categories)[position];
-
-            //build query bundle for child fragment and instantiate.
-            Fragment f = ContestCategoryFragment.newInstance(buildQueryBundleForCategory(category));
-
-            //We can use this adapter for non searchable fragments too, so check if it's a Searchable tab.
-            if(f instanceof Searchable)
-                searchables.add((Searchable) f);
-
-            return f;
-        }
-
-        @Override
-        public int getCount()
-        {
-            return getResources().getStringArray(R.array.contests_categories_titles).length;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position)
-        {
-            return getResources().getStringArray(R.array.contests_categories_titles)[position];
-        }
-
-        @Override
-        public void destroyItem(ViewGroup container, int position, Object object)
-        {
-            super.destroyItem(container, position, object);
-            searchables.remove(object);
-        }
-    }*/
 }
