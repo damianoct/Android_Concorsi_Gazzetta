@@ -42,6 +42,8 @@
             android:layout_gravity="end"
             android:id="@+id/forgottenPasswordButton"
             android:onClick="onClearDBButtonClick"
+            android:backgroundTint="#ffffff"
+            android:textColor="@color/colorPrimary"
         />
 
 </LinearLayout>

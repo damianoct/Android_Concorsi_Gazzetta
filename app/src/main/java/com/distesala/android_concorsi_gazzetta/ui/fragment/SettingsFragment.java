@@ -69,7 +69,7 @@ public class SettingsFragment extends PreferenceFragment
         //TODO settare enabled/disable per clear DB e gestire il summary.
         key = getString(R.string.key_clear_db);
         connectionPref = findPreference(key);
-        connectionPref.setEnabled(false);
+        //connectionPref.setEnabled(false);
 
     }
 
