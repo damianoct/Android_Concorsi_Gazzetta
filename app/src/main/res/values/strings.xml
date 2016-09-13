@@ -54,5 +54,7 @@
     <string name="clear_db_butotn">clear_db_button</string>
     <string name="clear_db">Svuota Database</string>
     <string name="key_clear_db">key_clear_db</string>
+    <string name="connection_alert_title">Nessuna connessione dati disponibile</string>
+    <string name="connection_alert_message">Controlla se si dispone di una connessione WiFi o di una rete dati cellulare valida. Verificare che l\'impostazione \"Utilizza rete dati\" sia abilitata nel caso si voglia usare la rete dati cellulare.</string>
 
 </resources>
