@@ -19,6 +19,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
@@ -151,7 +153,7 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
 
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_gazzettelist, container, false);
-        progressWheel = (ProgressWheel) rootView.findViewById(R.id.progress_wheel);
+        progressWheel = (ProgressWheel) getActivity().findViewById(R.id.progress_wheel);
 
         gazzetteList = (ListView) rootView.findViewById(R.id.gazzetteList);
         gazzetteList.setNestedScrollingEnabled(true);
@@ -208,7 +210,8 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
         //TODO questi risultati servono solo a stoppare un possibile indicatore di progresso -> IMPLEMENTARE
         //Non ho messo switch case perchè mi secco a cambiare
 
-        progressWheel.setVisibility(View.GONE);
+
+        fadeOutProgressWheel();
 
         if (resultCode == Activity.RESULT_OK)
         {
@@ -225,6 +228,13 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
         }
 
         mSwipeRefreshLayout.setRefreshing(false);
+    }
+
+    private void fadeOutProgressWheel()
+    {
+        Animation animFadeOut = AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out);
+        progressWheel.setAnimation(animFadeOut);
+        progressWheel.setVisibility(View.GONE);
     }
 
     private void showConnectionAlert()
