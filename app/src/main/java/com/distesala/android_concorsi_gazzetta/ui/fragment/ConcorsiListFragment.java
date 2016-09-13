@@ -8,8 +8,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,9 +15,6 @@ import android.view.ViewGroup;
 
 import com.distesala.android_concorsi_gazzetta.R;
 import com.distesala.android_concorsi_gazzetta.database.GazzetteSQLiteHelper;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,9 +26,13 @@ public class ConcorsiListFragment extends HostSearchablesFragment
     private static final String IN_SCADENZA = "In Scadenza";
     private static final String PREFERITI = "Preferiti";
 
+    private static final int IN_SCADENZA_POS = 0;
+    private static final int PREFERITI_POS = 1;
+
     private static final String[] childTitles = new String[]{   IN_SCADENZA,
                                                                 PREFERITI
                                                             };
+    private String threshold;
 
     private TabLayout tabLayout;
 
@@ -43,7 +42,6 @@ public class ConcorsiListFragment extends HostSearchablesFragment
         return childTitles;
     }
 
-    private ViewPager viewPager;
     private AppBarLayout appBarLayout;
 
     public String getFragmentName()
@@ -60,28 +58,26 @@ public class ConcorsiListFragment extends HostSearchablesFragment
     @Override
     protected SearchableFragment getChild(int position)
     {
-        CharSequence tagTitle = childTitles[position];
-        Bundle bundle = getQueryBundleFromTitle(tagTitle);
+        Bundle bundle = getQueryBundleForPosition(position);
 
         return ContestCategoryFragment.newInstance(bundle);
     }
 
-    private Bundle getQueryBundleFromTitle(CharSequence tagTitle)
+    @Override
+    protected Bundle getQueryBundleForPosition(int position)
     {
         Bundle args = new Bundle(2);
         String whereClause = null;
         String whereArgs = null;
 
-        switch (tagTitle.toString())
+        switch (position)
         {
-            case IN_SCADENZA:
-                String key = getString(R.string.key_scadenza_threshold);
-                String threshold = String.valueOf(PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt(key, 0));
+            case IN_SCADENZA_POS:
                 whereClause = GazzetteSQLiteHelper.ContestEntry.COLUMN_SCADENZA + " <= date('now', '+" + threshold +
                                                                                 " days') AND " +
                         GazzetteSQLiteHelper.ContestEntry.COLUMN_SCADENZA + " >= date('now')";
                 break;
-            case PREFERITI:
+            case PREFERITI_POS:
                 //TODO: implementare dopo aver cambiato il database per aggiungere i preferiti
                 //args.putStringArray(WHERE_ARGS, whereArgs);
                 break;
@@ -135,39 +131,16 @@ public class ConcorsiListFragment extends HostSearchablesFragment
         appBarLayout.setElevation(0);
     }
 
-    class ViewPagerAdapter extends FragmentPagerAdapter
+    @Override
+    public void onResume()
     {
-        private final List<Fragment> mFragmentList = new ArrayList<>();
-        private final List<String> mFragmentTitleList = new ArrayList<>();
+        super.onResume();
+        //check for new preference value
+        String key = getString(R.string.key_scadenza_threshold);
+        threshold = String.valueOf(PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt(key, 0));
 
-        public ViewPagerAdapter(FragmentManager manager)
-        {
-            super(manager);
-        }
-
-        @Override
-        public Fragment getItem(int position)
-        {
-            return mFragmentList.get(position);
-        }
-
-        @Override
-        public int getCount()
-        {
-            return mFragmentList.size();
-        }
-
-        public void addFragment(Fragment fragment, String title)
-        {
-            mFragmentList.add(fragment);
-            mFragmentTitleList.add(title);
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position)
-        {
-            return mFragmentTitleList.get(position);
-        }
+        //controllare se devo refreshare il cursore a questa posizione
+        //all'esatta posizione ci pensa la super classe.
+        refreshQueryBundle();
     }
-
 }

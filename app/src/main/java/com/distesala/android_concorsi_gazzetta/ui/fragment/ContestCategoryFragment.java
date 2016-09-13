@@ -22,7 +22,6 @@ public class ContestCategoryFragment extends SearchableFragment implements Loade
 {
     private ListView contestsList;
     private SimpleCursorAdapter adapterSimpleCursor;
-    private Bundle queryBundle;
 
     public static ContestCategoryFragment newInstance(Bundle queryBundle)
     {
@@ -83,8 +82,17 @@ public class ContestCategoryFragment extends SearchableFragment implements Loade
     }
 
     @Override
+    public void onResume()
+    {
+        super.onResume();
+        //force restart for preference changed.
+        getLoaderManager().restartLoader(0, queryBundle, this);
+    }
+
+    @Override
     public void performSearch(String s)
     {
+        //TODO implementare ricerca fragment child.
     }
 
     @Override

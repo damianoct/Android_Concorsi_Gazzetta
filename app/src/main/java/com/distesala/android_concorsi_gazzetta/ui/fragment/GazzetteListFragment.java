@@ -185,7 +185,7 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
     {
-        appBarLayout.setElevation(25);
+        appBarLayout.setElevation(15);
         fragmentListener.onHomeTransaction();
         gazzetteList.setAdapter(simpleCursorAdapter);
         getLoaderManager().initLoader(0, null, this); //TODO c'è quello in onResume, si può togliere? penso di sì.

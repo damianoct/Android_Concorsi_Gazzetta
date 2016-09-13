@@ -36,7 +36,7 @@ public class ContestForGazzettaFragment extends HostSearchablesFragment
     protected SearchableFragment getChild(int position)
     {
         CharSequence category = getResources().getStringArray(R.array.contests_categories)[position];
-        Bundle itemBundle = buildQueryBundleForCategory(category);
+        Bundle itemBundle = getQueryBundleForPosition(position);
 
         return new ContestCategoryFragment().newInstance(itemBundle);
     }
@@ -128,9 +128,12 @@ public class ContestForGazzettaFragment extends HostSearchablesFragment
         outState.putInt("currentViewPagerItem", viewPager.getCurrentItem());
     }
 
-    private Bundle buildQueryBundleForCategory(CharSequence category)
+    @Override
+    protected Bundle getQueryBundleForPosition(int position)
     {
         Bundle args = new Bundle(2);
+
+        String category = getResources().getStringArray(R.array.contests_categories)[position];
 
         String whereClause = GazzetteSQLiteHelper.ContestEntry.COLUMN_GAZZETTA_NUMBER_OF_PUBLICATION + " =? AND "
                 + GazzetteSQLiteHelper.ContestEntry.COLUMN_TIPOLOGIA + " LIKE? ";

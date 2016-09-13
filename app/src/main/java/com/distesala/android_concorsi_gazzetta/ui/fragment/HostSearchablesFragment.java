@@ -2,15 +2,11 @@ package com.distesala.android_concorsi_gazzetta.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.ViewGroup;
-
-import com.distesala.android_concorsi_gazzetta.R;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -22,9 +18,23 @@ import java.util.List;
 public abstract class HostSearchablesFragment extends BaseFragment
 {
     private List<SearchableFragment> searchables;
+    private SearchableTabsAdapter adapter;
+    protected ViewPager viewPager;
+
 
     protected abstract SearchableFragment getChild(int position);
     protected abstract String[] getTabTitles();
+    //questa è la funziona che fornisce il bundle per il refresh
+    //può essere usata per fornire anche il bundle in fase di inizializzazione del child
+    //se questo è uguale (come struttura) a quello per il refresh.
+    protected abstract Bundle getQueryBundleForPosition(int position);
+
+    public final void refreshQueryBundle()
+    {
+        int position = viewPager.getCurrentItem();
+        for(SearchableFragment sf: searchables)
+            sf.onRefreshQueryBundle(getQueryBundleForPosition(position));
+    }
 
     public void notifyChildrenForSearch()
     {
@@ -51,6 +61,12 @@ public abstract class HostSearchablesFragment extends BaseFragment
         searchables = new LinkedList<>();
     }
 
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+    }
+
     public void addSearchable(SearchableFragment sf)
     {
         searchables.add(sf);
@@ -63,9 +79,9 @@ public abstract class HostSearchablesFragment extends BaseFragment
 
     protected void setupViewPager(final ViewPager viewPager)
     {
-        //viewPager.setAdapter(new SearchableTabsAdapter(getChildFragmentManager(), getResources().getStringArray(R.array.contests_categories_titles)));
-        viewPager.setAdapter(   new SearchableTabsAdapter(getChildFragmentManager(),
-                                getTabTitles()));
+        adapter = new SearchableTabsAdapter(getChildFragmentManager(),
+                getTabTitles());
+        viewPager.setAdapter(adapter);
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener()
         {
@@ -78,6 +94,7 @@ public abstract class HostSearchablesFragment extends BaseFragment
                 //onPageSelected notify new Searchable item for search.
                 if(isSearchActive())
                     notifyChildrenForSearch();
+
             }
 
             @Override
@@ -87,7 +104,6 @@ public abstract class HostSearchablesFragment extends BaseFragment
 
     class SearchableTabsAdapter extends FragmentStatePagerAdapter
     {
-
         private String[] titles;
 
         public SearchableTabsAdapter(FragmentManager fm, String[] titles)
