@@ -3,17 +3,21 @@ package com.distesala.android_concorsi_gazzetta.services;
 import android.app.Activity;
 import android.app.IntentService;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.ResultReceiver;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.distesala.android_concorsi_gazzetta.R;
 import com.distesala.android_concorsi_gazzetta.adapter.GsonGazzettaAdapter;
 import com.distesala.android_concorsi_gazzetta.contentprovider.ConcorsiGazzettaContentProvider;
 import com.distesala.android_concorsi_gazzetta.database.GazzetteSQLiteHelper;
 import com.distesala.android_concorsi_gazzetta.execptions.HttpErrorException;
 import com.distesala.android_concorsi_gazzetta.model.Concorso;
 import com.distesala.android_concorsi_gazzetta.model.Gazzetta;
+import com.distesala.android_concorsi_gazzetta.networking.Connectivity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -77,39 +81,61 @@ public class JSONDownloader extends IntentService
             {
                 ResultReceiver rec = intent.getParcelableExtra("receiverTag");
 
-                if (!updatedGazzette())
+                if(canConnect())
                 {
-                    Log.i("INTENT SERVICE", "Sto aggionando il Database");
-
-                    try
+                    if (!updatedGazzette())
                     {
-                        String json = downloadGazzette(new URL(URL_WS));
-                        JSONObject jsonObject = new JSONObject(json);
-                        JSONArray gazzetteJsonArray = jsonObject.getJSONArray("gazzette");
+                        Log.i("INTENT SERVICE", "Sto aggionando il Database");
 
-                        GsonBuilder gsonBuilder = new GsonBuilder();
+                        try
+                        {
 
-                        gsonBuilder.registerTypeAdapter(Gazzetta.class, new GsonGazzettaAdapter());
-                        Gson gson = gsonBuilder.create();
+                            String json = downloadGazzette(new URL(URL_WS));
+                            JSONObject jsonObject = new JSONObject(json);
+                            JSONArray gazzetteJsonArray = jsonObject.getJSONArray("gazzette");
 
-                        Gazzetta[] gazzette = gson.fromJson(gazzetteJsonArray.toString(), Gazzetta[].class);
+                            GsonBuilder gsonBuilder = new GsonBuilder();
 
-                        insertGazzetteWithContests(gazzette);
+                            gsonBuilder.registerTypeAdapter(Gazzetta.class, new GsonGazzettaAdapter());
+                            Gson gson = gsonBuilder.create();
 
+                            Gazzetta[] gazzette = gson.fromJson(gazzetteJsonArray.toString(), Gazzetta[].class);
+
+                            insertGazzetteWithContests(gazzette);
+
+
+                        }
+
+                        catch (Exception e)
+                        {
+                            Log.i("IntentService", "Errore");
+                            e.printStackTrace();
+                            rec.send(Activity.RESULT_CANCELED, null);
+                        }
                     }
-
-                    catch (Exception e)
-                    {
-                        Log.i("IntentService", "Errore");
-                        e.printStackTrace();
-                        rec.send(Activity.RESULT_CANCELED, null);
-                    }
+                }
+                else
+                {
+                    Log.i("IntentService", "Manca la Conneccione");
+                    rec.send(Connectivity.CONNECTION_LOCKED, null);
                 }
 
                 rec.send(Activity.RESULT_OK, null);
                 Log.i("provider", "service finito");
             }
         }
+    }
+
+    private boolean canConnect()
+    {
+        Context c = getApplicationContext();
+        String cellularKey = getString(R.string.key_utilizzo_rete_dati);
+        boolean cellularEnabled = PreferenceManager
+                .getDefaultSharedPreferences(getApplicationContext())
+                .getBoolean(cellularKey, true);
+
+        return Connectivity.isConnectedWifi(c) ||
+                (Connectivity.isConnectedMobile(c) && cellularEnabled);
     }
 
     private boolean updatedGazzette()

@@ -1,6 +1,8 @@
 package com.distesala.android_concorsi_gazzetta.ui.fragment;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -12,6 +14,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +28,7 @@ import android.widget.Toast;
 import com.distesala.android_concorsi_gazzetta.R;
 import com.distesala.android_concorsi_gazzetta.contentprovider.ConcorsiGazzettaContentProvider;
 import com.distesala.android_concorsi_gazzetta.database.GazzetteSQLiteHelper;
+import com.distesala.android_concorsi_gazzetta.networking.Connectivity;
 import com.distesala.android_concorsi_gazzetta.services.JSONDownloader;
 import com.distesala.android_concorsi_gazzetta.services.JSONResultReceiver;
 import com.distesala.android_concorsi_gazzetta.ui.HomeActivity;
@@ -195,18 +199,38 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
     public void onReceiveResult(int resultCode, Bundle resultData)
     {
         //TODO questi risultati servono solo a stoppare un possibile indicatore di progresso -> IMPLEMENTARE
+        //Non ho messo switch case perchè mi secco a cambiare
         if (resultCode == Activity.RESULT_OK)
         {
             getLoaderManager().initLoader(0, null, this);
         }
-
-        if (resultCode == Activity.RESULT_CANCELED)
+        else if (resultCode == Activity.RESULT_CANCELED)
         {
             Toast.makeText(getActivity(), "ERROR", Toast.LENGTH_LONG).show();
             getLoaderManager().initLoader(0, null, this);
         }
+        else if (resultCode == Connectivity.CONNECTION_LOCKED)
+        {
+            showConnectionAlert();
+        }
 
         mSwipeRefreshLayout.setRefreshing(false);
+    }
+
+    private void showConnectionAlert()
+    {
+        Context context = getActivity();
+
+        new AlertDialog.Builder(context)
+                .setTitle(R.string.connection_alert_title)
+                .setMessage(R.string.connection_alert_message)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // continue with delete
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
     }
 
     @Override
