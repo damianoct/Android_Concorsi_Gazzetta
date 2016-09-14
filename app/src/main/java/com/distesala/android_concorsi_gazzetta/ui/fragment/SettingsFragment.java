@@ -1,24 +1,23 @@
 package com.distesala.android_concorsi_gazzetta.ui.fragment;
 
 
+import android.app.LoaderManager;
+import android.content.CursorLoader;
+import android.content.Loader;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.util.Log;
 
 import com.distesala.android_concorsi_gazzetta.R;
-
-/**
- * A simple {@link Fragment} subclass.
- */
+import com.distesala.android_concorsi_gazzetta.contentprovider.ConcorsiGazzettaContentProvider;
 
 public class SettingsFragment extends PreferenceFragment
-                              implements SharedPreferences.OnSharedPreferenceChangeListener
+                              implements SharedPreferences.OnSharedPreferenceChangeListener,
+                                            LoaderManager.LoaderCallbacks<Cursor>
 {
 
     public SettingsFragment()
@@ -41,6 +40,8 @@ public class SettingsFragment extends PreferenceFragment
         super.onResume();
 
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+
+        getLoaderManager().initLoader(0, null, this);
 
         updatePreferenceSummaries();
     }
@@ -65,12 +66,17 @@ public class SettingsFragment extends PreferenceFragment
                                     getString(R.string.summary_rete_dati) :
                                     getString(R.string.summary_rete_wifi));
 
+    }
 
-        //TODO settare enabled/disable per clear DB e gestire il summary.
-        key = getString(R.string.key_clear_db);
-        connectionPref = findPreference(key);
-        //connectionPref.setEnabled(false);
+    private void updateClearDBPref(int numberOfGazzette)
+    {
+        String key = getString(R.string.key_clear_db);
+        Preference connectionPref = findPreference(key);
 
+        connectionPref.setSummary("Il database contiene attualmente " +
+                                    numberOfGazzette + " gazzette.");
+
+        connectionPref.setEnabled(numberOfGazzette != 0);
     }
 
     @Override
@@ -84,7 +90,30 @@ public class SettingsFragment extends PreferenceFragment
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key)
     {
-        //Con sole tre preferences possiamo essere perdonati
+        //Con sole tre preferences da aggiornare possiamo essere perdonati
         updatePreferenceSummaries();
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args)
+    {
+        return new CursorLoader(getActivity().getApplicationContext(),
+                ConcorsiGazzettaContentProvider.GAZZETTE_URI,
+                null, //projection (null is ALL COLUMNS)
+                null, //selection
+                null, //selectionArgs
+                null); //order
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data)
+    {
+        updateClearDBPref(data.getCount());
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader)
+    {
+        Log.i("observer", "onLoaderReset");
     }
 }

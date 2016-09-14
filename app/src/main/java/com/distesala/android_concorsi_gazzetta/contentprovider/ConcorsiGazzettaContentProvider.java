@@ -23,6 +23,7 @@ public class ConcorsiGazzettaContentProvider extends ContentProvider
     private GazzetteSQLiteHelper database;
 
     // used for the UriMacher
+    private static final int GAZZETTE_ALL = 9;
     private static final int GAZZETTE = 10;
     private static final int GAZZETTA_ID = 11;
     private static final int CONTESTS = 12;
@@ -30,9 +31,14 @@ public class ConcorsiGazzettaContentProvider extends ContentProvider
 
     private static final String AUTHORITY = "com.distesala.android_concorsi_gazzetta.contentprovider";
 
+    private static final String GAZZETTE_ALL_PATH = "gazzetteAll";
+
     private static final String GAZZETTE_PATH = "gazzette";
 
     private static final String CONTESTS_PATH = "contests";
+
+    public static final Uri GAZZETTE_ALL_URI = Uri.parse("content://" + AUTHORITY
+            + "/" + GAZZETTE_ALL_PATH);
 
     public static final Uri GAZZETTE_URI = Uri.parse("content://" + AUTHORITY
             + "/" + GAZZETTE_PATH);
@@ -44,6 +50,7 @@ public class ConcorsiGazzettaContentProvider extends ContentProvider
             UriMatcher.NO_MATCH);
     static
     {
+        sURIMatcher.addURI(AUTHORITY, GAZZETTE_ALL_PATH, GAZZETTE_ALL);
         sURIMatcher.addURI(AUTHORITY, GAZZETTE_PATH, GAZZETTE);
         sURIMatcher.addURI(AUTHORITY, GAZZETTE_PATH + "/#", GAZZETTA_ID);
         sURIMatcher.addURI(AUTHORITY, CONTESTS_PATH, CONTESTS);
@@ -69,13 +76,13 @@ public class ConcorsiGazzettaContentProvider extends ContentProvider
         {
             case GAZZETTE:
             {
-                String key = getContext().getString(R.string.key_num_gazzette);
-                int nRow = PreferenceManager.getDefaultSharedPreferences(getContext()).getInt(key, 0);
+                //String key = getContext().getString(R.string.key_num_gazzette);
+                //int nRow = PreferenceManager.getDefaultSharedPreferences(getContext()).getInt(key, 0);
 
                 c = db.query(GazzetteSQLiteHelper.GazzettaEntry.TABLE_NAME,
                         projection,
                         selection, selectionArgs, null, null,
-                        GazzetteSQLiteHelper.GazzettaEntry.COLUMN_ID_GAZZETTA + " DESC" + " LIMIT " + nRow);
+                        sortOrder);
 
                 Log.i("provider", "cursor gazzette -> " + String.valueOf(c.getCount()));
                 break;
@@ -137,7 +144,6 @@ public class ConcorsiGazzettaContentProvider extends ContentProvider
             {
                 long id = db.insertWithOnConflict(GazzetteSQLiteHelper.GazzettaEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
                 returnUri = ContentUris.withAppendedId(GAZZETTE_URI, id);
-
                 break;
             }
 
@@ -151,8 +157,6 @@ public class ConcorsiGazzettaContentProvider extends ContentProvider
 
         getContext().getContentResolver().notifyChange(returnUri, null);
 
-
-
         return returnUri;
 
     }
@@ -160,7 +164,31 @@ public class ConcorsiGazzettaContentProvider extends ContentProvider
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs)
     {
-        return 0;
+
+        SQLiteDatabase db = database.getWritableDatabase();
+
+        int itemDeleted = 0;
+
+        switch(sURIMatcher.match(uri))
+        {
+            case GAZZETTE:
+            {
+                itemDeleted = db.delete(GazzetteSQLiteHelper.GazzettaEntry.TABLE_NAME, selection, selectionArgs);
+                itemDeleted += db.delete(GazzetteSQLiteHelper.ContestEntry.TABLE_NAME, selection, selectionArgs);
+
+                break;
+            }
+
+            case CONTESTS:
+            {
+                //Future implementation.
+                break;
+            }
+        }
+
+        getContext().getContentResolver().notifyChange(uri, null);
+
+        return itemDeleted;
     }
 
     @Override

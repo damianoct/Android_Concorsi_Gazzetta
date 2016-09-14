@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
@@ -193,6 +194,11 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
         fragmentListener.onHomeTransaction();
         gazzetteList.setAdapter(simpleCursorAdapter);
         getLoaderManager().initLoader(0, null, this); //TODO c'è quello in onResume, si può togliere? penso di sì.
+
+
+        Bundle args = isSearchActive() ? getSearchBundle(querySearch) : null;
+        //force restart for preference changed.
+        getLoaderManager().restartLoader(0, args, this);
     }
 
     @Override
@@ -236,25 +242,30 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args)
     {
+        String key = getActivity().getString(R.string.key_num_gazzette);
+        int nRow = PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt(key, 0);
+        String orderAndLimit = GazzetteSQLiteHelper.GazzettaEntry.COLUMN_ID_GAZZETTA
+                                    + " DESC" + " LIMIT " + nRow;
+
         return new CursorLoader(getActivity().getApplicationContext(),
                     ConcorsiGazzettaContentProvider.GAZZETTE_URI,
                     null, //projection (null is ALL COLUMNS)
                     (args != null ? args.getString(WHERE_CLAUSE): null), //selection
                     (args != null ? args.getStringArray(WHERE_ARGS) : null), //selectionArgs
-                    null); //order
+                    orderAndLimit); //order
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data)
     {
-        Log.i("gazzette loader", "gazzette list finished, cursor -> " + String.valueOf(data.getCount()));
+        Log.i("pio", "gazzette list finished, cursor -> " + String.valueOf(data.getCount()));
         simpleCursorAdapter.swapCursor(data);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader)
     {
-        Log.i("loader", "gazzette list loader RESET");
+        Log.i("pio", "gazzette list loader RESET");
         simpleCursorAdapter.swapCursor(null);
 
     }
@@ -264,9 +275,9 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
     {
         super.onResume();
 
-        Bundle args = isSearchActive() ? getSearchBundle(querySearch) : null;
+        /*Bundle args = isSearchActive() ? getSearchBundle(querySearch) : null;
 
         //force restart for preference changed.
-        getLoaderManager().restartLoader(0, args, this);
+        getLoaderManager().restartLoader(0, args, this);*/
     }
 }
