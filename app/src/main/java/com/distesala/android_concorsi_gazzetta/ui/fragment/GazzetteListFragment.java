@@ -20,6 +20,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
@@ -33,9 +35,11 @@ import com.distesala.android_concorsi_gazzetta.networking.Connectivity;
 import com.distesala.android_concorsi_gazzetta.services.JSONDownloader;
 import com.distesala.android_concorsi_gazzetta.services.JSONResultReceiver;
 import com.distesala.android_concorsi_gazzetta.ui.HomeActivity;
+import com.pnikosis.materialishprogress.ProgressWheel;
 
 /**
  * A simple {@link Fragment} subclass.
+ * Un razie spassionato a https://github.com/pnikosis/materialish-progress per la progress wheel
  */
 
 public class GazzetteListFragment extends BaseFragment implements JSONResultReceiver.Receiver, LoaderManager.LoaderCallbacks<Cursor>
@@ -51,6 +55,8 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
     private SimpleCursorAdapter simpleCursorAdapter;
     private AppBarLayout appBarLayout;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+
+    private ProgressWheel progressWheel;
 
     @Override
     public String getFragmentName()
@@ -134,6 +140,7 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
         mServiceIntent.setAction(JSONDownloader.DOWNLOAD_GAZZETTA);
         mServiceIntent.putExtra("receiverTag", mReceiver);
         getActivity().startService(mServiceIntent);
+
     }
 
     @Override
@@ -143,9 +150,11 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
         Log.d("ExtendendFragment", "onCreateView()");
 
         super.onCreateView(inflater, container, savedInstanceState);
+        appBarLayout = (AppBarLayout) getActivity().findViewById(R.id.appbarlayout);
+
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_gazzettelist, container, false);
-        appBarLayout = (AppBarLayout) getActivity().findViewById(R.id.appbarlayout);
+        progressWheel = (ProgressWheel) getActivity().findViewById(R.id.progress_wheel);
 
         gazzetteList = (ListView) rootView.findViewById(R.id.gazzetteList);
         gazzetteList.setNestedScrollingEnabled(true);
@@ -206,6 +215,10 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
     {
         //TODO questi risultati servono solo a stoppare un possibile indicatore di progresso -> IMPLEMENTARE
         //Non ho messo switch case perchè mi secco a cambiare
+
+
+        fadeOutProgressWheel();
+
         if (resultCode == Activity.RESULT_OK)
         {
             getLoaderManager().initLoader(0, null, this);
@@ -221,6 +234,13 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
         }
 
         mSwipeRefreshLayout.setRefreshing(false);
+    }
+
+    private void fadeOutProgressWheel()
+    {
+        Animation animFadeOut = AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out);
+        progressWheel.setAnimation(animFadeOut);
+        progressWheel.setVisibility(View.GONE);
     }
 
     private void showConnectionAlert()
