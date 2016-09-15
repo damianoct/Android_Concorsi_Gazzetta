@@ -15,6 +15,8 @@ public class Gazzetta implements Serializable
 
     private List<Concorso> concorsi;
 
+    public static final String DATE_OF_PUBLICATION = "dateOfPublication";
+
     public Gazzetta() {}
 
     public int getIdGazzetta()

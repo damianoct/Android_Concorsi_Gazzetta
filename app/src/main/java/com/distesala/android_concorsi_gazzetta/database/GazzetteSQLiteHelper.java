@@ -33,6 +33,7 @@ public class GazzetteSQLiteHelper extends SQLiteOpenHelper
 
         public static final String COLUMN_ID_CONCORSO = _ID;
         public static final String COLUMN_GAZZETTA_NUMBER_OF_PUBLICATION = "gazzettaNumberOfPublication";
+        public static final String COLUMN_GAZZETTA_DATE_OF_PUBLICATION = "gazzettaDateOfPublication";
         public static final String COLUMN_EMETTITORE = "emettitore";
         public static final String COLUMN_AREA = "areaDiInteresse";
         public static final String COLUMN_TITOLO = "titoloConcorso";
@@ -54,6 +55,7 @@ public class GazzetteSQLiteHelper extends SQLiteOpenHelper
     private static final String CREATE_CONCORSI = "create table " + ContestEntry.TABLE_NAME + "( " +
             ContestEntry.COLUMN_ID_CONCORSO + " text primary key, " +
             ContestEntry.COLUMN_GAZZETTA_NUMBER_OF_PUBLICATION + " text not null, " +
+            ContestEntry.COLUMN_GAZZETTA_DATE_OF_PUBLICATION + " text not null, " +
             ContestEntry.COLUMN_EMETTITORE + " text not null, " +
             ContestEntry.COLUMN_AREA + " text not null, " +
             ContestEntry.COLUMN_TITOLO + " text not null, " +
@@ -100,12 +102,13 @@ public class GazzetteSQLiteHelper extends SQLiteOpenHelper
 
         contestContentValues.put(ContestEntry.COLUMN_ID_CONCORSO, c.getCodiceRedazionale());
         contestContentValues.put(ContestEntry.COLUMN_GAZZETTA_NUMBER_OF_PUBLICATION, c.getGazzettaNumberOfPublication());
+        contestContentValues.put(ContestEntry.COLUMN_GAZZETTA_DATE_OF_PUBLICATION, c.getGazzettaDateOfPublication());
         contestContentValues.put(ContestEntry.COLUMN_TITOLO, c.getTitoloConcorso());
         contestContentValues.put(ContestEntry.COLUMN_EMETTITORE, c.getEmettitore());
         contestContentValues.put(ContestEntry.COLUMN_AREA, c.getAreaDiInteresse());
         contestContentValues.put(ContestEntry.COLUMN_TIPOLOGIA, c.getTipologia());
         contestContentValues.put(ContestEntry.COLUMN_SCADENZA, c.getScadenza());
-        contestContentValues.put(ContestEntry.COLUMN_N_ARTICOLI, c.getAreaDiInteresse());
+        contestContentValues.put(ContestEntry.COLUMN_N_ARTICOLI, c.getNumeroArticoli());
         contestContentValues.put(ContestEntry.COLUMN_FAVORITE, c.getIsFavorite());
 
         return contestContentValues;

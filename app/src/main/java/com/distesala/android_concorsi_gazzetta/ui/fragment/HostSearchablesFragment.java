@@ -247,4 +247,6 @@ public abstract class HostSearchablesFragment extends BaseFragment
             removeSearchable(object);
         }
     }
+
+    //TODO: Implementare l'espansione della TabBar quando la listview non contiene un coulouris
 }

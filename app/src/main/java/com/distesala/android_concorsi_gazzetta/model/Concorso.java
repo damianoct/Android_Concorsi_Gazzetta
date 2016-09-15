@@ -9,6 +9,7 @@ import java.util.List;
 public class Concorso
 {
     private String gazzettaNumberOfPublication; //gazzetta di appartenenza
+    private String gazzettaDateOfPublication;
     private String emettitore;
     private String areaDiInteresse;
     private String titoloConcorso;
@@ -18,11 +19,18 @@ public class Concorso
     private String scadenza;
     private int isFavorite;
 
+    public static final String CONTEST_ID = "contestID";
+
     public Concorso() {}
 
     public String getGazzettaNumberOfPublication()
     {
         return gazzettaNumberOfPublication;
+    }
+
+    public String getGazzettaDateOfPublication()
+    {
+        return gazzettaDateOfPublication;
     }
 
     public String getEmettitore()
@@ -68,6 +76,11 @@ public class Concorso
     public void setGazzettaNumberOfPublication(String gazzettaNumberOfPublication)
     {
         this.gazzettaNumberOfPublication = gazzettaNumberOfPublication;
+    }
+
+    public void setGazzettaDateOfPublication(String gazzettaDateOfPublication)
+    {
+        this.gazzettaDateOfPublication = gazzettaDateOfPublication;
     }
 
     public void setEmettitore(String emettitore)

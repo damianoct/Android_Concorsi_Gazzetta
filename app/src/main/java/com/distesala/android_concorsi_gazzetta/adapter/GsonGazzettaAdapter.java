@@ -62,6 +62,7 @@ public class GsonGazzettaAdapter implements JsonDeserializer<Gazzetta>
         {
             Concorso c = gson.fromJson(j, Concorso.class);
             c.setGazzettaNumberOfPublication(numberOfPublication);
+            c.setGazzettaDateOfPublication(dateOfPublication);
             contestsList.add(c);
         }
 

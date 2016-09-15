@@ -16,6 +16,7 @@ import com.distesala.android_concorsi_gazzetta.contentprovider.ConcorsiGazzettaC
 import com.distesala.android_concorsi_gazzetta.database.GazzetteSQLiteHelper;
 import com.distesala.android_concorsi_gazzetta.execptions.HttpErrorException;
 import com.distesala.android_concorsi_gazzetta.model.Concorso;
+import com.distesala.android_concorsi_gazzetta.model.ConcorsoContent;
 import com.distesala.android_concorsi_gazzetta.model.Gazzetta;
 import com.distesala.android_concorsi_gazzetta.networking.Connectivity;
 import com.google.gson.Gson;
@@ -38,8 +39,10 @@ import java.util.List;
 public class JSONDownloader extends IntentService
 {
     private static final String URL_WS = "http://marsala.ddns.net:8080/gazzetteWithContests";
+    private static final String URL = "http://marsala.ddns.net:8080/";
     private static final String LATEST_GAZZETTA = "http://marsala.ddns.net:8080/latestGazzetta";
-    public static final String DOWNLOAD_GAZZETTA = "com.distesala.android_concorsi_gazzetta.services.action.DownloadGazzetta";
+    public static final String DOWNLOAD_GAZZETTA = "DownloadGazzetta";
+    public static final String DOWNLOAD_CONTEST = "DownloadContest";
 
     public JSONDownloader()
     {
@@ -90,7 +93,7 @@ public class JSONDownloader extends IntentService
                         try
                         {
 
-                            String json = downloadGazzette(new URL(URL_WS));
+                            String json = downloadJSON(new URL(URL_WS));
                             JSONObject jsonObject = new JSONObject(json);
                             JSONArray gazzetteJsonArray = jsonObject.getJSONArray("gazzette");
 
@@ -123,6 +126,37 @@ public class JSONDownloader extends IntentService
                 rec.send(Activity.RESULT_OK, null);
                 Log.i("provider", "service finito");
             }
+            else if (DOWNLOAD_CONTEST.equals(action))
+            {
+                Log.i("melinta", "PATTITO");
+
+                String dateOfPublication = intent.getStringExtra(Gazzetta.DATE_OF_PUBLICATION);
+                String contestID = intent.getStringExtra(Concorso.CONTEST_ID);
+
+                String day = dateOfPublication.substring(8,10);
+                String month = dateOfPublication.substring(5,7);
+                String year = dateOfPublication.substring(0,4);
+
+                String link = URL + "concorso?giorno="
+                                    + day + "&mese="
+                                    + month + "&anno="
+                                    + year + "&codiceRedazionale=" + contestID;
+
+                try
+                {
+                    String json = downloadJSON(new URL(link));
+                    JSONObject jsonObject = new JSONObject(json);
+
+                    Gson gson = new Gson();
+                    ConcorsoContent content = gson.fromJson(jsonObject.toString(), ConcorsoContent.class);
+                    Log.i("melinta", content.articoliBando.get(0));
+
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
@@ -142,7 +176,7 @@ public class JSONDownloader extends IntentService
     {
         try
         {
-            String json = downloadGazzette(new URL(LATEST_GAZZETTA));
+            String json = downloadJSON(new URL(LATEST_GAZZETTA));
             Gson gson = new Gson();
 
 
@@ -166,7 +200,7 @@ public class JSONDownloader extends IntentService
         }
     }
 
-    private String downloadGazzette(URL url) throws Exception
+    private String downloadJSON(URL url) throws Exception
     {
         String json = null;
 

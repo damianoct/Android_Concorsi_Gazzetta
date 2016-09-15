@@ -62,23 +62,12 @@ public class FavContestCursorAdapter extends CursorAdapter
                 contentValues.put(GazzetteSQLiteHelper.ContestEntry.COLUMN_FAVORITE,  isFav ^ 1);
                 Log.i("MELINTA", String.valueOf(isFav ^ 1));
 
-                /*context.getContentResolver().update(ConcorsiGazzettaContentProvider.CONTESTS_URI,
+                context.getContentResolver().update(ConcorsiGazzettaContentProvider.CONTESTS_URI,
                         contentValues,
                         GazzetteSQLiteHelper.ContestEntry.COLUMN_ID_CONCORSO + " =?",
-                        new String[]{contestID});*/
+                        new String[]{contestID});
 
-                new AlertDialog.Builder(context)
-                        .setTitle(R.string.connection_alert_title)
-                        .setMessage(R.string.connection_alert_message)
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener()
-                        {
-                            public void onClick(DialogInterface dialog, int which)
-                            {
-                                // continue with delete
-                            }
-                        })
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
+
             }
         });
     }
