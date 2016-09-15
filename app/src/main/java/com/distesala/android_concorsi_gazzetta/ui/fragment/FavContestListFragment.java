@@ -1,40 +1,47 @@
 package com.distesala.android_concorsi_gazzetta.ui.fragment;
 
+
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.widget.CursorAdapter;
 import android.util.Log;
+import android.widget.AdapterView;
+import android.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 
 import com.distesala.android_concorsi_gazzetta.R;
 import com.distesala.android_concorsi_gazzetta.adapter.ContestCursorAdapter;
+import com.distesala.android_concorsi_gazzetta.adapter.FavContestCursorAdapter;
 import com.distesala.android_concorsi_gazzetta.contentprovider.ConcorsiGazzettaContentProvider;
-import com.distesala.android_concorsi_gazzetta.database.GazzetteSQLiteHelper;
 import com.distesala.android_concorsi_gazzetta.ui.HomeActivity;
 
-
-public class ContestCategoryFragment extends SearchableFragment implements LoaderManager.LoaderCallbacks<Cursor>
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class FavContestListFragment extends SearchableFragment implements LoaderManager.LoaderCallbacks<Cursor>
 {
     private ListView contestsList;
     private CursorAdapter cursorAdapter;
 
-    public static ContestCategoryFragment newInstance(Bundle queryBundle)
+    public static FavContestListFragment newInstance(Bundle queryBundle)
     {
-        ContestCategoryFragment f = new ContestCategoryFragment();
+        FavContestListFragment f = new FavContestListFragment();
         f.setArguments(queryBundle);
         return f;
     }
 
-    public ContestCategoryFragment() { }
+    @Override
+    protected void performSearch(String querySearch)
+    {
+        //TODO implementare ricerca fragment child.
+    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState)
@@ -51,13 +58,15 @@ public class ContestCategoryFragment extends SearchableFragment implements Loade
 
         queryBundle = getArguments();
 
-        cursorAdapter = new ContestCursorAdapter(getActivity(), null);
+        cursorAdapter = new FavContestCursorAdapter(getActivity(), null);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
+        //TODO sto usando un altro layout.
+        //si possono eliminare tutti e farne uno generico, dato che sono tutti identici.
         View rootView = inflater.inflate(R.layout.fragment_contest_category, container, false);
 
         contestsList = (ListView) rootView.findViewById(R.id.contestsList);
@@ -90,20 +99,6 @@ public class ContestCategoryFragment extends SearchableFragment implements Loade
     {
         super.onViewCreated(view, savedInstanceState);
         contestsList.setAdapter(cursorAdapter);
-    }
-
-    @Override
-    public void onResume()
-    {
-        super.onResume();
-        //force restart for preference changed.
-        getLoaderManager().restartLoader(0, queryBundle, this);
-    }
-
-    @Override
-    public void performSearch(String s)
-    {
-        //TODO implementare ricerca fragment child.
     }
 
     @Override

@@ -20,9 +20,9 @@ import com.distesala.android_concorsi_gazzetta.database.GazzetteSQLiteHelper;
 /**
  * Created by damiano on 29/08/16.
  */
-public class ContestCursorAdapter extends CursorAdapter
+public class FavContestCursorAdapter extends CursorAdapter
 {
-    public ContestCursorAdapter(Context context, Cursor c)
+    public FavContestCursorAdapter(Context context, Cursor c)
     {
         super(context, c, 0);
     }
@@ -38,23 +38,22 @@ public class ContestCursorAdapter extends CursorAdapter
     {
         TextView emettitore = (TextView) view.findViewById(R.id.emettitore);
         TextView titolo = (TextView) view.findViewById(R.id.titolo);
-        ImageButton favButton = (ImageButton) view.findViewById(R.id.fav_button);
+        ImageButton rubbishButton = (ImageButton) view.findViewById(R.id.fav_button);
 
         emettitore.setText(cursor.getString(cursor.getColumnIndex(GazzetteSQLiteHelper.ContestEntry.COLUMN_EMETTITORE)));
         titolo.setText(cursor.getString(cursor.getColumnIndex(GazzetteSQLiteHelper.ContestEntry.COLUMN_TITOLO)));
 
         final int isFav = cursor.getInt(cursor.getColumnIndex(GazzetteSQLiteHelper.ContestEntry.COLUMN_FAVORITE));
-        favButton.setImageResource((isFav == 0) ? R.drawable.star_off :
-                R.drawable.star_on );
+
+        /*favButton.setImageResource((isFav == 0) ? R.drawable.star_off :
+                R.drawable.star_on );*/
+
+        rubbishButton.setImageResource(R.drawable.rubbish);
 
 
         final String contestID = cursor.getString(cursor.getColumnIndex(GazzetteSQLiteHelper.ContestEntry.COLUMN_ID_CONCORSO));
 
-
-        //TODO nel costruttore si potrebbe passare un View.OnClickListener (il fragment che contiene l'adapter)
-        //e fargli gestire a lui la callback.
-
-        favButton.setOnClickListener(new View.OnClickListener()
+        rubbishButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -63,10 +62,23 @@ public class ContestCursorAdapter extends CursorAdapter
                 contentValues.put(GazzetteSQLiteHelper.ContestEntry.COLUMN_FAVORITE,  isFav ^ 1);
                 Log.i("MELINTA", String.valueOf(isFav ^ 1));
 
-                context.getContentResolver().update(ConcorsiGazzettaContentProvider.CONTESTS_URI,
+                /*context.getContentResolver().update(ConcorsiGazzettaContentProvider.CONTESTS_URI,
                         contentValues,
                         GazzetteSQLiteHelper.ContestEntry.COLUMN_ID_CONCORSO + " =?",
-                        new String[]{contestID});
+                        new String[]{contestID});*/
+
+                new AlertDialog.Builder(context)
+                        .setTitle(R.string.connection_alert_title)
+                        .setMessage(R.string.connection_alert_message)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener()
+                        {
+                            public void onClick(DialogInterface dialog, int which)
+                            {
+                                // continue with delete
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
             }
         });
     }

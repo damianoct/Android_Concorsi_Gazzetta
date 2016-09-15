@@ -53,9 +53,20 @@ public class ConcorsiListFragment extends HostSearchablesFragment
     @Override
     protected SearchableFragment getChild(int position)
     {
+        SearchableFragment f = null;
         Bundle bundle = getQueryBundleForPosition(position);
 
-        return ContestCategoryFragment.newInstance(bundle);
+        switch (position)
+        {
+            case IN_SCADENZA_POS:
+                f = ContestCategoryFragment.newInstance(bundle);
+                break;
+            case PREFERITI_POS:
+                f = FavContestListFragment.newInstance(bundle);
+                break;
+        }
+
+        return f;
     }
 
     @Override
@@ -63,7 +74,7 @@ public class ConcorsiListFragment extends HostSearchablesFragment
     {
         Bundle args = new Bundle(2);
         String whereClause = null;
-        String whereArgs = null;
+        String[] whereArgs = null;
 
         switch (position)
         {
@@ -73,13 +84,13 @@ public class ConcorsiListFragment extends HostSearchablesFragment
                         GazzetteSQLiteHelper.ContestEntry.COLUMN_SCADENZA + " >= date('now')";
                 break;
             case PREFERITI_POS:
-                //TODO: implementare dopo aver cambiato il database per aggiungere i preferiti
-                //args.putStringArray(WHERE_ARGS, whereArgs);
+                whereClause = GazzetteSQLiteHelper.ContestEntry.COLUMN_FAVORITE + "=?";
+                whereArgs = new String[]{"1"};
                 break;
         }
 
         args.putString(WHERE_CLAUSE, whereClause);
-
+        args.putStringArray(WHERE_ARGS, whereArgs);
 
         return args;
     }
