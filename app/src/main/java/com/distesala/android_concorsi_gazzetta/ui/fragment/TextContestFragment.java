@@ -1,13 +1,18 @@
 package com.distesala.android_concorsi_gazzetta.ui.fragment;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import com.distesala.android_concorsi_gazzetta.R;
 import com.distesala.android_concorsi_gazzetta.database.GazzetteSQLiteHelper;
 
 public class TextContestFragment extends HostSearchablesFragment
 {
+    public static TextContestFragment newInstance(Bundle bundle)
+    {
+        TextContestFragment f = new TextContestFragment();
+        f.setArguments(bundle);
+        return f;
+    }
 
     public String getFragmentName()
     {
@@ -28,7 +33,7 @@ public class TextContestFragment extends HostSearchablesFragment
     @Override
     protected String[] getTabTitles()
     {
-        return new String[] {"SOLO"};
+        return new String[] {"1", "2"};
     }
 
     @Override
@@ -53,13 +58,5 @@ public class TextContestFragment extends HostSearchablesFragment
         args.putStringArray(WHERE_ARGS, whereArgs);
 
         return args;
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState)
-    {
-        Log.i("[TEXTGAZ] MELINTA", String.valueOf(viewPager == null) + " <-> " + String.valueOf(tabLayout == null));
-
-        super.onSaveInstanceState(outState);
     }
 }

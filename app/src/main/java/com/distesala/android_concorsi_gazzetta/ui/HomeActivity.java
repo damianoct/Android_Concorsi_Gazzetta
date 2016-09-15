@@ -20,7 +20,6 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import com.distesala.android_concorsi_gazzetta.R;
-import com.distesala.android_concorsi_gazzetta.ui.fragment.BaseFragment;
 import com.distesala.android_concorsi_gazzetta.ui.fragment.ConcorsiListFragment;
 import com.distesala.android_concorsi_gazzetta.ui.fragment.FragmentListener;
 import com.distesala.android_concorsi_gazzetta.ui.fragment.GazzetteListFragment;

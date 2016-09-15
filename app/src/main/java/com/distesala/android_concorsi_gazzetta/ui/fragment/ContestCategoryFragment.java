@@ -15,6 +15,7 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
 import com.distesala.android_concorsi_gazzetta.R;
+import com.distesala.android_concorsi_gazzetta.adapter.ContestCursorAdapter;
 import com.distesala.android_concorsi_gazzetta.contentprovider.ConcorsiGazzettaContentProvider;
 import com.distesala.android_concorsi_gazzetta.database.GazzetteSQLiteHelper;
 import com.distesala.android_concorsi_gazzetta.ui.HomeActivity;
@@ -23,7 +24,7 @@ import com.distesala.android_concorsi_gazzetta.ui.HomeActivity;
 public class ContestCategoryFragment extends SearchableFragment implements LoaderManager.LoaderCallbacks<Cursor>
 {
     private ListView contestsList;
-    private SimpleCursorAdapter adapterSimpleCursor;
+    private ContestCursorAdapter cursorAdapter;
 
     public static ContestCategoryFragment newInstance(Bundle queryBundle)
     {
@@ -50,17 +51,7 @@ public class ContestCategoryFragment extends SearchableFragment implements Loade
 
         queryBundle = getArguments();
 
-        adapterSimpleCursor = new SimpleCursorAdapter(getActivity().getApplicationContext(), R.layout.contest_item,
-                null, //cursor null
-                new String[]    {
-                        GazzetteSQLiteHelper.ContestEntry.COLUMN_EMETTITORE,
-                        GazzetteSQLiteHelper.ContestEntry.COLUMN_TITOLO
-                },
-                new int[]       {
-                        R.id.emettitore,
-                        R.id.titolo
-                }
-                , 0);
+        cursorAdapter = new ContestCursorAdapter(getActivity(), null);
     }
 
     @Override
@@ -79,9 +70,13 @@ public class ContestCategoryFragment extends SearchableFragment implements Loade
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
+                Bundle creationBundle = new Bundle(1);
+                creationBundle.putBoolean(GazzetteListFragment.IS_FROM_SEGUE, true);
+                TextContestFragment textContestFragment = TextContestFragment.newInstance(creationBundle);
+
                 getActivity().getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.content_frame, new TextContestFragment())
+                        .replace(R.id.content_frame, textContestFragment)
                         .addToBackStack(HomeActivity.SEGUE_TRANSACTION)
                         .commit();
             }
@@ -94,7 +89,7 @@ public class ContestCategoryFragment extends SearchableFragment implements Loade
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        contestsList.setAdapter(adapterSimpleCursor);
+        contestsList.setAdapter(cursorAdapter);
     }
 
     @Override
@@ -126,12 +121,12 @@ public class ContestCategoryFragment extends SearchableFragment implements Loade
     public void onLoadFinished(Loader<Cursor> loader, Cursor data)
     {
         Log.i("category", "contest category loadfinish, SIZE -> " + String.valueOf(data.getCount()));
-        adapterSimpleCursor.changeCursor(data);
+        cursorAdapter.changeCursor(data);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader)
     {
-        adapterSimpleCursor.swapCursor(null);
+        cursorAdapter.swapCursor(null);
     }
 }

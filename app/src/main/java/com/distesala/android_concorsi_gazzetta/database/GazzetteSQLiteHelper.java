@@ -39,7 +39,7 @@ public class GazzetteSQLiteHelper extends SQLiteOpenHelper
         public static final String COLUMN_TIPOLOGIA = "tipologia";
         public static final String COLUMN_SCADENZA = "scadenza";
         public static final String COLUMN_N_ARTICOLI = "numeroArticoli";
-
+        public static final String COLUMN_FAVORITE = "favorite";
     }
 
     private static final String DATABASE_NAME = "gazzette.db";
@@ -47,19 +47,20 @@ public class GazzetteSQLiteHelper extends SQLiteOpenHelper
     private static final int DATABASE_VERSION = 1;
 
     private static final String CREATE_GAZZETTE = "create table " + GazzettaEntry.TABLE_NAME + "( " +
-                                                    GazzettaEntry.COLUMN_ID_GAZZETTA + " integer primary key, " +
-                                                    GazzettaEntry.COLUMN_NUMBER_OF_PUBLICATION + " text not null, " +
-                                                    GazzettaEntry.COLUMN_DATE_OF_PUBLICATION + " text not null);";
+            GazzettaEntry.COLUMN_ID_GAZZETTA + " integer primary key, " +
+            GazzettaEntry.COLUMN_NUMBER_OF_PUBLICATION + " text not null, " +
+            GazzettaEntry.COLUMN_DATE_OF_PUBLICATION + " text not null);";
 
     private static final String CREATE_CONCORSI = "create table " + ContestEntry.TABLE_NAME + "( " +
-                                                    ContestEntry.COLUMN_ID_CONCORSO + " text primary key, " +
-                                                    ContestEntry.COLUMN_GAZZETTA_NUMBER_OF_PUBLICATION + " text not null, " +
-                                                    ContestEntry.COLUMN_EMETTITORE + " text not null, " +
-                                                    ContestEntry.COLUMN_AREA + " text not null, " +
-                                                    ContestEntry.COLUMN_TITOLO + " text not null, " +
-                                                    ContestEntry.COLUMN_TIPOLOGIA + " text not null, " +
-                                                    ContestEntry.COLUMN_SCADENZA + " text, " +
-                                                    ContestEntry.COLUMN_N_ARTICOLI + " text not null);";
+            ContestEntry.COLUMN_ID_CONCORSO + " text primary key, " +
+            ContestEntry.COLUMN_GAZZETTA_NUMBER_OF_PUBLICATION + " text not null, " +
+            ContestEntry.COLUMN_EMETTITORE + " text not null, " +
+            ContestEntry.COLUMN_AREA + " text not null, " +
+            ContestEntry.COLUMN_TITOLO + " text not null, " +
+            ContestEntry.COLUMN_TIPOLOGIA + " text not null, " +
+            ContestEntry.COLUMN_SCADENZA + " text, " +
+            ContestEntry.COLUMN_N_ARTICOLI + " text not null, " +
+            ContestEntry.COLUMN_FAVORITE + " integer not null);";
 
     public GazzetteSQLiteHelper(Context context)
     {
@@ -77,7 +78,7 @@ public class GazzetteSQLiteHelper extends SQLiteOpenHelper
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
     {
         Log.w(GazzetteSQLiteHelper.class.getName(), "Upgrading database from version " + oldVersion + " to "
-                        + newVersion + ", which will destroy all old data");
+                + newVersion + ", which will destroy all old data");
         db.execSQL("DROP TABLE IF EXISTS " + GazzettaEntry.TABLE_NAME);
         onCreate(db);
     }
@@ -105,6 +106,7 @@ public class GazzetteSQLiteHelper extends SQLiteOpenHelper
         contestContentValues.put(ContestEntry.COLUMN_TIPOLOGIA, c.getTipologia());
         contestContentValues.put(ContestEntry.COLUMN_SCADENZA, c.getScadenza());
         contestContentValues.put(ContestEntry.COLUMN_N_ARTICOLI, c.getAreaDiInteresse());
+        contestContentValues.put(ContestEntry.COLUMN_FAVORITE, c.getIsFavorite());
 
         return contestContentValues;
     }

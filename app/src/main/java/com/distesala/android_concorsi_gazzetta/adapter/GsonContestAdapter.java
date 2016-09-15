@@ -66,6 +66,7 @@ public class GsonContestAdapter implements JsonDeserializer<Concorso>
         c.setTitoloConcorso(titoloConcorso);
         c.setTipologia(tipologia);
         c.setScadenza(scadenza);
+        c.setIsFavorite(0);
 
         return c;
     }

@@ -16,6 +16,7 @@ public class Concorso
     private String codiceRedazionale;
     private int numeroArticoli;
     private String scadenza;
+    private int isFavorite;
 
     public Concorso() {}
 
@@ -59,6 +60,11 @@ public class Concorso
         return numeroArticoli;
     }
 
+    public int getIsFavorite()
+    {
+        return isFavorite;
+    }
+
     public void setGazzettaNumberOfPublication(String gazzettaNumberOfPublication)
     {
         this.gazzettaNumberOfPublication = gazzettaNumberOfPublication;
@@ -97,6 +103,11 @@ public class Concorso
     public void setScadenza(String scadenza)
     {
         this.scadenza = scadenza;
+    }
+
+    public void setIsFavorite(int isFavorite)
+    {
+        this.isFavorite = isFavorite;
     }
 
     @Override

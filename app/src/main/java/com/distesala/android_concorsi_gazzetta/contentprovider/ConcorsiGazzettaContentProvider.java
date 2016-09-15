@@ -7,6 +7,7 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -190,6 +191,26 @@ public class ConcorsiGazzettaContentProvider extends ContentProvider
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs)
     {
-        return 0;
+        SQLiteDatabase db = database.getWritableDatabase();
+        int rowAffected = 0;
+
+        switch(sURIMatcher.match(uri))
+        {
+            case GAZZETTE:
+            {
+                rowAffected = db.update(GazzetteSQLiteHelper.GazzettaEntry.TABLE_NAME, values, selection, selectionArgs);
+                break;
+            }
+
+            case CONTESTS:
+            {
+                rowAffected = db.update(GazzetteSQLiteHelper.ContestEntry.TABLE_NAME, values, selection, selectionArgs);
+                break;
+            }
+        }
+
+        getContext().getContentResolver().notifyChange(uri, null);
+
+        return rowAffected;
     }
 }

@@ -2,7 +2,6 @@ package com.distesala.android_concorsi_gazzetta.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.distesala.android_concorsi_gazzetta.R;
 import com.distesala.android_concorsi_gazzetta.database.GazzetteSQLiteHelper;
@@ -52,14 +51,6 @@ public class ContestForGazzettaFragment extends HostSearchablesFragment
     protected String[] getTabTitles()
     {
         return getResources().getStringArray(R.array.contests_categories_titles);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState)
-    {
-        Log.i("[CONTESTFORGAZ] MELINTA", String.valueOf(viewPager == null) + " <-> " + String.valueOf(tabLayout == null));
-
-        super.onSaveInstanceState(outState);
     }
 
     @Override

@@ -167,7 +167,7 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
 
                 CharSequence numberOfPublication = ((TextView) arg1.findViewById(R.id.numberOfPublication)).getText();
 
-                Bundle creationBundle = new Bundle();
+                Bundle creationBundle = new Bundle(2);
                 creationBundle.putCharSequence("numberOfPublication", numberOfPublication);
                 creationBundle.putBoolean(IS_FROM_SEGUE, true);
                 ContestForGazzettaFragment contestForGazzettaFragment = ContestForGazzettaFragment.newInstance(creationBundle);
@@ -295,9 +295,9 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
     {
         super.onResume();
 
-        /*Bundle args = isSearchActive() ? getSearchBundle(querySearch) : null;
+        Bundle args = isSearchActive() ? getSearchBundle(querySearch) : null;
 
         //force restart for preference changed.
-        getLoaderManager().restartLoader(0, args, this);*/
+        getLoaderManager().restartLoader(0, args, this);
     }
 }

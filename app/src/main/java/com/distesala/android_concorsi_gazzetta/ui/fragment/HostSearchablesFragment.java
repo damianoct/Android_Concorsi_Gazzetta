@@ -97,7 +97,7 @@ public abstract class HostSearchablesFragment extends BaseFragment
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
         super.onCreateView(inflater, container, savedInstanceState);
-        
+
         View rootView = inflater.inflate(getLayoutResource(), container, false);
         appBarLayout = (AppBarLayout) getActivity().findViewById(R.id.appbarlayout);
 
@@ -112,9 +112,8 @@ public abstract class HostSearchablesFragment extends BaseFragment
             getActivity().finish();
         }
 
-        setupViewPager(viewPager);
-        tabLayout.setupWithViewPager(viewPager);
-        tabLayout.setTabTextColors(Color.WHITE, Color.WHITE);
+        setupViewPager();
+        setupTabLayout();
 
         return rootView;
     }
@@ -175,7 +174,7 @@ public abstract class HostSearchablesFragment extends BaseFragment
         searchables.remove(o);
     }
 
-    protected void setupViewPager(final ViewPager viewPager)
+    protected void setupViewPager()
     {
         adapter = new SearchableTabsAdapter(getChildFragmentManager(),
                 getTabTitles());
@@ -198,9 +197,16 @@ public abstract class HostSearchablesFragment extends BaseFragment
             @Override
             public void onPageScrollStateChanged(int state){}
         });
+    }
 
+    private void setupTabLayout()
+    {
+        //hide tablayout when there is only one child.
         if (getTabTitles().length == 1)
             tabLayout.setVisibility(View.GONE);
+
+        tabLayout.setupWithViewPager(viewPager);
+        tabLayout.setTabTextColors(Color.WHITE, Color.WHITE);
     }
 
     class SearchableTabsAdapter extends FragmentStatePagerAdapter
