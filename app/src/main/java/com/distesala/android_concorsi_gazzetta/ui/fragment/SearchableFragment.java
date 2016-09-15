@@ -33,6 +33,5 @@ public abstract class SearchableFragment extends Fragment
     {
         super.onResume();
         //Log.i("CHILD", "onResume");
-
     }
 }

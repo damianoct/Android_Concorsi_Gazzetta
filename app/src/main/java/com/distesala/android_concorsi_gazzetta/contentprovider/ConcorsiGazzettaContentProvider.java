@@ -7,7 +7,6 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -76,9 +75,6 @@ public class ConcorsiGazzettaContentProvider extends ContentProvider
         {
             case GAZZETTE:
             {
-                //String key = getContext().getString(R.string.key_num_gazzette);
-                //int nRow = PreferenceManager.getDefaultSharedPreferences(getContext()).getInt(key, 0);
-
                 c = db.query(GazzetteSQLiteHelper.GazzettaEntry.TABLE_NAME,
                         projection,
                         selection, selectionArgs, null, null,

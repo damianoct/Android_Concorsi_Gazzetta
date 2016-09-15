@@ -10,12 +10,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
 import com.distesala.android_concorsi_gazzetta.R;
 import com.distesala.android_concorsi_gazzetta.contentprovider.ConcorsiGazzettaContentProvider;
 import com.distesala.android_concorsi_gazzetta.database.GazzetteSQLiteHelper;
+import com.distesala.android_concorsi_gazzetta.ui.HomeActivity;
 
 
 public class ContestCategoryFragment extends SearchableFragment implements LoaderManager.LoaderCallbacks<Cursor>
@@ -71,6 +73,20 @@ public class ContestCategoryFragment extends SearchableFragment implements Loade
 
         //necessary to hide appbar when scrolling
         contestsList.setNestedScrollingEnabled(true);
+
+        contestsList.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+            {
+                getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.content_frame, new TextContestFragment())
+                        .addToBackStack(HomeActivity.SEGUE_TRANSACTION)
+                        .commit();
+            }
+        });
+
         return rootView;
     }
 

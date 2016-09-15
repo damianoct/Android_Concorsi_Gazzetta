@@ -1,14 +1,8 @@
 package com.distesala.android_concorsi_gazzetta.ui.fragment;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.util.Log;
 
 import com.distesala.android_concorsi_gazzetta.R;
 import com.distesala.android_concorsi_gazzetta.database.GazzetteSQLiteHelper;
@@ -18,27 +12,26 @@ import com.distesala.android_concorsi_gazzetta.ui.HomeActivity;
 public class ContestForGazzettaFragment extends HostSearchablesFragment
 {
     private CharSequence numberOfPublication;
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
-    private AppBarLayout appBarLayout;
 
     public static ContestForGazzettaFragment newInstance(Bundle bundle)
     {
         ContestForGazzettaFragment f = new ContestForGazzettaFragment();
-        //Bundle b = new Bundle();
-        //b.putCharSequence("numberOfPublication", numberOfPublication);
-        //b.putBundle("CreationBundle", bundle);
         f.setArguments(bundle);
         return f;
     }
 
     @Override
+    protected int getLayoutResource()
+    {
+        return R.layout.fragment_contest_for_gazzetta;
+    }
+
+    @Override
     protected SearchableFragment getChild(int position)
     {
-        CharSequence category = getResources().getStringArray(R.array.contests_categories)[position];
         Bundle itemBundle = getQueryBundleForPosition(position);
 
-        return new ContestCategoryFragment().newInstance(itemBundle);
+        return ContestCategoryFragment.newInstance(itemBundle);
     }
 
     @Override
@@ -62,51 +55,11 @@ public class ContestForGazzettaFragment extends HostSearchablesFragment
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState)
+    public void onSaveInstanceState(Bundle outState)
     {
-        // Inflate the layout for this fragment
-        super.onCreateView(inflater, container, savedInstanceState);
+        Log.i("[CONTESTFORGAZ] MELINTA", String.valueOf(viewPager == null) + " <-> " + String.valueOf(tabLayout == null));
 
-        View rootView = inflater.inflate(R.layout.fragment_contest_for_gazzetta, container, false);
-        appBarLayout = (AppBarLayout) getActivity().findViewById(R.id.appbarlayout);
-
-        viewPager = (ViewPager) rootView.findViewById(R.id.viewpager);
-        setupViewPager(viewPager);
-
-        tabLayout = (TabLayout) rootView.findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewPager);
-        tabLayout.setTabTextColors(Color.WHITE, Color.WHITE);
-
-        return rootView;
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
-    {
-        super.onViewCreated(view, savedInstanceState);
-
-        //bug tablayout support design v22 -> workaround stackoverflow
-        tabLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                tabLayout.setupWithViewPager(viewPager);
-            }
-        });
-        appBarLayout.setElevation(0);
-
-        //restore viewpager selected item.
-        if (savedInstanceState != null)
-        {
-            final int position = savedInstanceState.getInt("currentViewPagerItem");
-            viewPager.postDelayed(new Runnable() {
-
-                @Override
-                public void run() {
-                    viewPager.setCurrentItem(position);
-                }
-            }, 100);
-        }
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -119,13 +72,6 @@ public class ContestForGazzettaFragment extends HostSearchablesFragment
     public String getFragmentTitle()
     {
         return "Gazzetta n. " + numberOfPublication;
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState)
-    {
-        super.onSaveInstanceState(outState);
-        outState.putInt("currentViewPagerItem", viewPager.getCurrentItem());
     }
 
     @Override

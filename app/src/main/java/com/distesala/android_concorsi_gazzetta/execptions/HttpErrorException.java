@@ -5,11 +5,6 @@ package com.distesala.android_concorsi_gazzetta.execptions;
  */
 public class HttpErrorException extends Exception
 {
-    public HttpErrorException()
-    {
-        super();
-    }
-
     public HttpErrorException(String detailMessage)
     {
         super(detailMessage);

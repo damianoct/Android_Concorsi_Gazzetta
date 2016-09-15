@@ -1,12 +1,21 @@
 package com.distesala.android_concorsi_gazzetta.ui.fragment;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+
+import com.distesala.android_concorsi_gazzetta.R;
+import com.distesala.android_concorsi_gazzetta.execptions.ResourceIDLayoutException;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -19,11 +28,33 @@ public abstract class HostSearchablesFragment extends BaseFragment
 {
     private List<SearchableFragment> searchables;
     private SearchableTabsAdapter adapter;
-    protected ViewPager viewPager;
 
+    protected ViewPager viewPager;
+    protected TabLayout tabLayout;
+    private AppBarLayout appBarLayout;
+
+    private TabLayout getTabLayoutView(View rootView) throws ResourceIDLayoutException
+    {
+        TabLayout t = (TabLayout) rootView.findViewById(R.id.tabs);
+        if(t == null)
+            throw new ResourceIDLayoutException(getResources().getString(R.string.layout_tablayout_exeception));
+        else
+            return t;
+    }
+
+    private ViewPager getViewPager(View rootView) throws ResourceIDLayoutException
+    {
+        ViewPager v = (ViewPager) rootView.findViewById(R.id.viewpager);
+        if(v == null)
+            throw new ResourceIDLayoutException(getResources().getString(R.string.layout_viewpager_exception));
+        else
+            return v;
+    }
 
     protected abstract SearchableFragment getChild(int position);
     protected abstract String[] getTabTitles();
+    protected abstract int getLayoutResource();
+
     //questa è la funziona che fornisce il bundle per il refresh
     //può essere usata per fornire anche il bundle in fase di inizializzazione del child
     //se questo è uguale (come struttura) a quello per il refresh.
@@ -61,10 +92,77 @@ public abstract class HostSearchablesFragment extends BaseFragment
         searchables = new LinkedList<>();
     }
 
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
+    {
+        super.onCreateView(inflater, container, savedInstanceState);
+        
+        View rootView = inflater.inflate(getLayoutResource(), container, false);
+        appBarLayout = (AppBarLayout) getActivity().findViewById(R.id.appbarlayout);
+
+        try
+        {
+            viewPager = getViewPager(rootView);
+            tabLayout = getTabLayoutView(rootView);
+
+        } catch (ResourceIDLayoutException e)
+        {
+            Log.e("FATAL", e.getMessage());
+            getActivity().finish();
+        }
+
+        setupViewPager(viewPager);
+        tabLayout.setupWithViewPager(viewPager);
+        tabLayout.setTabTextColors(Color.WHITE, Color.WHITE);
+
+        return rootView;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
+    {
+        super.onViewCreated(view, savedInstanceState);
+
+        //bug tablayout support design v22 -> workaround stackoverflow
+        tabLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                tabLayout.setupWithViewPager(viewPager);
+            }
+        });
+
+        //restore viewpager selected item.
+        if (savedInstanceState != null)
+        {
+            final int position = savedInstanceState.getInt("currentViewPagerItem");
+            viewPager.postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+                    viewPager.setCurrentItem(position);
+                }
+            }, 100);
+        }
+
+        appBarLayout.setElevation(0);
+
+    }
+
     @Override
     public void onResume()
     {
         super.onResume();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState)
+    {
+        //check if viewpager is null for entry in backstack.
+        if (viewPager != null)
+            outState.putInt("currentViewPagerItem", viewPager.getCurrentItem());
+
+        super.onSaveInstanceState(outState);
     }
 
     public void addSearchable(SearchableFragment sf)
@@ -100,6 +198,9 @@ public abstract class HostSearchablesFragment extends BaseFragment
             @Override
             public void onPageScrollStateChanged(int state){}
         });
+
+        if (getTabTitles().length == 1)
+            tabLayout.setVisibility(View.GONE);
     }
 
     class SearchableTabsAdapter extends FragmentStatePagerAdapter

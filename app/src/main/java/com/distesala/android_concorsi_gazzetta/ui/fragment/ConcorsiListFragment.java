@@ -34,26 +34,29 @@ public class ConcorsiListFragment extends HostSearchablesFragment
                                                             };
     private String threshold;
 
-    private TabLayout tabLayout;
-
     @Override
     protected String[] getTabTitles()
     {
         return childTitles;
     }
 
-    private AppBarLayout appBarLayout;
-
+    @Override
     public String getFragmentName()
     {
         return CONCORSI_FRAGMENT;
     }
 
+    @Override
     public String getFragmentTitle()
     {
         return APPBAR_TITLE;
     }
 
+    @Override
+    protected int getLayoutResource()
+    {
+        return R.layout.fragment_concorsi_list;
+    }
 
     @Override
     protected SearchableFragment getChild(int position)
@@ -87,48 +90,6 @@ public class ConcorsiListFragment extends HostSearchablesFragment
 
 
         return args;
-    }
-
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState)
-    {
-        super.onCreateView(inflater, container, savedInstanceState);
-
-        // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_concorsi_list, container, false);
-        appBarLayout = (AppBarLayout) getActivity().findViewById(R.id.appbarlayout);
-
-        viewPager = (ViewPager) rootView.findViewById(R.id.viewpager);
-        setupViewPager(viewPager);
-
-        tabLayout = (TabLayout) rootView.findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewPager);
-        tabLayout.setTabTextColors(Color.WHITE, Color.WHITE);
-
-        return rootView;
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
-    {
-        super.onViewCreated(view, savedInstanceState);
-
-        //bug tablayout support design v22 -> workaround stackoverflow
-        tabLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                tabLayout.setupWithViewPager(viewPager);
-            }
-        });
-        appBarLayout.setElevation(0);
     }
 
     @Override
