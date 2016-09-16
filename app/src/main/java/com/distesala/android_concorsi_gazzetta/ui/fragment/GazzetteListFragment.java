@@ -14,6 +14,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.widget.CursorAdapter;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -24,11 +25,11 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.distesala.android_concorsi_gazzetta.R;
+import com.distesala.android_concorsi_gazzetta.adapter.GazzettaCursorAdapter;
 import com.distesala.android_concorsi_gazzetta.contentprovider.ConcorsiGazzettaContentProvider;
 import com.distesala.android_concorsi_gazzetta.database.GazzetteSQLiteHelper;
 import com.distesala.android_concorsi_gazzetta.networking.Connectivity;
@@ -52,7 +53,7 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
 
     private JSONResultReceiver mReceiver;
     private ListView gazzetteList;
-    private SimpleCursorAdapter simpleCursorAdapter;
+    private CursorAdapter adapter;
     private AppBarLayout appBarLayout;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
@@ -119,17 +120,7 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
         mReceiver.setReceiver(this);
         updateGazzette();
 
-        simpleCursorAdapter = new SimpleCursorAdapter(getActivity().getApplicationContext(), R.layout.gazzetta_item,
-                null, //cursor null
-                new String[]    {
-                        GazzetteSQLiteHelper.GazzettaEntry.COLUMN_NUMBER_OF_PUBLICATION,
-                        GazzetteSQLiteHelper.GazzettaEntry.COLUMN_DATE_OF_PUBLICATION
-                },
-                new int[]       {
-                        R.id.numberOfPublication,
-                        R.id.dateOfPublication
-                }
-                , 0);
+        adapter = new GazzettaCursorAdapter(getActivity(), null);
 
         setRetainInstance(true);
     }
@@ -165,7 +156,10 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3)
             {
 
-                CharSequence numberOfPublication = ((TextView) arg1.findViewById(R.id.numberOfPublication)).getText();
+                //CharSequence numberOfPublication = ((TextView) arg1.findViewById(R.id.numberOfPublication)).getText();
+
+                CursorAdapter adapter = (CursorAdapter) arg0.getAdapter();
+                CharSequence numberOfPublication = adapter.getCursor().getString(adapter.getCursor().getColumnIndex(GazzetteSQLiteHelper.GazzettaEntry.COLUMN_NUMBER_OF_PUBLICATION));
 
                 Bundle creationBundle = new Bundle(2);
                 creationBundle.putCharSequence("numberOfPublication", numberOfPublication);
@@ -201,13 +195,15 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
     {
         appBarLayout.setElevation(15);
         fragmentListener.onHomeTransaction();
-        gazzetteList.setAdapter(simpleCursorAdapter);
+        gazzetteList.setAdapter(adapter);
+
+        /*
         getLoaderManager().initLoader(0, null, this); //TODO c'è quello in onResume, si può togliere? penso di sì.
 
 
         Bundle args = isSearchActive() ? getSearchBundle(querySearch) : null;
         //force restart for preference changed.
-        getLoaderManager().restartLoader(0, args, this);
+        getLoaderManager().restartLoader(0, args, this);*/
     }
 
     @Override
@@ -279,14 +275,14 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
     public void onLoadFinished(Loader<Cursor> loader, Cursor data)
     {
         Log.i("pio", "gazzette list finished, cursor -> " + String.valueOf(data.getCount()));
-        simpleCursorAdapter.swapCursor(data);
+        adapter.swapCursor(data);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader)
     {
         Log.i("pio", "gazzette list loader RESET");
-        simpleCursorAdapter.swapCursor(null);
+        adapter.swapCursor(null);
 
     }
 

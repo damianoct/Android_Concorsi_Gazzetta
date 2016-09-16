@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_height="wrap_content"
+              android:layout_width="fill_parent"
+              android:orientation="horizontal"
+              android:paddingTop="20dp"
+              android:paddingBottom="20dp"
+              android:weightSum="1"
+              android:descendantFocusability="blocksDescendants">
+
+    <View
+        android:layout_width="1dp"
+        android:layout_marginLeft="10dp"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary"/>
+
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="left|center_vertical"
+        android:gravity="left|center_vertical"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/numberOfPublication"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="PUBBLICAZIONE 54"
+            android:textSize="13dp"
+            android:textColor="@color/colorPrimary"/>
+
+        <View
+            android:layout_marginTop="-2dp"
+            android:layout_marginLeft="10dp"
+            android:layout_width="98dp"
+            android:layout_height="0.5dp"
+            android:background="@color/colorPrimary"/>
+
+        <TextView
+            android:id="@+id/dateOfPublication"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="6dp"
+            android:text="13 settembre 2016"
+            android:textSize="19dp"
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="bold"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginRight="2dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="left|center_vertical"
+        android:gravity="left|center_vertical"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="left|center_vertical"
+            android:gravity="left|center_vertical"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/megafono"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/megafono"
+                android:layout_gravity="end"
+                android:paddingLeft="10dp"
+                android:scaleType="fitCenter"
+                android:background="@android:color/transparent" />
+
+            <TextView
+                android:id="@+id/nConcorsi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="59"
+                android:textColor="@color/colorPrimary"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"/>
+
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="left|center_vertical"
+            android:gravity="left|center_vertical"
+            android:layout_weight="1"
+            android:paddingTop="20dp">
+
+            <ImageView
+                android:id="@+id/orologio"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/clock"
+                android:layout_gravity="end"
+                android:paddingLeft="10dp"
+                android:scaleType="fitCenter"
+                android:background="@android:color/transparent" />
+
+            <TextView
+                android:id="@+id/nExpiring"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="59"
+                android:textColor="@color/colorPrimary"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"/>
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
