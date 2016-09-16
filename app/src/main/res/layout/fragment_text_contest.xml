@@ -13,19 +13,29 @@
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:tabMode="fixed"
+            app:tabMode="scrollable"
             app:tabGravity="fill"
             android:elevation="6dp"
             android:background="@color/colorPrimary"/>
 
 
-        <android.support.v4.view.ViewPager
-            android:id="@+id/viewpager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#FFFFFF"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
-
     </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FFFFFF"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        app:layout_anchor="@id/viewpager"
+        app:layout_anchorGravity="bottom|right|end"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:src="@drawable/ic_share_black_24dp"
+        app:borderWidth="@dimen/fab_border_width"
+        app:fabSize="normal" />
 
 </android.support.design.widget.CoordinatorLayout>
