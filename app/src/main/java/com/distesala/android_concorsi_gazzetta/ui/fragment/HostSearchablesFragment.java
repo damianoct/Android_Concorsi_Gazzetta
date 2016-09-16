@@ -31,7 +31,7 @@ public abstract class HostSearchablesFragment extends BaseFragment
 
     protected ViewPager viewPager;
     protected TabLayout tabLayout;
-    private AppBarLayout appBarLayout;
+    protected AppBarLayout appBarLayout;
 
     private TabLayout getTabLayoutView(View rootView) throws ResourceIDLayoutException
     {
@@ -58,6 +58,7 @@ public abstract class HostSearchablesFragment extends BaseFragment
     //questa è la funziona che fornisce il bundle per il refresh
     //può essere usata per fornire anche il bundle in fase di inizializzazione del child
     //se questo è uguale (come struttura) a quello per il refresh.
+    @Nullable
     protected abstract Bundle getQueryBundleForPosition(int position);
 
     public final void refreshQueryBundle()
@@ -67,7 +68,7 @@ public abstract class HostSearchablesFragment extends BaseFragment
             sf.onRefreshQueryBundle(getQueryBundleForPosition(position));
     }
 
-    public void notifyChildrenForSearch()
+    private void notifyChildrenForSearch()
     {
         for(SearchableFragment sf: searchables)
             sf.performSearch(querySearch);
@@ -145,7 +146,6 @@ public abstract class HostSearchablesFragment extends BaseFragment
         }
 
         appBarLayout.setElevation(0);
-
     }
 
     @Override
@@ -164,17 +164,17 @@ public abstract class HostSearchablesFragment extends BaseFragment
         super.onSaveInstanceState(outState);
     }
 
-    public void addSearchable(SearchableFragment sf)
+    private void addSearchable(SearchableFragment sf)
     {
         searchables.add(sf);
     }
 
-    public void removeSearchable(Object o)
+    private void removeSearchable(Object o)
     {
         searchables.remove(o);
     }
 
-    protected void setupViewPager()
+    protected final void setupViewPager()
     {
         adapter = new SearchableTabsAdapter(getChildFragmentManager(),
                 getTabTitles());
@@ -199,7 +199,7 @@ public abstract class HostSearchablesFragment extends BaseFragment
         });
     }
 
-    private void setupTabLayout()
+    protected final void setupTabLayout()
     {
         //hide tablayout when there is only one child.
         if (getTabTitles().length == 1)
@@ -209,7 +209,7 @@ public abstract class HostSearchablesFragment extends BaseFragment
         tabLayout.setTabTextColors(Color.WHITE, Color.WHITE);
     }
 
-    class SearchableTabsAdapter extends FragmentStatePagerAdapter
+    private class SearchableTabsAdapter extends FragmentStatePagerAdapter
     {
         private String[] titles;
 
@@ -226,6 +226,12 @@ public abstract class HostSearchablesFragment extends BaseFragment
             addSearchable((SearchableFragment) f);
 
             return f;
+        }
+
+        @Override
+        public int getItemPosition(Object object)
+        {
+            return POSITION_NONE;
         }
 
         @Override

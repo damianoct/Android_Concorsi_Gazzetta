@@ -2,17 +2,6 @@
     <string name="app_name">Concorsi Gazzetta</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    <!-- Days -->
-    <string-array name="days_names">
-        <item>Concorso 1</item>
-        <item>Concorso 2</item>
-        <item>Concorso 3</item>
-        <item>Concorso 4</item>
-        <item>Concorso 5</item>
-        <item>Concorso 6</item>
-        <item>Concorso 7</item>
-    </string-array>
-
     <string-array name="contests_categories_titles">
         <item>Concorsi</item>
         <item>Avvisi</item>

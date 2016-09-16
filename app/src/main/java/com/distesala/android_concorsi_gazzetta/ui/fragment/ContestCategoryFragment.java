@@ -1,6 +1,5 @@
 package com.distesala.android_concorsi_gazzetta.ui.fragment;
 
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,15 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 
 import com.distesala.android_concorsi_gazzetta.R;
 import com.distesala.android_concorsi_gazzetta.adapter.ContestCursorAdapter;
 import com.distesala.android_concorsi_gazzetta.contentprovider.ConcorsiGazzettaContentProvider;
 import com.distesala.android_concorsi_gazzetta.database.GazzetteSQLiteHelper;
-import com.distesala.android_concorsi_gazzetta.model.Concorso;
-import com.distesala.android_concorsi_gazzetta.model.Gazzetta;
-import com.distesala.android_concorsi_gazzetta.services.JSONDownloader;
 import com.distesala.android_concorsi_gazzetta.ui.HomeActivity;
 
 
@@ -74,24 +69,19 @@ public class ContestCategoryFragment extends SearchableFragment implements Loade
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
-                Bundle creationBundle = new Bundle(1);
-                creationBundle.putBoolean(GazzetteListFragment.IS_FROM_SEGUE, true);
-                TextContestFragment textContestFragment = TextContestFragment.newInstance(creationBundle);
-
-
-
                 Cursor c = cursorAdapter.getCursor();
+
                 String dateOfPublication = c.getString(c.getColumnIndex(GazzetteSQLiteHelper.ContestEntry.COLUMN_GAZZETTA_DATE_OF_PUBLICATION));
                 String contestID = c.getString(c.getColumnIndex(GazzetteSQLiteHelper.ContestEntry._ID));
+                int nArticoli = c.getInt(c.getColumnIndex(GazzetteSQLiteHelper.ContestEntry.COLUMN_N_ARTICOLI));
 
-                Intent mServiceIntent = new Intent(getActivity(), JSONDownloader.class);
+                Bundle creationBundle = new Bundle(4);
+                creationBundle.putBoolean(GazzetteListFragment.IS_FROM_SEGUE, true);
+                creationBundle.putInt(TextContestFragment.N_ARTICOLI, nArticoli);
+                creationBundle.putString(TextContestFragment.GAZZETTA_DATE_OF_PUB, dateOfPublication);
+                creationBundle.putString(TextContestFragment.CONTEST_ID, contestID);
 
-                mServiceIntent.putExtra(Gazzetta.DATE_OF_PUBLICATION, dateOfPublication);
-                mServiceIntent.putExtra(Concorso.CONTEST_ID, contestID);
-                mServiceIntent.setAction(JSONDownloader.DOWNLOAD_CONTEST);
-
-                getActivity().startService(mServiceIntent);
-
+                TextContestFragment textContestFragment = TextContestFragment.newInstance(creationBundle);
 
                 getActivity().getSupportFragmentManager()
                         .beginTransaction()

@@ -103,6 +103,7 @@ public class ConcorsiListFragment extends HostSearchablesFragment
         String key = getString(R.string.key_scadenza_threshold);
         threshold = String.valueOf(PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt(key, 0));
 
+        //TODO provare con meccanismo viewpager.getAdapter().notifyDataSetChange()!!!
         //controllare se devo refreshare il cursore a questa posizione
         //all'esatta posizione ci pensa la super classe.
         refreshQueryBundle();

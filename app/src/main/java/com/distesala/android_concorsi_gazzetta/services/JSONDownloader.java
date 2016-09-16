@@ -6,6 +6,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Bundle;
 import android.os.ResultReceiver;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -80,10 +81,11 @@ public class JSONDownloader extends IntentService
         {
             final String action = intent.getAction();
 
+            //every intent action has a receiver.
+            ResultReceiver rec = intent.getParcelableExtra("receiverTag");
+
             if (DOWNLOAD_GAZZETTA.equals(action))
             {
-                ResultReceiver rec = intent.getParcelableExtra("receiverTag");
-
                 if(canConnect())
                 {
                     if (!updatedGazzette())
@@ -149,7 +151,10 @@ public class JSONDownloader extends IntentService
 
                     Gson gson = new Gson();
                     ConcorsoContent content = gson.fromJson(jsonObject.toString(), ConcorsoContent.class);
-                    Log.i("melinta", content.articoliBando.get(0));
+
+                    Bundle b = new Bundle(1);
+                    b.putStringArrayList("articles", new ArrayList<>(content.articoliBando));
+                    rec.send(Activity.RESULT_OK, b);
 
                 }
                 catch (Exception e)
