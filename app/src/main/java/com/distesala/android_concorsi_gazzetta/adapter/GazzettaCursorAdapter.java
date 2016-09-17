@@ -43,8 +43,6 @@ public class GazzettaCursorAdapter extends CursorAdapter
         TextView nContest = (TextView) view.findViewById(R.id.nConcorsi);
         TextView nExpiring = (TextView) view.findViewById(R.id.nExpiring);
 
-
-
         String numberOfPup = cursor.getString(cursor.getColumnIndex(GazzetteSQLiteHelper.GazzettaEntry.COLUMN_NUMBER_OF_PUBLICATION));
 
         String whereClause = GazzetteSQLiteHelper.ContestEntry.COLUMN_GAZZETTA_NUMBER_OF_PUBLICATION + "=?";
@@ -81,12 +79,8 @@ public class GazzettaCursorAdapter extends CursorAdapter
 
         } catch (ParseException e)
         {
-            dateOfPublication.setText("suca");
-
+            dateOfPublication.setText("1 gennaio 1970"); // :-)
         }
-
-
-
 
     }
 }

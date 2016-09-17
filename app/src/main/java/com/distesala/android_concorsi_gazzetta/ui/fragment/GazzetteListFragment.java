@@ -193,7 +193,7 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
     {
-        appBarLayout.setElevation(15);
+        appBarLayout.setElevation(10);
         fragmentListener.onHomeTransaction();
         gazzetteList.setAdapter(adapter);
 
