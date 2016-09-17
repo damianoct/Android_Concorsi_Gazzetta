@@ -1,6 +1,7 @@
 <resources>
 
     <style name="MyMaterialTheme" parent="MyMaterialTheme.Base">
+        <item name="colorAccent">@color/colorPrimaryDark</item>
 
     </style>
 

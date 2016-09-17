@@ -13,7 +13,7 @@
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:tabMode="fixed"
+            app:tabMode="scrollable"
             app:tabGravity="fill"
             android:elevation="6dp"
             android:background="@color/colorPrimary"/>
@@ -30,12 +30,11 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
-        app:layout_anchor="@id/viewpager"
-        app:layout_anchorGravity="bottom|right|end"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:src="@drawable/ic_share_black_24dp"
-        app:borderWidth="@dimen/fab_border_width"
-        app:fabSize="normal" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@android:drawable/ic_menu_share"
+        android:tint="#ffffff"/>
 
 </android.support.design.widget.CoordinatorLayout>
