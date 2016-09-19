@@ -20,11 +20,10 @@ import com.distesala.android_concorsi_gazzetta.R;
 import com.distesala.android_concorsi_gazzetta.adapter.ContestCursorAdapter;
 import com.distesala.android_concorsi_gazzetta.adapter.FavContestCursorAdapter;
 import com.distesala.android_concorsi_gazzetta.contentprovider.ConcorsiGazzettaContentProvider;
+import com.distesala.android_concorsi_gazzetta.database.GazzetteSQLiteHelper;
 import com.distesala.android_concorsi_gazzetta.ui.HomeActivity;
 
-/**
- * A simple {@link Fragment} subclass.
- */
+
 public class FavContestListFragment extends SearchableFragment implements LoaderManager.LoaderCallbacks<Cursor>
 {
     private ListView contestsList;
@@ -74,15 +73,23 @@ public class FavContestListFragment extends SearchableFragment implements Loader
         //necessary to hide appbar when scrolling
         contestsList.setNestedScrollingEnabled(true);
 
-        //TODO IMPORTANTISSIMO AGGIORNARE QUESTA ON CLICK LISTENER CON QUELLA DI CONTEST CATEGORY
-
         contestsList.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
-                Bundle creationBundle = new Bundle(1);
+                Cursor c = cursorAdapter.getCursor();
+
+                String dateOfPublication = c.getString(c.getColumnIndex(GazzetteSQLiteHelper.ContestEntry.COLUMN_GAZZETTA_DATE_OF_PUBLICATION));
+                String contestID = c.getString(c.getColumnIndex(GazzetteSQLiteHelper.ContestEntry._ID));
+                int nArticoli = c.getInt(c.getColumnIndex(GazzetteSQLiteHelper.ContestEntry.COLUMN_N_ARTICOLI));
+
+                Bundle creationBundle = new Bundle(4);
                 creationBundle.putBoolean(GazzetteListFragment.IS_FROM_SEGUE, true);
+                creationBundle.putInt(TextContestFragment.N_ARTICOLI, nArticoli);
+                creationBundle.putString(TextContestFragment.GAZZETTA_DATE_OF_PUB, dateOfPublication);
+                creationBundle.putString(TextContestFragment.CONTEST_ID, contestID);
+
                 TextContestFragment textContestFragment = TextContestFragment.newInstance(creationBundle);
 
                 getActivity().getSupportFragmentManager()

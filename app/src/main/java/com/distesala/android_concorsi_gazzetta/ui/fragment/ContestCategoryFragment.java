@@ -81,10 +81,6 @@ public class ContestCategoryFragment extends SearchableFragment implements Loade
                 creationBundle.putString(TextContestFragment.GAZZETTA_DATE_OF_PUB, dateOfPublication);
                 creationBundle.putString(TextContestFragment.CONTEST_ID, contestID);
 
-                /*
-                    LANCIO FRAGMENT
-                 */
-
                 TextContestFragment textContestFragment = TextContestFragment.newInstance(creationBundle);
 
                 getActivity().getSupportFragmentManager()
@@ -92,14 +88,6 @@ public class ContestCategoryFragment extends SearchableFragment implements Loade
                         .replace(R.id.content_frame, textContestFragment)
                         .addToBackStack(HomeActivity.SEGUE_TRANSACTION)
                         .commit();
-
-
-                /*
-                    LANCIO ACTIVITY
-                 */
-
-                /*Intent i = new Intent(getActivity(), CollapsableActivity.class);
-                startActivity(i);*/
             }
         });
 
