@@ -2,11 +2,11 @@ package com.distesala.android_concorsi_gazzetta.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.internal.widget.AdapterViewCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.SubMenu;
 
 import com.distesala.android_concorsi_gazzetta.R;
 import com.distesala.android_concorsi_gazzetta.database.GazzetteSQLiteHelper;
@@ -15,8 +15,9 @@ import com.distesala.android_concorsi_gazzetta.ui.HomeActivity;
 
 public class ContestForGazzettaFragment extends HostSearchablesFragment
 {
+    private static final String FILTER_AREA = "filter";
     private CharSequence numberOfPublication;
-    private String filterArea = "";
+    private int filterAreaId = R.id.action_no_filter;
 
     public static ContestForGazzettaFragment newInstance(Bundle bundle)
     {
@@ -44,6 +45,11 @@ public class ContestForGazzettaFragment extends HostSearchablesFragment
     {
         super.onCreate(savedInstanceState);
 
+        if(savedInstanceState != null)
+        {
+            filterAreaId = savedInstanceState.getInt(FILTER_AREA);
+        }
+
         Bundle bundle = this.getArguments();
 
         if (bundle != null)
@@ -51,6 +57,13 @@ public class ContestForGazzettaFragment extends HostSearchablesFragment
             CharSequence numberOfPublication = bundle.getCharSequence("numberOfPublication");
             this.numberOfPublication = numberOfPublication;
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState)
+    {
+        outState.putInt(FILTER_AREA, filterAreaId);
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -63,58 +76,23 @@ public class ContestForGazzettaFragment extends HostSearchablesFragment
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        if(item.getItemId() != R.id.menu_item_filtering && item.getItemId() != R.id.action_search)
+        if(item.getItemId() != R.id.menu_item_filtering
+                && item.getItemId() != R.id.action_search)
         {
-            switch (item.getItemId())
-            {
-                case R.id.action_no_filter:
-                {
-                    filterArea = "";
-                    break;
-                }
-
-                case R.id.action_filter_amministrazioni_centrali:
-                {
-                    filterArea = getString(R.string.filter_amministrazioni_centrali);
-                    break;
-                }
-
-                case R.id.action_filter_universita:
-                {
-                    filterArea = getString(R.string.filter_uni);
-                    break;
-                }
-
-                case R.id.action_filter_aziende_sanitarie:
-                {
-                    filterArea = getString(R.string.filter_aziende_sanitarie);
-                    break;
-                }
-
-                case R.id.action_filter_enti_pubblici_statali:
-                {
-                    filterArea = getString(R.string.filter_enti_pubblici_statali);
-                    break;
-                }
-
-                case R.id.action_filter_enti_locali:
-                {
-                    filterArea = getString(R.string.filter_enti_locali);
-                    break;
-                }
-
-                case R.id.action_filter_altri_enti:
-                {
-                    filterArea = getString(R.string.filter_altri_enti);
-                    break;
-                }
-            }
-
+            filterAreaId = item.getItemId();
+            getActivity().invalidateOptionsMenu();
             viewPager.getAdapter().notifyDataSetChanged();
-            //refreshQueryBundle();
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu)
+    {
+        SubMenu filterMenu = menu.findItem(R.id.menu_item_filtering).getSubMenu();
+        filterMenu.findItem(filterAreaId).setEnabled(false);
+        super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -146,38 +124,41 @@ public class ContestForGazzettaFragment extends HostSearchablesFragment
                 + GazzetteSQLiteHelper.ContestEntry.COLUMN_TIPOLOGIA + " LIKE? AND "
                 + GazzetteSQLiteHelper.ContestEntry.COLUMN_AREA + " LIKE? ";
 
-        String[] whereArgs = new String[]{numberOfPublication.toString(), "%" + category + "%", "%" + filterArea + "%" };
+        String[] whereArgs = new String[]{numberOfPublication.toString(), "%" + category + "%", "%" + getStringForFilterAreaId(filterAreaId) + "%" };
 
         args.putString(WHERE_CLAUSE, whereClause);
         args.putStringArray(WHERE_ARGS, whereArgs);
-
-        Log.i("melinta", "------ INIT -----------------");
-        Log.i("melinta", "getQueryBundlerForPosition -> " + position);
-        Log.i("melinta", "whereClause -> " + whereClause);
-
-        for(String s: whereArgs)
-        {
-            Log.i("melinta", "whereargs -> " + s);
-        }
-
 
         return args;
     }
 
-    protected Bundle buildCreationBundlerFor(int position)
+    private String getStringForFilterAreaId(int id)
     {
-        Bundle args = new Bundle(2);
+        switch (id)
+        {
+            case R.id.action_no_filter:
+                return "";
 
-        String category = getResources().getStringArray(R.array.contests_categories)[position];
+            case R.id.action_filter_amministrazioni_centrali:
+                return getString(R.string.filter_amministrazioni_centrali);
 
-        String whereClause = GazzetteSQLiteHelper.ContestEntry.COLUMN_GAZZETTA_NUMBER_OF_PUBLICATION + " =? AND "
-                + GazzetteSQLiteHelper.ContestEntry.COLUMN_TIPOLOGIA + " LIKE? ";
+            case R.id.action_filter_universita:
+                return getString(R.string.filter_uni);
 
-        String[] whereArgs = new String[]{numberOfPublication.toString(), "%" + category + "%"};
+            case R.id.action_filter_aziende_sanitarie:
+                return getString(R.string.filter_aziende_sanitarie);
 
-        args.putString(WHERE_CLAUSE, whereClause);
-        args.putStringArray(WHERE_ARGS, whereArgs);
+            case R.id.action_filter_enti_pubblici_statali:
+                return getString(R.string.filter_enti_pubblici_statali);
 
-        return args;
+            case R.id.action_filter_enti_locali:
+                return getString(R.string.filter_enti_locali);
+
+            case R.id.action_filter_altri_enti:
+                return getString(R.string.filter_altri_enti);
+
+            default:
+                return null;
+        }
     }
 }

@@ -143,6 +143,7 @@ public class JSONDownloader extends IntentService
                                     + day + "&mese="
                                     + month + "&anno="
                                     + year + "&codiceRedazionale=" + contestID;
+                Log.i("contentdeb", link);
 
                 try
                 {

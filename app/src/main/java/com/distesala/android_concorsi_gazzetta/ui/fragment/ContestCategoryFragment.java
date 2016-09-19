@@ -118,12 +118,6 @@ public class ContestCategoryFragment extends SearchableFragment implements Loade
     }
 
     @Override
-    protected void executeQuery()
-    {
-        getLoaderManager().restartLoader(0, queryBundle, this);
-    }
-
-    @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args)
     {
         return new CursorLoader(getActivity().getApplicationContext(), //context

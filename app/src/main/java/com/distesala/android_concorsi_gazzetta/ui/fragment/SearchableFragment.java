@@ -24,13 +24,10 @@ public abstract class SearchableFragment extends Fragment
 
     protected abstract void performSearch(String querySearch);
 
-    protected abstract void executeQuery();
-
     public final void onRefreshQueryBundle(Bundle queryBundle)
     {
         Log.i("CHILD", "onRefreshQueryBundle");
         this.queryBundle = queryBundle;
-        executeQuery();
     }
 
     @Override

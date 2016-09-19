@@ -2,13 +2,9 @@ package com.distesala.android_concorsi_gazzetta.ui.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
-import android.view.View;
-import android.widget.TableLayout;
 import android.widget.Toast;
 
 import com.distesala.android_concorsi_gazzetta.R;
@@ -64,7 +60,6 @@ public class TextContestFragment extends HostSearchablesFragment implements JSON
         for(int i = 0; i < nArticoli; i++)
             titles[i] = String.valueOf(i + 1);
         return titles;
-        //return new String[nArticoli];
     }
 
     @Override
@@ -128,6 +123,8 @@ public class TextContestFragment extends HostSearchablesFragment implements JSON
         nArticoli = getArguments().getInt(N_ARTICOLI);
         dateOfPublication = getArguments().getString(GAZZETTA_DATE_OF_PUB);
         contestID = getArguments().getString(CONTEST_ID);
+
+        //TODO mettere il controllo sulla connettivity!
 
         if(savedInstanceState == null)
         {

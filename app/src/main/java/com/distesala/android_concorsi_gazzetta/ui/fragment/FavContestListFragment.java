@@ -55,12 +55,6 @@ public class FavContestListFragment extends SearchableFragment implements Loader
     }
 
     @Override
-    protected void executeQuery()
-    {
-        //TODO restart loader
-    }
-
-    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState)
     {
         super.onActivityCreated(savedInstanceState);
@@ -143,6 +137,7 @@ public class FavContestListFragment extends SearchableFragment implements Loader
     public void onLoadFinished(Loader<Cursor> loader, Cursor data)
     {
         Log.i("category", "contest category loadfinish, SIZE -> " + String.valueOf(data.getCount()));
+        //TODO bisognerrebbe applicare questa funzione anche a tutti gli altri fragment.
         if(data.getCount() == 0)
             expandAppBarLayout();
         cursorAdapter.changeCursor(data);

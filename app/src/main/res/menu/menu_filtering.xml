@@ -7,6 +7,7 @@
         android:title="@string/menu_filtering"
         android:icon="@drawable/filter"
         app:showAsAction="ifRoom|withText">
+
     <menu>
         <item
             android:id="@+id/action_no_filter"
@@ -30,6 +31,7 @@
             android:id="@+id/action_filter_altri_enti"
             android:title="@string/filter_altri_enti" />
     </menu>
+
     </item>
 
 </menu>

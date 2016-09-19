@@ -45,9 +45,6 @@ import com.pnikosis.materialishprogress.ProgressWheel;
 
 public class GazzetteListFragment extends BaseFragment implements JSONResultReceiver.Receiver, LoaderManager.LoaderCallbacks<Cursor>
 {
-    //TODO dato che questo fragment ha lo stato retained provare a farlo ascoltare il cambiamento delle preference
-    //in modo tale da togliere il restartLoader forzato dalla onResume() ma farlo solo quando cambia quella specifica reference.
-
     //TODO provare a spostare le chiamate al loaderManager.init nei metodi onActivityCreated()
     //vedere -> http://stackoverflow.com/questions/14559573/getting-called-dostart-when-already-started-from-loadermanager-why
 
@@ -201,20 +198,11 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
         appBarLayout.setElevation(10);
         fragmentListener.onHomeTransaction();
         gazzetteList.setAdapter(adapter);
-
-        /*
-        getLoaderManager().initLoader(0, null, this); //TODO c'è quello in onResume, si può togliere? penso di sì.
-
-
-        Bundle args = isSearchActive() ? getSearchBundle(querySearch) : null;
-        //force restart for preference changed.
-        getLoaderManager().restartLoader(0, args, this);*/
     }
 
     @Override
     public void onReceiveResult(int resultCode, Bundle resultData)
     {
-        //TODO questi risultati servono solo a stoppare un possibile indicatore di progresso -> IMPLEMENTARE
         //Non ho messo switch case perchè mi secco a cambiare
 
         if (resultCode == Activity.RESULT_OK)
