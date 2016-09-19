@@ -74,6 +74,8 @@ public class FavContestListFragment extends SearchableFragment implements Loader
         //necessary to hide appbar when scrolling
         contestsList.setNestedScrollingEnabled(true);
 
+        //TODO IMPORTANTISSIMO AGGIORNARE QUESTA ON CLICK LISTENER CON QUELLA DI CONTEST CATEGORY
+
         contestsList.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {
             @Override
@@ -124,4 +126,6 @@ public class FavContestListFragment extends SearchableFragment implements Loader
     {
         cursorAdapter.swapCursor(null);
     }
+
+
 }

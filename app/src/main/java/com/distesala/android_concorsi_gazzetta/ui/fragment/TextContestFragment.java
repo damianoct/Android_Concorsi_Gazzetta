@@ -2,10 +2,13 @@ package com.distesala.android_concorsi_gazzetta.ui.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.view.View;
+import android.widget.TableLayout;
 import android.widget.Toast;
 
 import com.distesala.android_concorsi_gazzetta.R;
@@ -51,7 +54,6 @@ public class TextContestFragment extends HostSearchablesFragment implements JSON
     protected SearchableFragment getChild(int position)
     {
         return ContentFragment.newInstance((articles != null && !articles.isEmpty()) ? articles.get(position) : "");
-        //return ContestCategoryFragment.newInstance(getQueryBundleForPosition(position));
     }
 
     @Override
@@ -143,18 +145,6 @@ public class TextContestFragment extends HostSearchablesFragment implements JSON
         {
             articles = savedInstanceState.getStringArrayList("articles");
         }
-
-        //on configuration change no need to download the contest text.
-        //setRetainInstance(true); //con setRetainTrue da NullPointerException.
     }
 
-    /*@Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
-    {
-        super.onViewCreated(view, savedInstanceState);
-        if(savedInstanceState != null)
-        {
-            viewPager.getAdapter().notifyDataSetChanged();
-        }
-    }*/
 }

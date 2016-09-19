@@ -201,11 +201,9 @@ public abstract class HostSearchablesFragment extends BaseFragment
 
     protected final void setupTabLayout()
     {
-        //hide tablayout when there is only one child.
-        if (getTabTitles().length == 1)
-            //tabLayout.setVisibility(View.GONE);
+        if (getTabTitles().length > 10) //MAGIC NUMBER....
+            tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
 
-        tabLayout.setupWithViewPager(viewPager);
         tabLayout.setTabTextColors(Color.WHITE, Color.WHITE);
     }
 

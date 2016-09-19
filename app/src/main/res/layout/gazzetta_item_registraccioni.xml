@@ -34,12 +34,12 @@
             android:textSize="13dp"
             android:textColor="@color/colorPrimary"/>
 
-        <View
+       <!-- <View
             android:layout_marginTop="-2dp"
             android:layout_marginLeft="10dp"
             android:layout_width="98dp"
             android:layout_height="0.5dp"
-            android:background="@color/colorPrimary"/>
+            android:background="@color/colorPrimary"/> -->
 
         <TextView
             android:id="@+id/dateOfPublication"

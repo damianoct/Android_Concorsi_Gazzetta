@@ -20,6 +20,16 @@
         <item>Nomina</item>
     </string-array>
 
+    <string-array name="days_names">
+        <item>Lunedì</item>
+        <item>Martedì</item>
+        <item>Mercoledì</item>
+        <item>Giovedì</item>
+        <item>Venerdì</item>
+        <item>Sabato</item>
+        <item>Domenica</item>
+    </string-array>
+
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
     <string name="action_settings">Settings</string>
@@ -47,5 +57,50 @@
     <string name="connection_alert_message">Controlla se si dispone di una connessione WiFi o di una rete dati cellulare valida. Verificare che l\'impostazione \"Utilizza rete dati\" sia abilitata nel caso si voglia usare la rete dati cellulare.</string>
     <string name="layout_tablayout_exeception">Il fragment deve avere nel proprio layout.xml un oggetto \" +                                                     \"TabLayout con id/tabs</string>
     <string name="layout_viewpager_exception">Il fragment deve avere nel proprio layout.xml un oggetto \" +                     \"ViewPager con id/viewpager</string>
+    <string name="large_text">A
+    A
+    A
+    A
+    A
+    A
+    A
+    A
+    A
+    A
+    A
+    A
+    A
+    A
+    A
+    A
+    A
+    A
+    A
+    A
+    A
+    A
+    A
+    A
+    A
+    A
+    A
+    A
+    A
+    A
+    A
+    A
+    A
+    A
+    A
+    A
+    A
+    A
+    A
+    A
+    A
+    A
+    A
+    A
+    </string>
 
 </resources>
