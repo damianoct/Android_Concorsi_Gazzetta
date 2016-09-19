@@ -63,9 +63,12 @@ public abstract class HostSearchablesFragment extends BaseFragment
 
     public final void refreshQueryBundle()
     {
-        int position = viewPager.getCurrentItem();
+        //int position = viewPager.getCurrentItem();
+
         for(SearchableFragment sf: searchables)
-            sf.onRefreshQueryBundle(getQueryBundleForPosition(position));
+        {
+            sf.onRefreshQueryBundle(getQueryBundleForPosition(sf.getPosition()));
+        }
     }
 
     private void notifyChildrenForSearch()
@@ -221,7 +224,9 @@ public abstract class HostSearchablesFragment extends BaseFragment
         public Fragment getItem(int position)
         {
             Fragment f = getChild(position);
-            addSearchable((SearchableFragment) f);
+            SearchableFragment sf = (SearchableFragment) f;
+            sf.setPosition(position);
+            addSearchable(sf);
 
             return f;
         }

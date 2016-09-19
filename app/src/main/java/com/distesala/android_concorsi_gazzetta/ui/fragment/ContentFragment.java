@@ -53,4 +53,10 @@ public class ContentFragment extends SearchableFragment
 
     }
 
+    @Override
+    protected void executeQuery()
+    {
+        //TODO restartare loader
+    }
+
 }

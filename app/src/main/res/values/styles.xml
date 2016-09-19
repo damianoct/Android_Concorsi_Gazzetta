@@ -2,6 +2,8 @@
 
     <style name="MyMaterialTheme" parent="MyMaterialTheme.Base">
         <item name="colorAccent">@color/colorPrimaryDark</item>
+        <item name="android:actionMenuTextColor">#127611</item>
+        <item name="actionMenuTextColor">#127611</item>
 
     </style>
 

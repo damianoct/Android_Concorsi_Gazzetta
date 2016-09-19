@@ -20,12 +20,17 @@ public abstract class SearchableFragment extends Fragment
 
     protected Bundle queryBundle;
 
+    private int position;
+
     protected abstract void performSearch(String querySearch);
+
+    protected abstract void executeQuery();
 
     public final void onRefreshQueryBundle(Bundle queryBundle)
     {
         Log.i("CHILD", "onRefreshQueryBundle");
         this.queryBundle = queryBundle;
+        executeQuery();
     }
 
     @Override
@@ -33,5 +38,15 @@ public abstract class SearchableFragment extends Fragment
     {
         super.onResume();
         //Log.i("CHILD", "onResume");
+    }
+
+    public int getPosition()
+    {
+        return position;
+    }
+
+    public void setPosition(int position)
+    {
+        this.position = position;
     }
 }

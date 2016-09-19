@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/menu_item_filtering"
+        android:title="@string/menu_filtering"
+        android:icon="@drawable/filter"
+        app:showAsAction="ifRoom|withText">
+    <menu>
+        <item
+            android:id="@+id/action_no_filter"
+            android:title="@string/no_filter"/>
+        <item
+            android:id="@+id/action_filter_amministrazioni_centrali"
+            android:title="@string/filter_amministrazioni_centrali"/>
+        <item
+            android:id="@+id/action_filter_universita"
+            android:title="@string/filter_universita" />
+        <item
+            android:id="@+id/action_filter_aziende_sanitarie"
+            android:title="@string/filter_aziende_sanitarie" />
+        <item
+            android:id="@+id/action_filter_enti_pubblici_statali"
+            android:title="@string/filter_enti_pubblici_statali" />
+        <item
+            android:id="@+id/action_filter_enti_locali"
+            android:title="@string/filter_enti_locali" />
+        <item
+            android:id="@+id/action_filter_altri_enti"
+            android:title="@string/filter_altri_enti" />
+    </menu>
+    </item>
+
+</menu>

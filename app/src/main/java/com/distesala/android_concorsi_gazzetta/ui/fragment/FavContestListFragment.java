@@ -4,6 +4,8 @@ package com.distesala.android_concorsi_gazzetta.ui.fragment;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -29,6 +31,16 @@ public class FavContestListFragment extends SearchableFragment implements Loader
     private ListView contestsList;
     private CursorAdapter cursorAdapter;
 
+    private void expandAppBarLayout()
+    {
+        AppBarLayout appBarLayout = (AppBarLayout) getActivity().findViewById(R.id.appbarlayout);
+        CoordinatorLayout rootLayout = (CoordinatorLayout) getActivity().findViewById(R.id.coordinator);
+        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
+        AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) params.getBehavior();
+        assert behavior != null;
+        behavior.onNestedFling(rootLayout, appBarLayout, null, 0, -10000, true);
+    }
+
     public static FavContestListFragment newInstance(Bundle queryBundle)
     {
         FavContestListFragment f = new FavContestListFragment();
@@ -40,6 +52,12 @@ public class FavContestListFragment extends SearchableFragment implements Loader
     protected void performSearch(String querySearch)
     {
         //TODO implementare ricerca fragment child.
+    }
+
+    @Override
+    protected void executeQuery()
+    {
+        //TODO restart loader
     }
 
     @Override
@@ -125,6 +143,8 @@ public class FavContestListFragment extends SearchableFragment implements Loader
     public void onLoadFinished(Loader<Cursor> loader, Cursor data)
     {
         Log.i("category", "contest category loadfinish, SIZE -> " + String.valueOf(data.getCount()));
+        if(data.getCount() == 0)
+            expandAppBarLayout();
         cursorAdapter.changeCursor(data);
     }
 

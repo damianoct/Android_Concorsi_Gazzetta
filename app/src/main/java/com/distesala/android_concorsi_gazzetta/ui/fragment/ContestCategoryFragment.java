@@ -109,10 +109,18 @@ public class ContestCategoryFragment extends SearchableFragment implements Loade
         getLoaderManager().restartLoader(0, queryBundle, this);
     }
 
+
+
     @Override
     public void performSearch(String s)
     {
         //TODO implementare ricerca fragment child.
+    }
+
+    @Override
+    protected void executeQuery()
+    {
+        getLoaderManager().restartLoader(0, queryBundle, this);
     }
 
     @Override
@@ -129,7 +137,7 @@ public class ContestCategoryFragment extends SearchableFragment implements Loade
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data)
     {
-        Log.i("category", "contest category loadfinish, SIZE -> " + String.valueOf(data.getCount()));
+        Log.i("TANO", "contest category loadfinish, SIZE -> " + String.valueOf(data.getCount()));
         cursorAdapter.changeCursor(data);
     }
 

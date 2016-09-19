@@ -102,5 +102,14 @@
     A
     A
     </string>
+    <string name="menu_filtering">Filtra</string>
+    <string name="filter_amministrazioni_centrali">Amministrazioni Centrali</string>
+    <string name="filter_enti_pubblici_statali">Enti Pubblici Statali</string>
+    <string name="filter_universita">Università</string>
+    <string name="filter_enti_locali">Enti Locali</string>
+    <string name="filter_aziende_sanitarie">Aziende Sanitarie</string>
+    <string name="filter_altri_enti">Altri Enti</string>
+    <string name="no_filter">Tutti</string>
+    <string name="filter_uni">Universit</string>
 
 </resources>
