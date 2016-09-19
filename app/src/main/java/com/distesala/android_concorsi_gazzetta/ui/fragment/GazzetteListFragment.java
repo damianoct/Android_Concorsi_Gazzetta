@@ -127,11 +127,17 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
 
     private void updateGazzette()
     {
+        progressWheel = (ProgressWheel) getActivity().findViewById(R.id.progress_wheel);
+        Animation animFadeOut = AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out);
+        progressWheel.setAnimation(animFadeOut);
+
         Intent mServiceIntent = new Intent(getActivity(), JSONDownloader.class);
         mServiceIntent.setAction(JSONDownloader.DOWNLOAD_GAZZETTA);
         mServiceIntent.putExtra("receiverTag", mReceiver);
         getActivity().startService(mServiceIntent);
 
+        progressWheel.spin();
+        progressWheel.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -145,7 +151,6 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
 
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_gazzettelist, container, false);
-        progressWheel = (ProgressWheel) getActivity().findViewById(R.id.progress_wheel);
 
         gazzetteList = (ListView) rootView.findViewById(R.id.gazzetteList);
         gazzetteList.setNestedScrollingEnabled(true);
@@ -212,9 +217,6 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
         //TODO questi risultati servono solo a stoppare un possibile indicatore di progresso -> IMPLEMENTARE
         //Non ho messo switch case perchè mi secco a cambiare
 
-
-        fadeOutProgressWheel();
-
         if (resultCode == Activity.RESULT_OK)
         {
             getLoaderManager().initLoader(0, null, this);
@@ -230,13 +232,10 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
         }
 
         mSwipeRefreshLayout.setRefreshing(false);
-    }
 
-    private void fadeOutProgressWheel()
-    {
-        Animation animFadeOut = AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out);
-        progressWheel.setAnimation(animFadeOut);
         progressWheel.setVisibility(View.GONE);
+        progressWheel.clearAnimation();
+        progressWheel.stopSpinning();
     }
 
     private void showConnectionAlert()
