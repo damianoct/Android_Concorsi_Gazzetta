@@ -120,6 +120,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener,
         actionBarDrawerToggle.syncState();
 
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
+        navigationView.setItemIconTintList(null);
         navigationView.setNavigationItemSelectedListener(this);
     }
 

@@ -5,10 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ListView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +16,7 @@ import com.distesala.android_concorsi_gazzetta.model.Concorso;
 import com.distesala.android_concorsi_gazzetta.model.Gazzetta;
 import com.distesala.android_concorsi_gazzetta.services.JSONDownloader;
 import com.distesala.android_concorsi_gazzetta.services.JSONResultReceiver;
+import com.distesala.android_concorsi_gazzetta.utils.Helper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,16 +28,25 @@ public class TextContestFragment extends HostSearchablesFragment implements JSON
     protected static final String GAZZETTA_NUM_OF_PUB = "numberOfPublication";
     protected static final String EMETTITORE = "emettitore";
     protected static final String CONTEST_ID = "contestID";
+    protected static final String TIPOLOGIA = "tipologia";
+    protected static final String EXPIRING_DATE = "expiring";
 
-    private int nArticoli;
+
+    private String tipologia;
     private String dateOfPublication;
-    private String emettitore;
     private String numberOfPublication;
+    private String emettitore;
     private String contestID;
     private JSONResultReceiver mReceiver;
+    private LinearLayout expiringLayout;
+    private String expiring;
     private String mURL;
     private List<String> articles;
     private TextView emettitoreTextView;
+    private TextView tipologiaTextView;
+    private TextView gazzettaInfoTextView;
+    private TextView expiringTextView;
+    private int nArticoli;
 
     public static TextContestFragment newInstance(Bundle bundle)
     {
@@ -133,10 +141,15 @@ public class TextContestFragment extends HostSearchablesFragment implements JSON
     {
         super.onCreate(savedInstanceState);
         nArticoli = getArguments().getInt(N_ARTICOLI);
+        //dateOfPublication = Helper.formatDate(getArguments().getString(GAZZETTA_DATE_OF_PUB), "dd MMMM yyyy");
         dateOfPublication = getArguments().getString(GAZZETTA_DATE_OF_PUB);
         numberOfPublication = getArguments().getString(GAZZETTA_NUM_OF_PUB);
         contestID = getArguments().getString(CONTEST_ID);
         emettitore = getArguments().getString(EMETTITORE);
+        tipologia = getArguments().getString(TIPOLOGIA);
+
+        expiring = Helper.formatDate(getArguments().getString(EXPIRING_DATE, null), "dd MMMM yyyy");
+
 
         //TODO mettere il controllo sulla connettivity!
 
@@ -158,26 +171,33 @@ public class TextContestFragment extends HostSearchablesFragment implements JSON
         }
     }
 
-    /*@Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
-    {
-        super.onCreateView(inflater, container, savedInstanceState);
-        View rootView = inflater.inflate(getLayoutResource(), container, false);
-
-        emettitoreTextView = (TextView) rootView.findViewById(R.id.emettitore);
-        emettitoreTextView.setText(emettitore);
-
-        return rootView;
-    }*/
-
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
 
+        tipologiaTextView = (TextView) getActivity().findViewById(R.id.tipologia);
+        tipologiaTextView.setText(tipologia);
+
         emettitoreTextView = (TextView) getActivity().findViewById(R.id.emettitore);
         emettitoreTextView.setText(emettitore);
+
+        gazzettaInfoTextView = (TextView) getActivity().findViewById(R.id.gazetta_num);
+        dateOfPublication = Helper.formatDate(dateOfPublication, "dd MMMM yyyy");
+        gazzettaInfoTextView.setText("Gazzetta n. " + numberOfPublication + " del " + dateOfPublication);
+
+        /*
+        expiringLayout = (LinearLayout) getActivity().findViewById(R.id.expiringLayout);
+
+        if(expiring != null)
+        {
+            expiringTextView = (TextView) getActivity().findViewById(R.id.expiringDate);
+            expiringTextView.setText(expiring);
+        }
+        else
+        {
+            expiringLayout.setVisibility(View.GONE);
+        }*/
 
         //Sharing
 

@@ -45,7 +45,6 @@ public class ContentFragment extends SearchableFragment
 
         View rootView = inflater.inflate(R.layout.fragment_content, container, false);
         contentTextView = (TextView) rootView.findViewById(R.id.content);
-        contentTextView.setMovementMethod(new ScrollingMovementMethod());
         contentTextView.setText(content.replaceAll("\\s+", " "));
         return rootView;
     }

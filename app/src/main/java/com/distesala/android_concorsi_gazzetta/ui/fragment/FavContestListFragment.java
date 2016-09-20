@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -19,7 +18,6 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.distesala.android_concorsi_gazzetta.R;
-import com.distesala.android_concorsi_gazzetta.adapter.ContestCursorAdapter;
 import com.distesala.android_concorsi_gazzetta.adapter.FavContestCursorAdapter;
 import com.distesala.android_concorsi_gazzetta.contentprovider.ConcorsiGazzettaContentProvider;
 import com.distesala.android_concorsi_gazzetta.database.GazzetteSQLiteHelper;
@@ -96,6 +94,8 @@ public class FavContestListFragment extends SearchableFragment implements Loader
                 String contestID = c.getString(c.getColumnIndex(GazzetteSQLiteHelper.ContestEntry._ID));
                 String numberOfPublication = c.getString(c.getColumnIndex(GazzetteSQLiteHelper.ContestEntry.COLUMN_GAZZETTA_NUMBER_OF_PUBLICATION));
                 String emettitore = c.getString(c.getColumnIndex(GazzetteSQLiteHelper.ContestEntry.COLUMN_EMETTITORE));
+                String tipologia = c.getString(c.getColumnIndex(GazzetteSQLiteHelper.ContestEntry.COLUMN_TIPOLOGIA));
+                String expiring = c.getString(c.getColumnIndex(GazzetteSQLiteHelper.ContestEntry.COLUMN_SCADENZA));
                 int nArticoli = c.getInt(c.getColumnIndex(GazzetteSQLiteHelper.ContestEntry.COLUMN_N_ARTICOLI));
 
                 Bundle creationBundle = new Bundle(4);
@@ -105,6 +105,8 @@ public class FavContestListFragment extends SearchableFragment implements Loader
                 creationBundle.putString(TextContestFragment.GAZZETTA_NUM_OF_PUB, numberOfPublication);
                 creationBundle.putString(TextContestFragment.CONTEST_ID, contestID);
                 creationBundle.putString(TextContestFragment.EMETTITORE, emettitore);
+                creationBundle.putString(TextContestFragment.TIPOLOGIA, tipologia);
+                creationBundle.putString(TextContestFragment.EXPIRING_DATE, expiring);
 
                 TextContestFragment textContestFragment = TextContestFragment.newInstance(creationBundle);
 

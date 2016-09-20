@@ -7,27 +7,18 @@
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:elevation="@dimen/appbar_elevation">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:contentScrim="?attr/colorPrimary"
+            android:background="@color/colorPrimaryDark"
             app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
 
-            <!-- mettere un immagine  al posto della view -->
-
-            <TextView
-                android:id="@+id/emettitore"
-                android:layout_width="match_parent"
-                android:layout_margin="20dp"
-                android:layout_height="120dp"
-                android:scaleType="centerCrop"
-                android:fitsSystemWindows="true"
-                app:layout_collapseMode="parallax"
-                android:text="Prova PRova Prova Prova"
-                android:background="@color/colorPrimary"/>
+            <include layout="@layout/header_content"/>
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -46,7 +37,7 @@
                 app:tabMode="fixed"
                 app:tabGravity="fill"
                 app:tabTextColor="#ffffff"
-                android:background="@color/colorPrimary"/>
+                android:background="@color/colorPrimaryDark"/>
 
 
     </android.support.design.widget.AppBarLayout>
@@ -57,8 +48,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:layout_marginBottom="?attr/actionBarSize"
-        />
+        android:layout_marginBottom="?attr/actionBarSize"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

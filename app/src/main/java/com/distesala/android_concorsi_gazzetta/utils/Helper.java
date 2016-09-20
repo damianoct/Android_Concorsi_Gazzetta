@@ -2,6 +2,12 @@ package com.distesala.android_concorsi_gazzetta.utils;
 
 import com.distesala.android_concorsi_gazzetta.R;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 /**
  * Created by damiano on 20/09/16.
  */
@@ -34,6 +40,23 @@ public class Helper
 
             default:
                 return 0;
+        }
+    }
+
+    public static String formatDate(String dateString, String format)
+    {
+        DateFormat dfInsert = new SimpleDateFormat("yyyy-MM-dd", Locale.ITALY);
+        DateFormat dfVisualization = new SimpleDateFormat(format, Locale.ITALY);
+
+        try
+        {
+            Date d = dfInsert.parse(dateString);
+
+            return dfVisualization.format(d);
+
+        } catch (ParseException | NullPointerException e)
+        {
+            return null;
         }
     }
 }
