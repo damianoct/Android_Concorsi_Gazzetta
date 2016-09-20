@@ -113,5 +113,7 @@
     <string name="filter_uni">Universit</string>
     <string name="condividiURL">Condividi il Link</string>
     <string name="subjectCondivisione">C\'è un concorso che potrebbe interessarti.</string>
+    <string name="gaggetta">Concorsi Gaggetta</string>
+    <string name="filter_none"/>
 
 </resources>

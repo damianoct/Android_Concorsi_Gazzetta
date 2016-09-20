@@ -1,5 +1,9 @@
 <resources>
 
+    <style name="FloatingButtonTheme" parent="MyMaterialTheme">
+    <item name="colorAccent">#ebc816</item>
+    </style>
+
     <style name="MyMaterialTheme" parent="MyMaterialTheme.Base">
         <item name="colorAccent">@color/colorPrimaryDark</item>
         <item name="android:actionMenuTextColor">#ffffff</item>

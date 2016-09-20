@@ -3,16 +3,23 @@ package com.distesala.android_concorsi_gazzetta.ui.fragment;
 
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.SubMenu;
 
 import com.distesala.android_concorsi_gazzetta.R;
 import com.distesala.android_concorsi_gazzetta.database.GazzetteSQLiteHelper;
+import com.distesala.android_concorsi_gazzetta.utils.Helper;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class ConcorsiListFragment extends HostSearchablesFragment
 {
+    private static final String FILTER_AREA = "filter" ;
     private static String APPBAR_TITLE = "Concorsi";
     private static final String CONCORSI_FRAGMENT = String.valueOf(R.id.concorsi);
     private static final String IN_SCADENZA = "In Scadenza";
@@ -25,6 +32,9 @@ public class ConcorsiListFragment extends HostSearchablesFragment
                                                                 PREFERITI
                                                             };
     private String threshold;
+
+    private int filterAreaId = R.id.action_no_filter;
+
 
     @Override
     protected String[] getTabTitles()
@@ -81,11 +91,14 @@ public class ConcorsiListFragment extends HostSearchablesFragment
             case IN_SCADENZA_POS:
                 whereClause = GazzetteSQLiteHelper.ContestEntry.COLUMN_SCADENZA + " <= date('now', '+" + threshold +
                                                                                 " days') AND " +
-                        GazzetteSQLiteHelper.ContestEntry.COLUMN_SCADENZA + " >= date('now')";
+                        GazzetteSQLiteHelper.ContestEntry.COLUMN_SCADENZA + " >= date('now') AND " +
+                        GazzetteSQLiteHelper.ContestEntry.COLUMN_AREA + " LIKE? ";
+                        whereArgs = new String[]{"%" + getString(Helper.getStringResourceForFilterAreaId(filterAreaId)) + "%" };
                 break;
             case PREFERITI_POS:
-                whereClause = GazzetteSQLiteHelper.ContestEntry.COLUMN_FAVORITE + "=?";
-                whereArgs = new String[]{"1"};
+                whereClause = GazzetteSQLiteHelper.ContestEntry.COLUMN_FAVORITE + "=? AND " +
+                                GazzetteSQLiteHelper.ContestEntry.COLUMN_AREA + " LIKE? ";
+                whereArgs = new String[]{"1", "%" + getString(Helper.getStringResourceForFilterAreaId(filterAreaId)) + "%"};
                 break;
         }
 
@@ -93,6 +106,52 @@ public class ConcorsiListFragment extends HostSearchablesFragment
         args.putStringArray(WHERE_ARGS, whereArgs);
 
         return args;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        if(savedInstanceState != null)
+        {
+            filterAreaId = savedInstanceState.getInt(FILTER_AREA);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState)
+    {
+        outState.putInt(FILTER_AREA, filterAreaId);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
+    {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_filtering, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        if(item.getItemId() != R.id.menu_item_filtering
+                && item.getItemId() != R.id.action_search)
+        {
+            filterAreaId = item.getItemId();
+            getActivity().invalidateOptionsMenu();
+            viewPager.getAdapter().notifyDataSetChanged();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu)
+    {
+        SubMenu filterMenu = menu.findItem(R.id.menu_item_filtering).getSubMenu();
+        filterMenu.findItem(filterAreaId).setEnabled(false);
+        super.onPrepareOptionsMenu(menu);
     }
 
     @Override

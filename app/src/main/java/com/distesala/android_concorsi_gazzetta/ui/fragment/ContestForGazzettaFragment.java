@@ -11,6 +11,7 @@ import android.view.SubMenu;
 import com.distesala.android_concorsi_gazzetta.R;
 import com.distesala.android_concorsi_gazzetta.database.GazzetteSQLiteHelper;
 import com.distesala.android_concorsi_gazzetta.ui.HomeActivity;
+import com.distesala.android_concorsi_gazzetta.utils.Helper;
 
 
 public class ContestForGazzettaFragment extends HostSearchablesFragment
@@ -124,7 +125,7 @@ public class ContestForGazzettaFragment extends HostSearchablesFragment
                 + GazzetteSQLiteHelper.ContestEntry.COLUMN_TIPOLOGIA + " LIKE? AND "
                 + GazzetteSQLiteHelper.ContestEntry.COLUMN_AREA + " LIKE? ";
 
-        String[] whereArgs = new String[]{numberOfPublication.toString(), "%" + category + "%", "%" + getStringForFilterAreaId(filterAreaId) + "%" };
+        String[] whereArgs = new String[]{numberOfPublication.toString(), "%" + category + "%", "%" + getString(Helper.getStringResourceForFilterAreaId(filterAreaId)) + "%" };
 
         args.putString(WHERE_CLAUSE, whereClause);
         args.putStringArray(WHERE_ARGS, whereArgs);

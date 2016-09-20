@@ -37,8 +37,8 @@ public class FavContestListFragment extends SearchableFragment implements Loader
         CoordinatorLayout rootLayout = (CoordinatorLayout) getActivity().findViewById(R.id.coordinator);
         CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
         AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) params.getBehavior();
-        assert behavior != null;
-        behavior.onNestedFling(rootLayout, appBarLayout, null, 0, -10000, true);
+        if(behavior != null)
+            behavior.onNestedFling(rootLayout, appBarLayout, null, 0, -10000, true);
     }
 
     public static FavContestListFragment newInstance(Bundle queryBundle)
@@ -94,13 +94,17 @@ public class FavContestListFragment extends SearchableFragment implements Loader
 
                 String dateOfPublication = c.getString(c.getColumnIndex(GazzetteSQLiteHelper.ContestEntry.COLUMN_GAZZETTA_DATE_OF_PUBLICATION));
                 String contestID = c.getString(c.getColumnIndex(GazzetteSQLiteHelper.ContestEntry._ID));
+                String numberOfPublication = c.getString(c.getColumnIndex(GazzetteSQLiteHelper.ContestEntry.COLUMN_GAZZETTA_NUMBER_OF_PUBLICATION));
+                String emettitore = c.getString(c.getColumnIndex(GazzetteSQLiteHelper.ContestEntry.COLUMN_EMETTITORE));
                 int nArticoli = c.getInt(c.getColumnIndex(GazzetteSQLiteHelper.ContestEntry.COLUMN_N_ARTICOLI));
 
                 Bundle creationBundle = new Bundle(4);
                 creationBundle.putBoolean(GazzetteListFragment.IS_FROM_SEGUE, true);
                 creationBundle.putInt(TextContestFragment.N_ARTICOLI, nArticoli);
                 creationBundle.putString(TextContestFragment.GAZZETTA_DATE_OF_PUB, dateOfPublication);
+                creationBundle.putString(TextContestFragment.GAZZETTA_NUM_OF_PUB, numberOfPublication);
                 creationBundle.putString(TextContestFragment.CONTEST_ID, contestID);
+                creationBundle.putString(TextContestFragment.EMETTITORE, emettitore);
 
                 TextContestFragment textContestFragment = TextContestFragment.newInstance(creationBundle);
 

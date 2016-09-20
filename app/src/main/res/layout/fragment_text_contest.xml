@@ -18,14 +18,16 @@
 
             <!-- mettere un immagine  al posto della view -->
 
-            <View
-                android:id="@+id/background"
+            <TextView
+                android:id="@+id/emettitore"
                 android:layout_width="match_parent"
-                android:layout_height="128dp"
+                android:layout_margin="20dp"
+                android:layout_height="120dp"
                 android:scaleType="centerCrop"
                 android:fitsSystemWindows="true"
                 app:layout_collapseMode="parallax"
-                android:background="#5fa9c6"/>
+                android:text="Prova PRova Prova Prova"
+                android:background="@color/colorPrimary"/>
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -60,11 +62,14 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/fab_size_normal"
+        android:layout_height="@dimen/fab_size_normal"
         android:layout_gravity="end|bottom"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@android:drawable/ic_menu_share"/>
+        android:layout_marginRight="@dimen/fab_margin"
+        android:layout_marginBottom="24dp"
+        android:src="@drawable/sharing_floating_button"
+        android:theme="@style/FloatingButtonTheme"
+        android:elevation="@dimen/fab_elevation"/>
 
 </android.support.design.widget.CoordinatorLayout>
 

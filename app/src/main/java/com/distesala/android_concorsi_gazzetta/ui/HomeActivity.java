@@ -49,8 +49,8 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener,
         CoordinatorLayout rootLayout = (CoordinatorLayout) findViewById(R.id.coordinator);
         CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
         AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) params.getBehavior();
-        assert behavior != null;
-        behavior.onNestedFling(rootLayout, appBarLayout, null, 0, -10000, true);
+        if(behavior != null)
+            behavior.onNestedFling(rootLayout, appBarLayout, null, 0, -10000, true);
     }
 
     private void setFragment(int tag)

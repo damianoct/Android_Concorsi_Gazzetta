@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group android:checkableBehavior="single">
+    <group
+        android:checkableBehavior="single"
+        android:id="@+id/first">
         <item
             android:id="@+id/gazzette"
-            android:icon="@drawable/star_off"
+            android:icon="@drawable/gazzetta_drawer"
             android:title="Gazzette"/>
         <item
             android:id="@+id/concorsi"
-            android:icon="@drawable/star_off"
+            android:icon="@drawable/contest_drawer"
             android:title="Concorsi"/>
         <item
             android:id="@+id/settings"
-            android:icon="@drawable/star_off"
-            android:title="Settings"/>
-
+            android:icon="@drawable/settings_drawer"
+            android:title="Impostazioni"/>
     </group>
 </menu>
