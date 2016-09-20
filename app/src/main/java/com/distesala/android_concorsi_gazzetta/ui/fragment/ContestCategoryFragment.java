@@ -69,7 +69,7 @@ public class ContestCategoryFragment extends SearchableFragment implements Loade
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
-                Cursor c = cursorAdapter.getCursor();
+                Cursor c = ((CursorAdapter) parent.getAdapter()).getCursor();
 
                 String dateOfPublication = c.getString(c.getColumnIndex(GazzetteSQLiteHelper.ContestEntry.COLUMN_GAZZETTA_DATE_OF_PUBLICATION));
                 String contestID = c.getString(c.getColumnIndex(GazzetteSQLiteHelper.ContestEntry._ID));
@@ -108,9 +108,7 @@ public class ContestCategoryFragment extends SearchableFragment implements Loade
         //force restart for preference changed.
         getLoaderManager().restartLoader(0, queryBundle, this);
     }
-
-
-
+    
     @Override
     public void performSearch(String s)
     {

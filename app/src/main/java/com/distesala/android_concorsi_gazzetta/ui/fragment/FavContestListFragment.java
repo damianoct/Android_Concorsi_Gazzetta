@@ -90,7 +90,7 @@ public class FavContestListFragment extends SearchableFragment implements Loader
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
-                Cursor c = cursorAdapter.getCursor();
+                Cursor c = ((CursorAdapter) parent.getAdapter()).getCursor();
 
                 String dateOfPublication = c.getString(c.getColumnIndex(GazzetteSQLiteHelper.ContestEntry.COLUMN_GAZZETTA_DATE_OF_PUBLICATION));
                 String contestID = c.getString(c.getColumnIndex(GazzetteSQLiteHelper.ContestEntry._ID));
@@ -137,7 +137,6 @@ public class FavContestListFragment extends SearchableFragment implements Loader
     public void onLoadFinished(Loader<Cursor> loader, Cursor data)
     {
         Log.i("category", "contest category loadfinish, SIZE -> " + String.valueOf(data.getCount()));
-        //TODO bisognerrebbe applicare questa funzione anche a tutti gli altri fragment.
         if(data.getCount() == 0)
             expandAppBarLayout();
         cursorAdapter.changeCursor(data);

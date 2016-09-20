@@ -237,6 +237,12 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener,
     }
 
     @Override
+    public void expandAppBar()
+    {
+        expandAppBarLayout();
+    }
+
+    @Override
     public boolean onNavigationItemSelected(MenuItem menuItem)
     {
         if(!menuItem.isChecked())

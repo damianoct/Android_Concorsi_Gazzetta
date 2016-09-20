@@ -8,4 +8,5 @@ public interface FragmentListener
     void onSegueTransaction();
     void onHomeTransaction();
     void onFragmentDisplayed(String fragmentTag);
+    void expandAppBar();
 }

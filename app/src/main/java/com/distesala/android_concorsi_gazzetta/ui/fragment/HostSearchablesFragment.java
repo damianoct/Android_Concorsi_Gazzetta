@@ -191,6 +191,9 @@ public abstract class HostSearchablesFragment extends BaseFragment
             @Override
             public void onPageSelected(int position)
             {
+                //expand appbar
+                fragmentListener.expandAppBar();
+
                 //onPageSelected notify new Searchable item for search.
                 if(isSearchActive())
                     notifyChildrenForSearch();
