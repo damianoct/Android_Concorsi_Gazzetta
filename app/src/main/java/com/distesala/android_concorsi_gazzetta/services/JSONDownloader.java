@@ -42,6 +42,7 @@ public class JSONDownloader extends IntentService
     private static final String URL_WS = "http://marsala.ddns.net:8080/gazzetteWithContests";
     private static final String URL = "http://marsala.ddns.net:8080/";
     private static final String LATEST_GAZZETTA = "http://marsala.ddns.net:8080/latestGazzetta";
+    private static final String GAZZETTA_URL = "http://www.gazzettaufficiale.it/eli/id/";
     public static final String DOWNLOAD_GAZZETTA = "DownloadGazzetta";
     public static final String DOWNLOAD_CONTEST = "DownloadContest";
 
@@ -130,8 +131,6 @@ public class JSONDownloader extends IntentService
             }
             else if (DOWNLOAD_CONTEST.equals(action))
             {
-                Log.i("melinta", "PATTITO");
-
                 String dateOfPublication = intent.getStringExtra(Gazzetta.DATE_OF_PUBLICATION);
                 String contestID = intent.getStringExtra(Concorso.CONTEST_ID);
 
@@ -155,6 +154,14 @@ public class JSONDownloader extends IntentService
 
                     Bundle b = new Bundle(1);
                     b.putStringArrayList("articles", new ArrayList<>(content.articoliBando));
+
+                    String gazzettaURL = GAZZETTA_URL
+                                        + year + "/"
+                                        + month + "/"
+                                        + day + "/"
+                                        + contestID + "/s4";
+
+                    b.putString("url", gazzettaURL);
                     rec.send(Activity.RESULT_OK, b);
 
                 }
