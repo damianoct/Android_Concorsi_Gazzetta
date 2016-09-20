@@ -2,9 +2,7 @@ package com.distesala.android_concorsi_gazzetta.adapter;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.database.Cursor;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,9 +15,16 @@ import com.distesala.android_concorsi_gazzetta.R;
 import com.distesala.android_concorsi_gazzetta.contentprovider.ConcorsiGazzettaContentProvider;
 import com.distesala.android_concorsi_gazzetta.database.GazzetteSQLiteHelper;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 /**
  * Created by damiano on 29/08/16.
  */
+
 public class FavContestCursorAdapter extends CursorAdapter
 {
     public FavContestCursorAdapter(Context context, Cursor c)
@@ -38,17 +43,34 @@ public class FavContestCursorAdapter extends CursorAdapter
     {
         TextView emettitore = (TextView) view.findViewById(R.id.emettitore);
         TextView titolo = (TextView) view.findViewById(R.id.titolo);
+        TextView expiringDate = (TextView) view.findViewById(R.id.expiringDate);
+
         ImageButton rubbishButton = (ImageButton) view.findViewById(R.id.fav_button);
 
         emettitore.setText(cursor.getString(cursor.getColumnIndex(GazzetteSQLiteHelper.ContestEntry.COLUMN_EMETTITORE)));
         titolo.setText(cursor.getString(cursor.getColumnIndex(GazzetteSQLiteHelper.ContestEntry.COLUMN_TITOLO)));
 
+        String dateOfPublication = cursor.getString(cursor.getColumnIndex(GazzetteSQLiteHelper.ContestEntry.COLUMN_SCADENZA));
+
+        DateFormat dfInsert = new SimpleDateFormat("yyyy-MM-dd", Locale.ITALY);
+        DateFormat dfVisualization = new SimpleDateFormat("dd MMM", Locale.ITALY);
+
+        try
+        {
+            Date d = dfInsert.parse(dateOfPublication);
+
+            expiringDate.setText(dfVisualization.format(d));
+
+        }
+        catch (ParseException | NullPointerException e)
+        {
+            expiringDate.setVisibility(View.GONE);
+        }
+
+
         final int isFav = cursor.getInt(cursor.getColumnIndex(GazzetteSQLiteHelper.ContestEntry.COLUMN_FAVORITE));
 
-        /*favButton.setImageResource((isFav == 0) ? R.drawable.star_off :
-                R.drawable.star_on );*/
-
-        rubbishButton.setImageResource(R.drawable.rubbish);
+        rubbishButton.setImageResource(R.drawable.ic_delete_gray_24px);
 
 
         final String contestID = cursor.getString(cursor.getColumnIndex(GazzetteSQLiteHelper.ContestEntry.COLUMN_ID_CONCORSO));

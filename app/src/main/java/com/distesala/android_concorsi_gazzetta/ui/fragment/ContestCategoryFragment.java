@@ -108,7 +108,7 @@ public class ContestCategoryFragment extends SearchableFragment implements Loade
         //force restart for preference changed.
         getLoaderManager().restartLoader(0, queryBundle, this);
     }
-    
+
     @Override
     public void performSearch(String s)
     {

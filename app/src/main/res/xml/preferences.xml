@@ -23,7 +23,7 @@
             android:title="@string/soglia_scadenza"
             android:defaultValue="10"
             android:summary="@string/summary_scadenza_threshold"
-            picker:min_value="5"
+            picker:min_value="1"
             picker:max_value="15"
             picker:step="1">
         </com.distesala.android_concorsi_gazzetta.preferences.GazzettePickerPreference>
