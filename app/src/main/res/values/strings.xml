@@ -111,5 +111,7 @@
     <string name="filter_altri_enti">Altri Enti</string>
     <string name="no_filter">Tutti</string>
     <string name="filter_uni">Universit</string>
+    <string name="condividiURL">Condividi il Link</string>
+    <string name="subjectCondivisione">C\'è un concorso che potrebbe interessarti.</string>
 
 </resources>

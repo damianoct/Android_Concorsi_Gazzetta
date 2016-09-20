@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.view.View;
 import android.widget.Toast;
 
 import com.distesala.android_concorsi_gazzetta.R;
@@ -27,6 +28,7 @@ public class TextContestFragment extends HostSearchablesFragment implements JSON
     private String dateOfPublication;
     private String contestID;
     private JSONResultReceiver mReceiver;
+    private String mURL;
     private List<String> articles;
 
     public static TextContestFragment newInstance(Bundle bundle)
@@ -92,6 +94,7 @@ public class TextContestFragment extends HostSearchablesFragment implements JSON
         if (resultCode == Activity.RESULT_OK)
         {
             articles = resultData.getStringArrayList("articles");
+            mURL = resultData.getString("url");
 
             //refresh adapter
             viewPager.getAdapter().notifyDataSetChanged();
@@ -142,6 +145,38 @@ public class TextContestFragment extends HostSearchablesFragment implements JSON
         {
             articles = savedInstanceState.getStringArrayList("articles");
         }
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
+    {
+        super.onViewCreated(view, savedInstanceState);
+
+        //Sharing
+
+        View.OnClickListener handler = new View.OnClickListener()
+        {
+            public void onClick(View v)
+            {
+                if(v.getId() == R.id.fab)
+                {
+                    shareURL();
+                }
+            }
+        };
+
+        getActivity().findViewById(R.id.fab).setOnClickListener(handler);
+    }
+
+    private void shareURL()
+    {
+        Intent share = new Intent(android.content.Intent.ACTION_SEND);
+        share.setType("text/plain");
+
+        share.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.subjectCondivisione));
+        share.putExtra(Intent.EXTRA_TEXT, mURL);
+
+        startActivity(Intent.createChooser(share, getString(R.string.condividiURL)));
     }
 
 }
