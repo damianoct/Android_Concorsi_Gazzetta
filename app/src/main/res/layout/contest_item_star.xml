@@ -51,7 +51,6 @@
             android:id="@+id/expiringDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="12 sett"
             android:paddingBottom="20dp"
             android:paddingLeft="10dp"
             android:fontFamily="sans-serif-light"

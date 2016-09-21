@@ -3,6 +3,7 @@ package com.distesala.android_concorsi_gazzetta.utils;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 
 import com.distesala.android_concorsi_gazzetta.R;
 
@@ -52,16 +53,23 @@ public class Helper
         DateFormat dfInsert = new SimpleDateFormat("yyyy-MM-dd", Locale.ITALY);
         DateFormat dfVisualization = new SimpleDateFormat(format, Locale.ITALY);
 
-        try
+        if(dateString != null)
         {
-            Date d = dfInsert.parse(dateString);
+            try
+            {
+                Date d = dfInsert.parse(dateString);
 
-            return dfVisualization.format(d);
+                return dfVisualization.format(d);
 
-        } catch (ParseException | NullPointerException e)
-        {
-            return null;
+            } catch (ParseException e)
+            {
+                Log.e("dateexception", e.getMessage());
+                return null;
+            }
         }
+        else
+            Log.e("[]", "Helper -> DATA NULLA.");
+            return null;
     }
 
     public static void showConnectionAlert(Context context)

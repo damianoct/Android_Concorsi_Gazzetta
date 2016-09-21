@@ -1,5 +1,6 @@
 package com.distesala.android_concorsi_gazzetta.ui.fragment;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -144,6 +145,17 @@ public class ContestCategoryFragment extends SearchableFragment implements Loade
     @Override
     public void onLoaderReset(Loader<Cursor> loader)
     {
-        cursorAdapter.swapCursor(null);
+        cursorAdapter.changeCursor(null);
+    }
+
+    public void updateItem(int isFav, String contestID)
+    {
+        ContentValues contentValues = new ContentValues(1);
+        contentValues.put(GazzetteSQLiteHelper.ContestEntry.COLUMN_FAVORITE,  isFav);
+
+        getActivity().getContentResolver().update(ConcorsiGazzettaContentProvider.CONTESTS_URI,
+                contentValues,
+                GazzetteSQLiteHelper.ContestEntry.COLUMN_ID_CONCORSO + " =?",
+                new String[]{contestID});
     }
 }

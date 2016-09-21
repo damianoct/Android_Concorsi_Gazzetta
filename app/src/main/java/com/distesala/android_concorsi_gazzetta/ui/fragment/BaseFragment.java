@@ -147,9 +147,11 @@ public abstract class BaseFragment extends Fragment implements MenuItemCompat.On
     {
         super.onCreateOptionsMenu(menu, inflater);
         final ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        assert actionBar != null;
-        actionBar.setTitle(getFragmentTitle());
-        inflater.inflate(R.menu.menu_search, menu);
+        if(actionBar != null)
+        {
+            actionBar.setTitle(getFragmentTitle());
+            inflater.inflate(R.menu.menu_search, menu);
+        }
 
         initSearchViewForMenu(menu);
     }

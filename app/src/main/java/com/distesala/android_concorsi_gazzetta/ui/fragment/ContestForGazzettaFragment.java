@@ -2,7 +2,6 @@ package com.distesala.android_concorsi_gazzetta.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -131,35 +130,5 @@ public class ContestForGazzettaFragment extends HostSearchablesFragment
         args.putStringArray(WHERE_ARGS, whereArgs);
 
         return args;
-    }
-
-    private String getStringForFilterAreaId(int id)
-    {
-        switch (id)
-        {
-            case R.id.action_no_filter:
-                return "";
-
-            case R.id.action_filter_amministrazioni_centrali:
-                return getString(R.string.filter_amministrazioni_centrali);
-
-            case R.id.action_filter_universita:
-                return getString(R.string.filter_uni);
-
-            case R.id.action_filter_aziende_sanitarie:
-                return getString(R.string.filter_aziende_sanitarie);
-
-            case R.id.action_filter_enti_pubblici_statali:
-                return getString(R.string.filter_enti_pubblici_statali);
-
-            case R.id.action_filter_enti_locali:
-                return getString(R.string.filter_enti_locali);
-
-            case R.id.action_filter_altri_enti:
-                return getString(R.string.filter_altri_enti);
-
-            default:
-                return null;
-        }
     }
 }
