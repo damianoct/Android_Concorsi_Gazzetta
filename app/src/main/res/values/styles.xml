@@ -1,7 +1,7 @@
 <resources>
 
     <style name="FloatingButtonTheme" parent="MyMaterialTheme">
-    <item name="colorAccent">#ebc816</item>
+    <item name="colorAccent">@color/fabColor</item>
     </style>
 
     <style name="MyMaterialTheme" parent="MyMaterialTheme.Base">

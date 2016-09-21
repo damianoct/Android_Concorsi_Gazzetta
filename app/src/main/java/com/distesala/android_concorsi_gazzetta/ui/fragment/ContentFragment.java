@@ -16,14 +16,18 @@ public class ContentFragment extends SearchableFragment
 {
 
     protected static final String CONTENT = "content";
+    protected static final String EMETTITORE = "emettitore";
     private String content;
+    private String emettitore;
     private TextView contentTextView;
+    private TextView emettitoreTextView;
 
-    public static ContentFragment newInstance(String content)
+    public static ContentFragment newInstance(String content, String emettitore)
     {
         ContentFragment f = new ContentFragment();
         Bundle b = new Bundle(1);
         b.putString(CONTENT, content);
+        b.putString(EMETTITORE, emettitore);
         f.setArguments(b);
 
         return f;
@@ -34,6 +38,7 @@ public class ContentFragment extends SearchableFragment
     {
         super.onCreate(savedInstanceState);
         content = getArguments().getString(CONTENT);
+        emettitore = getArguments().getString(EMETTITORE);
     }
 
     @Override
@@ -43,9 +48,13 @@ public class ContentFragment extends SearchableFragment
         //TODO alcuni concorsi non si visualizzano tutti, controllare il replace ALL...
         //esempio comune di canonica d'adda -> ENTI LOCALI, gazzetta 73.
 
-        View rootView = inflater.inflate(R.layout.fragment_content, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_cardview, container, false);
         contentTextView = (TextView) rootView.findViewById(R.id.content);
         contentTextView.setText(content.replaceAll("\\s+", " "));
+
+        emettitoreTextView = (TextView) rootView.findViewById(R.id.emettitore);
+        emettitoreTextView.setText(emettitore);
+
         return rootView;
     }
 

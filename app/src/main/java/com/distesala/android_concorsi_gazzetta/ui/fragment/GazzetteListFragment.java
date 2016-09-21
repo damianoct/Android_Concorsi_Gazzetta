@@ -36,6 +36,7 @@ import com.distesala.android_concorsi_gazzetta.networking.Connectivity;
 import com.distesala.android_concorsi_gazzetta.services.JSONDownloader;
 import com.distesala.android_concorsi_gazzetta.services.JSONResultReceiver;
 import com.distesala.android_concorsi_gazzetta.ui.HomeActivity;
+import com.distesala.android_concorsi_gazzetta.utils.Helper;
 import com.pnikosis.materialishprogress.ProgressWheel;
 
 /**
@@ -216,7 +217,7 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
         }
         else if (resultCode == Connectivity.CONNECTION_LOCKED)
         {
-            showConnectionAlert();
+            Helper.showConnectionAlert(getActivity());
         }
 
         mSwipeRefreshLayout.setRefreshing(false);
@@ -224,22 +225,6 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
         progressWheel.setVisibility(View.GONE);
         progressWheel.clearAnimation();
         progressWheel.stopSpinning();
-    }
-
-    private void showConnectionAlert()
-    {
-        Context context = getActivity();
-
-        new AlertDialog.Builder(context)
-                .setTitle(R.string.connection_alert_title)
-                .setMessage(R.string.connection_alert_message)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // continue with delete
-                    }
-                })
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show();
     }
 
     @Override

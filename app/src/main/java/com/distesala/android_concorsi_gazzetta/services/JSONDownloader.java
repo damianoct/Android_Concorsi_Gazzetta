@@ -146,23 +146,31 @@ public class JSONDownloader extends IntentService
 
                 try
                 {
-                    String json = downloadJSON(new URL(link));
-                    JSONObject jsonObject = new JSONObject(json);
+                    if(canConnect())
+                    {
+                        String json = downloadJSON(new URL(link));
+                        JSONObject jsonObject = new JSONObject(json);
 
-                    Gson gson = new Gson();
-                    ConcorsoContent content = gson.fromJson(jsonObject.toString(), ConcorsoContent.class);
+                        Gson gson = new Gson();
+                        ConcorsoContent content = gson.fromJson(jsonObject.toString(), ConcorsoContent.class);
 
-                    Bundle b = new Bundle(1);
-                    b.putStringArrayList("articles", new ArrayList<>(content.articoliBando));
+                        Bundle b = new Bundle(1);
+                        b.putStringArrayList("articles", new ArrayList<>(content.articoliBando));
 
-                    String gazzettaURL = GAZZETTA_URL
-                                        + year + "/"
-                                        + month + "/"
-                                        + day + "/"
-                                        + contestID + "/s4";
+                        String gazzettaURL = GAZZETTA_URL
+                                + year + "/"
+                                + month + "/"
+                                + day + "/"
+                                + contestID + "/s4";
 
-                    b.putString("url", gazzettaURL);
-                    rec.send(Activity.RESULT_OK, b);
+                        b.putString("url", gazzettaURL);
+                        rec.send(Activity.RESULT_OK, b);
+                    }
+                    else
+                    {
+                        Log.i("IntentService", "Manca la Conneccione");
+                        rec.send(Connectivity.CONNECTION_LOCKED, null);
+                    }
 
                 }
                 catch (Exception e)

@@ -1,5 +1,9 @@
 package com.distesala.android_concorsi_gazzetta.utils;
 
+import android.content.Context;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
+
 import com.distesala.android_concorsi_gazzetta.R;
 
 import java.text.DateFormat;
@@ -58,5 +62,19 @@ public class Helper
         {
             return null;
         }
+    }
+
+    public static void showConnectionAlert(Context context)
+    {
+        new AlertDialog.Builder(context)
+                .setTitle(R.string.connection_alert_title)
+                .setMessage(R.string.connection_alert_message)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // continue with delete
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
     }
 }
