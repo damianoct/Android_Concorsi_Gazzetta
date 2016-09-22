@@ -22,20 +22,19 @@ public abstract class BaseFragment extends Fragment implements MenuItemCompat.On
                                                                 SearchView.OnQueryTextListener
 {
     protected static final String IS_FROM_SEGUE = "isFromSegue";
-
     protected static final String SEARCH_KEY = "search";
     protected static final String WHERE_CLAUSE = "whereClause";
     protected static final String WHERE_ARGS = "whereArgs";
 
 
-    //communication Fragment -> Host
+    //comunicazione Fragment -> Activity
     protected FragmentListener fragmentListener;
 
     protected String querySearch = null;
 
     private boolean isFromSegue = false;
 
-    //every BaseFragment class has searchViewItem on AppBar.
+    //ogni implementazione di BaseFragment possiede una searchViewItem nell'appbar.
     private MenuItem searchViewItem;
 
     public abstract String getFragmentName();
@@ -52,12 +51,11 @@ public abstract class BaseFragment extends Fragment implements MenuItemCompat.On
 
         final SearchView searchViewAndroidActionBar = (SearchView) MenuItemCompat.getActionView(searchViewItem);
 
+        //in landscape estende la searchbar per tutto lo schermo
         searchViewAndroidActionBar.setMaxWidth(Integer.MAX_VALUE);
-
 
         if(querySearch != null)
         {
-            Log.i("category", "EXPANDO");
             MenuItemCompat.expandActionView(searchViewItem);
             searchViewAndroidActionBar.setQuery(querySearch, true);
         }
@@ -115,29 +113,9 @@ public abstract class BaseFragment extends Fragment implements MenuItemCompat.On
     {
 
         if(savedInstanceState != null) //restore state
-        {
             querySearch = savedInstanceState.getString(SEARCH_KEY);
-        }
         else
-        {
-            //this is the solution for the opened search bar on fragment replace!
-            //fragment are reused, so querySearch is restored with null value.
-
-            /*
-                Ogni volta che da un fragment (con la searchView aperta)
-                passavo tramite Drawer a un altro Fragment si setta la query
-                search VUOTA ma non nulla (non so il perchè), di conseguenza
-                i Fragment di merda sono riutilizzati (non vengono istanziati tutte le volte)
-                quindi la querySearch rimaneva VUOTA.
-                e il metodo initSearchView la apriva.
-
-                Dato che si salva lo stato SOLO quando c'è un cambio di configurazione
-                (eg. orientamento del dispositivo) se non c'è nulla salvato allora non c'è
-                 stato un cambiamento di stato e quindi solo uno switch di Fragments.
-
-             */
             querySearch = null;
-        }
 
         return super.onCreateView(inflater, container, savedInstanceState);
     }
@@ -199,16 +177,6 @@ public abstract class BaseFragment extends Fragment implements MenuItemCompat.On
         querySearch = newText;
         searchFor(newText);
 
-        Log.i("category", "querySearch -> [ " + querySearch + " ]");
-
-
         return true;
-    }
-
-    @Override
-    public void onPause()
-    {
-        super.onPause();
-        Log.i("lifecycle", "onPause()");
     }
 }

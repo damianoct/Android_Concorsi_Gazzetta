@@ -23,7 +23,6 @@ import com.distesala.android_concorsi_gazzetta.R;
 import com.distesala.android_concorsi_gazzetta.ui.fragment.ConcorsiListFragment;
 import com.distesala.android_concorsi_gazzetta.ui.fragment.FragmentListener;
 import com.distesala.android_concorsi_gazzetta.ui.fragment.GazzetteListFragment;
-import com.distesala.android_concorsi_gazzetta.ui.fragment.WebViewFragment;
 
 public class HomeActivity extends AppCompatActivity implements FragmentListener,
                                                                 NavigationView.OnNavigationItemSelectedListener
@@ -55,7 +54,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener,
 
     private void setFragment(int tag)
     {
-        //clear history of SEGUE transactions.
+        //pop dallo stack delle segue transaction
         getSupportFragmentManager().popBackStackImmediate(SEGUE_TRANSACTION, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
         //first drawer transaction?
@@ -70,7 +69,6 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener,
         transaction.addToBackStack(backStackTag).replace(R.id.content_frame, fragmentToAdd, String.valueOf(tag)).commit();
     }
 
-    //MAYBE NEED A FACTORY.....
     private Fragment createFragmentForTag(int tag)
     {
         switch (tag)
@@ -79,8 +77,6 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener,
                 return new GazzetteListFragment();
             case R.id.concorsi:
                 return new ConcorsiListFragment();
-            case R.id.settings:
-                return new WebViewFragment();
             default:
                 return null;
         }
@@ -98,7 +94,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener,
                 super.onDrawerSlide(drawerView, slideOffset);
             }
 
-            //hide keyboard on navigation drawer opened.
+            //se la tastiera è aperta e apro il drawer, devo nasconderla.
             @Override
             public void onDrawerOpened(View drawerView)
             {
@@ -120,6 +116,8 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener,
         actionBarDrawerToggle.syncState();
 
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
+
+        //preservare il colore originale delle icone del navigation view.
         navigationView.setItemIconTintList(null);
         navigationView.setNavigationItemSelectedListener(this);
     }
@@ -137,6 +135,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener,
 
         setContentView(R.layout.activity_home);
 
+        //solo al PRIMO avvio dell'app setto le preferences di default.
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -148,43 +147,28 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener,
 
         /* restore state if needed */
 
-        if (savedInstanceState != null) //restore fragment, non added to backstack
+        if (savedInstanceState != null) //restore fragment, non aggiungo al backstack.
         {
             Fragment savedFragment = getSupportFragmentManager().getFragment(savedInstanceState, SAVED_FRAGMENT);
             getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, savedFragment, savedFragment.getTag()).commit();
         }
-        else //default fragment, first transition not added to backstack
+        else //default fragment, prima transazione con HOME FRAGMENT
         {
             getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, new GazzetteListFragment()
                     , HOME_FRAGMENT).commit();
         }
-
-        //only for debugging
-        getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
-            @Override
-            public void onBackStackChanged()
-            {
-                Log.i("[MAIN] BackStack", "---------------------------------------------------" );
-                Log.i("[MAIN] Backstack", "Count -> " + String.valueOf(getSupportFragmentManager().getBackStackEntryCount()));
-                for(int i = 0; i < getSupportFragmentManager().getBackStackEntryCount(); i++)
-                {
-                    Log.i("[MAIN] Backstack", getSupportFragmentManager().getBackStackEntryAt(i).toString());
-                }
-                Log.i("[MAIN] BackStack", "---------------------------------------------------" );
-            }
-        });
     }
 
     @Override
     public void onBackPressed()
     {
         Fragment homeFragment = getSupportFragmentManager().findFragmentByTag(HOME_FRAGMENT);
-        if (homeFragment != null && homeFragment.isVisible()) //if I am in home fragment, quit application.
+        if (homeFragment != null && homeFragment.isVisible()) //se sono nella home, esci.
             finish();
 
         if(getSupportFragmentManager().getBackStackEntryCount() > 0)
         {
-            //get head of back stack
+            //prendo il primo elemento dello stack
             String headOfStack = getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName();
 
             switch (headOfStack)
@@ -224,16 +208,14 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener,
     @Override
     public void onHomeTransaction()
     {
-        //getSupportActionBar().setTitle(R.string.app_name);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         actionBarDrawerToggle.setDrawerIndicatorEnabled(true);
     }
 
-    //restore menu checked item on backpress.
+    //ripristino l'highlight della relativa voce del menu.
     @Override
     public void onFragmentDisplayed(String fragmentTag)
     {
-        Log.d("onDisplayed", fragmentTag);
         navigationView.getMenu().findItem(Integer.parseInt(fragmentTag)).setChecked(true);
     }
 

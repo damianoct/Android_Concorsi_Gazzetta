@@ -13,7 +13,7 @@ import com.distesala.android_concorsi_gazzetta.model.Gazzetta;
 /**
  * Created by Marco on 21/08/16.
  */
-public class GazzetteSQLiteHelper extends SQLiteOpenHelper
+public class ConcorsiGazzetteSQLiteHelper extends SQLiteOpenHelper
 {
 
 
@@ -64,7 +64,7 @@ public class GazzetteSQLiteHelper extends SQLiteOpenHelper
             ContestEntry.COLUMN_N_ARTICOLI + " text not null, " +
             ContestEntry.COLUMN_FAVORITE + " integer not null);";
 
-    public GazzetteSQLiteHelper(Context context)
+    public ConcorsiGazzetteSQLiteHelper(Context context)
     {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -79,7 +79,7 @@ public class GazzetteSQLiteHelper extends SQLiteOpenHelper
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
     {
-        Log.w(GazzetteSQLiteHelper.class.getName(), "Upgrading database from version " + oldVersion + " to "
+        Log.w(ConcorsiGazzetteSQLiteHelper.class.getName(), "Upgrading database from version " + oldVersion + " to "
                 + newVersion + ", which will destroy all old data");
         db.execSQL("DROP TABLE IF EXISTS " + GazzettaEntry.TABLE_NAME);
         onCreate(db);

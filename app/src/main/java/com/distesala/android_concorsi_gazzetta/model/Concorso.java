@@ -1,8 +1,5 @@
 package com.distesala.android_concorsi_gazzetta.model;
 
-import java.util.Date;
-import java.util.List;
-
 /**
  * Created by Marco on 20/08/16.
  */

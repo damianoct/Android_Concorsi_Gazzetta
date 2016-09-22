@@ -7,12 +7,10 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.distesala.android_concorsi_gazzetta.R;
-import com.distesala.android_concorsi_gazzetta.database.GazzetteSQLiteHelper;
+import com.distesala.android_concorsi_gazzetta.database.ConcorsiGazzetteSQLiteHelper;
 
 /**
  * Created by damiano on 31/08/16.
@@ -20,10 +18,9 @@ import com.distesala.android_concorsi_gazzetta.database.GazzetteSQLiteHelper;
 
 public class ConcorsiGazzettaContentProvider extends ContentProvider
 {
-    private GazzetteSQLiteHelper database;
+    private ConcorsiGazzetteSQLiteHelper database;
 
     // used for the UriMacher
-    private static final int GAZZETTE_ALL = 9;
     private static final int GAZZETTE = 10;
     private static final int GAZZETTA_ID = 11;
     private static final int CONTESTS = 12;
@@ -31,14 +28,9 @@ public class ConcorsiGazzettaContentProvider extends ContentProvider
 
     private static final String AUTHORITY = "com.distesala.android_concorsi_gazzetta.contentprovider";
 
-    private static final String GAZZETTE_ALL_PATH = "gazzetteAll";
-
     private static final String GAZZETTE_PATH = "gazzette";
 
     private static final String CONTESTS_PATH = "contests";
-
-    public static final Uri GAZZETTE_ALL_URI = Uri.parse("content://" + AUTHORITY
-            + "/" + GAZZETTE_ALL_PATH);
 
     public static final Uri GAZZETTE_URI = Uri.parse("content://" + AUTHORITY
             + "/" + GAZZETTE_PATH);
@@ -50,7 +42,6 @@ public class ConcorsiGazzettaContentProvider extends ContentProvider
             UriMatcher.NO_MATCH);
     static
     {
-        sURIMatcher.addURI(AUTHORITY, GAZZETTE_ALL_PATH, GAZZETTE_ALL);
         sURIMatcher.addURI(AUTHORITY, GAZZETTE_PATH, GAZZETTE);
         sURIMatcher.addURI(AUTHORITY, GAZZETTE_PATH + "/#", GAZZETTA_ID);
         sURIMatcher.addURI(AUTHORITY, CONTESTS_PATH, CONTESTS);
@@ -60,7 +51,7 @@ public class ConcorsiGazzettaContentProvider extends ContentProvider
     @Override
     public boolean onCreate()
     {
-        database = new GazzetteSQLiteHelper(getContext());
+        database = new ConcorsiGazzetteSQLiteHelper(getContext());
         return false;
     }
 
@@ -76,7 +67,7 @@ public class ConcorsiGazzettaContentProvider extends ContentProvider
         {
             case GAZZETTE:
             {
-                c = db.query(GazzetteSQLiteHelper.GazzettaEntry.TABLE_NAME,
+                c = db.query(ConcorsiGazzetteSQLiteHelper.GazzettaEntry.TABLE_NAME,
                         projection,
                         selection, selectionArgs, null, null,
                         sortOrder);
@@ -87,7 +78,7 @@ public class ConcorsiGazzettaContentProvider extends ContentProvider
 
             case CONTESTS:
             {
-                c = db.query(GazzetteSQLiteHelper.ContestEntry.TABLE_NAME,
+                c = db.query(ConcorsiGazzetteSQLiteHelper.ContestEntry.TABLE_NAME,
                         projection,
                         selection, selectionArgs,
                         null, null, null);
@@ -98,8 +89,8 @@ public class ConcorsiGazzettaContentProvider extends ContentProvider
         }
 
         //notify
-        assert c!= null;
-        c.setNotificationUri(getContext().getContentResolver(), uri);
+        if (c != null)
+            c.setNotificationUri(getContext().getContentResolver(), uri);
 
         return c;
     }
@@ -139,14 +130,14 @@ public class ConcorsiGazzettaContentProvider extends ContentProvider
         {
             case GAZZETTE:
             {
-                long id = db.insertWithOnConflict(GazzetteSQLiteHelper.GazzettaEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+                long id = db.insertWithOnConflict(ConcorsiGazzetteSQLiteHelper.GazzettaEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
                 returnUri = ContentUris.withAppendedId(GAZZETTE_URI, id);
                 break;
             }
 
             case CONTESTS:
             {
-                long id = db.insertWithOnConflict(GazzetteSQLiteHelper.ContestEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+                long id = db.insertWithOnConflict(ConcorsiGazzetteSQLiteHelper.ContestEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
                 returnUri = ContentUris.withAppendedId(CONTESTS_URI, id);
                 break;
             }
@@ -170,15 +161,15 @@ public class ConcorsiGazzettaContentProvider extends ContentProvider
         {
             case GAZZETTE:
             {
-                itemDeleted = db.delete(GazzetteSQLiteHelper.GazzettaEntry.TABLE_NAME, selection, selectionArgs);
-                itemDeleted += db.delete(GazzetteSQLiteHelper.ContestEntry.TABLE_NAME, selection, selectionArgs);
+                itemDeleted = db.delete(ConcorsiGazzetteSQLiteHelper.GazzettaEntry.TABLE_NAME, selection, selectionArgs);
+                itemDeleted += db.delete(ConcorsiGazzetteSQLiteHelper.ContestEntry.TABLE_NAME, selection, selectionArgs);
 
                 break;
             }
 
             case CONTESTS:
             {
-                //Future implementation.
+                //Future implementazioni se necessario.
                 break;
             }
         }
@@ -198,13 +189,13 @@ public class ConcorsiGazzettaContentProvider extends ContentProvider
         {
             case GAZZETTE:
             {
-                rowAffected = db.update(GazzetteSQLiteHelper.GazzettaEntry.TABLE_NAME, values, selection, selectionArgs);
+                rowAffected = db.update(ConcorsiGazzetteSQLiteHelper.GazzettaEntry.TABLE_NAME, values, selection, selectionArgs);
                 break;
             }
 
             case CONTESTS:
             {
-                rowAffected = db.update(GazzetteSQLiteHelper.ContestEntry.TABLE_NAME, values, selection, selectionArgs);
+                rowAffected = db.update(ConcorsiGazzetteSQLiteHelper.ContestEntry.TABLE_NAME, values, selection, selectionArgs);
                 break;
             }
         }

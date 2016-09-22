@@ -16,26 +16,26 @@ import android.widget.ListView;
 import com.distesala.android_concorsi_gazzetta.R;
 import com.distesala.android_concorsi_gazzetta.adapter.ContestCursorAdapter;
 import com.distesala.android_concorsi_gazzetta.contentprovider.ConcorsiGazzettaContentProvider;
-import com.distesala.android_concorsi_gazzetta.database.GazzetteSQLiteHelper;
+import com.distesala.android_concorsi_gazzetta.database.ConcorsiGazzetteSQLiteHelper;
 import com.distesala.android_concorsi_gazzetta.ui.HomeActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class ContestCategoryFragment extends SearchableFragment implements LoaderManager.LoaderCallbacks<Cursor>
+public class ContestFragment extends SearchableFragment implements LoaderManager.LoaderCallbacks<Cursor>
 {
     private ListView contestsList;
     private CursorAdapter cursorAdapter;
 
-    public static ContestCategoryFragment newInstance(Bundle queryBundle)
+    public static ContestFragment newInstance(Bundle queryBundle)
     {
-        ContestCategoryFragment f = new ContestCategoryFragment();
+        ContestFragment f = new ContestFragment();
         f.setArguments(queryBundle);
         return f;
     }
 
-    public ContestCategoryFragment() { }
+    public ContestFragment() { }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState)
@@ -59,7 +59,7 @@ public class ContestCategoryFragment extends SearchableFragment implements Loade
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
-        View rootView = inflater.inflate(R.layout.fragment_contest_category, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_contest, container, false);
 
         contestsList = (ListView) rootView.findViewById(R.id.contestsList);
 
@@ -73,13 +73,11 @@ public class ContestCategoryFragment extends SearchableFragment implements Loade
             {
                 Cursor c = ((CursorAdapter) parent.getAdapter()).getCursor();
 
-                String dateOfPublication = c.getString(c.getColumnIndex(GazzetteSQLiteHelper.ContestEntry.COLUMN_GAZZETTA_DATE_OF_PUBLICATION));
-                String contestID = c.getString(c.getColumnIndex(GazzetteSQLiteHelper.ContestEntry._ID));
-                String numberOfPublication = c.getString(c.getColumnIndex(GazzetteSQLiteHelper.ContestEntry.COLUMN_GAZZETTA_NUMBER_OF_PUBLICATION));
-                String emettitore = c.getString(c.getColumnIndex(GazzetteSQLiteHelper.ContestEntry.COLUMN_EMETTITORE));
-                String tipologia = c.getString(c.getColumnIndex(GazzetteSQLiteHelper.ContestEntry.COLUMN_TIPOLOGIA));
-                String expiring = c.getString(c.getColumnIndex(GazzetteSQLiteHelper.ContestEntry.COLUMN_SCADENZA));
-                int nArticoli = c.getInt(c.getColumnIndex(GazzetteSQLiteHelper.ContestEntry.COLUMN_N_ARTICOLI));
+                String dateOfPublication = c.getString(c.getColumnIndex(ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_GAZZETTA_DATE_OF_PUBLICATION));
+                String contestID = c.getString(c.getColumnIndex(ConcorsiGazzetteSQLiteHelper.ContestEntry._ID));
+                String numberOfPublication = c.getString(c.getColumnIndex(ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_GAZZETTA_NUMBER_OF_PUBLICATION));
+                String emettitore = c.getString(c.getColumnIndex(ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_EMETTITORE));
+                int nArticoli = c.getInt(c.getColumnIndex(ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_N_ARTICOLI));
 
                 Bundle creationBundle = new Bundle(4);
                 creationBundle.putBoolean(GazzetteListFragment.IS_FROM_SEGUE, true);
@@ -88,8 +86,6 @@ public class ContestCategoryFragment extends SearchableFragment implements Loade
                 creationBundle.putString(TextContestFragment.GAZZETTA_NUM_OF_PUB, numberOfPublication);
                 creationBundle.putString(TextContestFragment.CONTEST_ID, contestID);
                 creationBundle.putString(TextContestFragment.EMETTITORE, emettitore);
-                creationBundle.putString(TextContestFragment.TIPOLOGIA, tipologia);
-                creationBundle.putString(TextContestFragment.EXPIRING_DATE, expiring);
 
                 TextContestFragment textContestFragment = TextContestFragment.newInstance(creationBundle);
 
@@ -139,8 +135,8 @@ public class ContestCategoryFragment extends SearchableFragment implements Loade
             List<String> listArgs = new ArrayList<>();
 
             String whereClause = "(" +
-                    GazzetteSQLiteHelper.ContestEntry.COLUMN_EMETTITORE + " LIKE? OR " +
-                    GazzetteSQLiteHelper.ContestEntry.COLUMN_TITOLO + " LIKE? ) ";
+                    ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_EMETTITORE + " LIKE? OR " +
+                    ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_TITOLO + " LIKE? ) ";
 
             listArgs.add("%" + s + "%");
             listArgs.add("%" + s + "%");
@@ -149,7 +145,7 @@ public class ContestCategoryFragment extends SearchableFragment implements Loade
             {
                 String category = queryBundle.getStringArray(BaseFragment.WHERE_ARGS)[1];
                 String filter = queryBundle.getStringArray(BaseFragment.WHERE_ARGS)[2];
-                whereClause += "AND " + GazzetteSQLiteHelper.ContestEntry.COLUMN_TIPOLOGIA + " LIKE? ";
+                whereClause += "AND " + ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_TIPOLOGIA + " LIKE? ";
                 listArgs.add(category);
                 listArgs.add(filter);
             }
@@ -160,7 +156,7 @@ public class ContestCategoryFragment extends SearchableFragment implements Loade
                 listArgs.add(filter);
             }
 
-            whereClause += "AND " + GazzetteSQLiteHelper.ContestEntry.COLUMN_AREA + " LIKE? ";
+            whereClause += "AND " + ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_AREA + " LIKE? ";
 
 
             args.putString(BaseFragment.WHERE_CLAUSE, whereClause);

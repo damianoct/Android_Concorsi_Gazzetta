@@ -37,16 +37,20 @@ public class GsonContestAdapter implements JsonDeserializer<Concorso>
         String tipologia = null;
         String scadenza = null; //no scadenza
 
+        /**
+         * la scandenza è inserita all'interno della tipologia nel JSON.
+         * E.g.: "tipologia": "CONCORSO (scad. 7 ottobre 2016)"
+         */
         String type = jsonObject.get("tipologia").getAsString();
 
         try
         {
-            String dateString = type.substring(type.indexOf(".") + 1, type.indexOf(")"));
+            String dateString = type.substring(type.indexOf(".") + 2, type.indexOf(")")); //7 ottobre 2016
             tipologia =  type.substring(0, type.indexOf(" "));
 
-            DateFormat formatter = new SimpleDateFormat(" dd MMMM yyyy", Locale.ITALY);
+            DateFormat formatter = new SimpleDateFormat("dd MMMM yyyy", Locale.ITALY);
             Date d = formatter.parse(dateString);
-            DateFormat dfInsert = new SimpleDateFormat("yyyy-MM-dd", Locale.ITALY);
+            DateFormat dfInsert = new SimpleDateFormat("yyyy-MM-dd", Locale.ITALY); //formato utile ad sqlite
             scadenza = dfInsert.format(d);
         }
         catch(IndexOutOfBoundsException e) //è un concorso senza scadenza

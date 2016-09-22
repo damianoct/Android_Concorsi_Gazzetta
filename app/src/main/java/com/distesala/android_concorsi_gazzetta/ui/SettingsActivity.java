@@ -20,14 +20,13 @@ public class SettingsActivity extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        //abilito il pulsante indietro
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.content_frame, new SettingsFragment())
                 .commit();
-
-        //getContentResolver().registerContentObserver(ConcorsiGazzettaContentProvider.GAZZETTE_URI, true, new DbObserver(new Handler()));
     }
 
     @Override

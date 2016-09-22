@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.distesala.android_concorsi_gazzetta.R;
 import com.distesala.android_concorsi_gazzetta.contentprovider.ConcorsiGazzettaContentProvider;
-import com.distesala.android_concorsi_gazzetta.database.GazzetteSQLiteHelper;
+import com.distesala.android_concorsi_gazzetta.database.ConcorsiGazzetteSQLiteHelper;
 import com.distesala.android_concorsi_gazzetta.utils.Helper;
 
 
@@ -42,14 +42,14 @@ public class ContestCursorAdapter extends CursorAdapter
         TextView expiringTextView = (TextView) view.findViewById(R.id.expiringDate);
         ImageButton favButton = (ImageButton) view.findViewById(R.id.fav_button);
 
-        emettitoreTextView.setText(cursor.getString(cursor.getColumnIndex(GazzetteSQLiteHelper.ContestEntry.COLUMN_EMETTITORE)));
-        titoloTextView.setText(cursor.getString(cursor.getColumnIndex(GazzetteSQLiteHelper.ContestEntry.COLUMN_TITOLO)));
+        emettitoreTextView.setText(cursor.getString(cursor.getColumnIndex(ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_EMETTITORE)));
+        titoloTextView.setText(cursor.getString(cursor.getColumnIndex(ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_TITOLO)));
 
-        String expiringDate = cursor.getString(cursor.getColumnIndex(GazzetteSQLiteHelper.ContestEntry.COLUMN_SCADENZA));
+        String expiringDate = cursor.getString(cursor.getColumnIndex(ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_SCADENZA));
 
         String expiringDateString = Helper.formatDate(expiringDate, "dd MMM");
 
-        final int isFav = cursor.getInt(cursor.getColumnIndex(GazzetteSQLiteHelper.ContestEntry.COLUMN_FAVORITE));
+        final int isFav = cursor.getInt(cursor.getColumnIndex(ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_FAVORITE));
         favButton.setImageResource((isFav == 0) ? R.drawable.star_off : R.drawable.star_on );
 
         if(expiringDateString != null)
@@ -57,7 +57,7 @@ public class ContestCursorAdapter extends CursorAdapter
         else
             expiringTextView.setText("");
 
-        final String contestID = cursor.getString(cursor.getColumnIndex(GazzetteSQLiteHelper.ContestEntry.COLUMN_ID_CONCORSO));
+        final String contestID = cursor.getString(cursor.getColumnIndex(ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_ID_CONCORSO));
 
         favButton.setOnClickListener(new View.OnClickListener()
         {
@@ -65,11 +65,11 @@ public class ContestCursorAdapter extends CursorAdapter
             public void onClick(View v)
             {
                 ContentValues contentValues = new ContentValues(1);
-                contentValues.put(GazzetteSQLiteHelper.ContestEntry.COLUMN_FAVORITE,  isFav ^ 1);
+                contentValues.put(ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_FAVORITE,  isFav ^ 1);
 
                 context.getContentResolver().update(ConcorsiGazzettaContentProvider.CONTESTS_URI,
                         contentValues,
-                        GazzetteSQLiteHelper.ContestEntry.COLUMN_ID_CONCORSO + " =?",
+                        ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_ID_CONCORSO + " =?",
                         new String[]{contestID});
             }
         });

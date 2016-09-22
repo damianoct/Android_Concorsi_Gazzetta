@@ -1,7 +1,6 @@
 package com.distesala.android_concorsi_gazzetta.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 /**

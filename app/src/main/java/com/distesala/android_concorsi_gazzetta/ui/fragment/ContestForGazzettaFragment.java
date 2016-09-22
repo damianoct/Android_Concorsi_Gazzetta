@@ -8,7 +8,7 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 
 import com.distesala.android_concorsi_gazzetta.R;
-import com.distesala.android_concorsi_gazzetta.database.GazzetteSQLiteHelper;
+import com.distesala.android_concorsi_gazzetta.database.ConcorsiGazzetteSQLiteHelper;
 import com.distesala.android_concorsi_gazzetta.ui.HomeActivity;
 import com.distesala.android_concorsi_gazzetta.utils.Helper;
 
@@ -29,7 +29,7 @@ public class ContestForGazzettaFragment extends HostSearchablesFragment
     @Override
     protected int getLayoutResource()
     {
-        return R.layout.fragment_contest_for_gazzetta;
+        return R.layout.fragment_contest_host;
     }
 
     @Override
@@ -37,7 +37,7 @@ public class ContestForGazzettaFragment extends HostSearchablesFragment
     {
         Bundle itemBundle = getQueryBundleForPosition(position);
 
-        return ContestCategoryFragment.newInstance(itemBundle);
+        return ContestFragment.newInstance(itemBundle);
     }
 
     @Override
@@ -113,16 +113,15 @@ public class ContestForGazzettaFragment extends HostSearchablesFragment
         return "Gazzetta n. " + numberOfPublication;
     }
 
-    @Override
-    protected Bundle getQueryBundleForPosition(int position)
+    private Bundle getQueryBundleForPosition(int position)
     {
         Bundle args = new Bundle(2);
 
         String category = getResources().getStringArray(R.array.contests_categories)[position];
 
-        String whereClause = GazzetteSQLiteHelper.ContestEntry.COLUMN_GAZZETTA_NUMBER_OF_PUBLICATION + " =? AND "
-                + GazzetteSQLiteHelper.ContestEntry.COLUMN_TIPOLOGIA + " LIKE? AND "
-                + GazzetteSQLiteHelper.ContestEntry.COLUMN_AREA + " LIKE? ";
+        String whereClause = ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_GAZZETTA_NUMBER_OF_PUBLICATION + " =? AND "
+                + ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_TIPOLOGIA + " LIKE? AND "
+                + ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_AREA + " LIKE? ";
 
         String[] whereArgs = new String[]{numberOfPublication.toString(), "%" + category + "%", "%" + getString(Helper.getStringResourceForFilterAreaId(filterAreaId)) + "%" };
 

@@ -20,7 +20,7 @@ import android.widget.ListView;
 import com.distesala.android_concorsi_gazzetta.R;
 import com.distesala.android_concorsi_gazzetta.adapter.FavContestCursorAdapter;
 import com.distesala.android_concorsi_gazzetta.contentprovider.ConcorsiGazzettaContentProvider;
-import com.distesala.android_concorsi_gazzetta.database.GazzetteSQLiteHelper;
+import com.distesala.android_concorsi_gazzetta.database.ConcorsiGazzetteSQLiteHelper;
 import com.distesala.android_concorsi_gazzetta.ui.HomeActivity;
 
 
@@ -64,10 +64,10 @@ public class FavContestListFragment extends SearchableFragment implements Loader
             args = new Bundle(2);
 
             String whereClause = "(" +
-                    GazzetteSQLiteHelper.ContestEntry.COLUMN_EMETTITORE + " LIKE? OR " +
-                    GazzetteSQLiteHelper.ContestEntry.COLUMN_TITOLO + " LIKE? ) AND " +
-                    GazzetteSQLiteHelper.ContestEntry.COLUMN_AREA + " LIKE? AND " +
-                    GazzetteSQLiteHelper.ContestEntry.COLUMN_FAVORITE + " =? ";
+                    ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_EMETTITORE + " LIKE? OR " +
+                    ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_TITOLO + " LIKE? ) AND " +
+                    ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_AREA + " LIKE? AND " +
+                    ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_FAVORITE + " =? ";
 
 
             String[] whereArgs = new String[]{  "%" + s + "%",
@@ -104,12 +104,11 @@ public class FavContestListFragment extends SearchableFragment implements Loader
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
-        //same layout of contest category fragment
-        View rootView = inflater.inflate(R.layout.fragment_contest_category, container, false);
+        //posso utilizzare lo stesso layout del contest fragment
+        View rootView = inflater.inflate(R.layout.fragment_contest, container, false);
 
         contestsList = (ListView) rootView.findViewById(R.id.contestsList);
 
-        //necessary to hide appbar when scrolling
         contestsList.setNestedScrollingEnabled(true);
 
         contestsList.setOnItemClickListener(new AdapterView.OnItemClickListener()
@@ -119,23 +118,19 @@ public class FavContestListFragment extends SearchableFragment implements Loader
             {
                 Cursor c = ((CursorAdapter) parent.getAdapter()).getCursor();
 
-                String dateOfPublication = c.getString(c.getColumnIndex(GazzetteSQLiteHelper.ContestEntry.COLUMN_GAZZETTA_DATE_OF_PUBLICATION));
-                String contestID = c.getString(c.getColumnIndex(GazzetteSQLiteHelper.ContestEntry._ID));
-                String numberOfPublication = c.getString(c.getColumnIndex(GazzetteSQLiteHelper.ContestEntry.COLUMN_GAZZETTA_NUMBER_OF_PUBLICATION));
-                String emettitore = c.getString(c.getColumnIndex(GazzetteSQLiteHelper.ContestEntry.COLUMN_EMETTITORE));
-                String tipologia = c.getString(c.getColumnIndex(GazzetteSQLiteHelper.ContestEntry.COLUMN_TIPOLOGIA));
-                String expiring = c.getString(c.getColumnIndex(GazzetteSQLiteHelper.ContestEntry.COLUMN_SCADENZA));
-                int nArticoli = c.getInt(c.getColumnIndex(GazzetteSQLiteHelper.ContestEntry.COLUMN_N_ARTICOLI));
+                String dateOfPublication = c.getString(c.getColumnIndex(ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_GAZZETTA_DATE_OF_PUBLICATION));
+                String contestID = c.getString(c.getColumnIndex(ConcorsiGazzetteSQLiteHelper.ContestEntry._ID));
+                String numberOfPublication = c.getString(c.getColumnIndex(ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_GAZZETTA_NUMBER_OF_PUBLICATION));
+                String emettitore = c.getString(c.getColumnIndex(ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_EMETTITORE));
+                int nArticoli = c.getInt(c.getColumnIndex(ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_N_ARTICOLI));
 
-                Bundle creationBundle = new Bundle(4);
+                Bundle creationBundle = new Bundle(6);
                 creationBundle.putBoolean(GazzetteListFragment.IS_FROM_SEGUE, true);
                 creationBundle.putInt(TextContestFragment.N_ARTICOLI, nArticoli);
                 creationBundle.putString(TextContestFragment.GAZZETTA_DATE_OF_PUB, dateOfPublication);
                 creationBundle.putString(TextContestFragment.GAZZETTA_NUM_OF_PUB, numberOfPublication);
                 creationBundle.putString(TextContestFragment.CONTEST_ID, contestID);
                 creationBundle.putString(TextContestFragment.EMETTITORE, emettitore);
-                creationBundle.putString(TextContestFragment.TIPOLOGIA, tipologia);
-                creationBundle.putString(TextContestFragment.EXPIRING_DATE, expiring);
 
                 TextContestFragment textContestFragment = TextContestFragment.newInstance(creationBundle);
 

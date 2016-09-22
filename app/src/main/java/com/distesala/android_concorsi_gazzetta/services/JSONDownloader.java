@@ -14,7 +14,7 @@ import android.util.Log;
 import com.distesala.android_concorsi_gazzetta.R;
 import com.distesala.android_concorsi_gazzetta.adapter.GsonGazzettaAdapter;
 import com.distesala.android_concorsi_gazzetta.contentprovider.ConcorsiGazzettaContentProvider;
-import com.distesala.android_concorsi_gazzetta.database.GazzetteSQLiteHelper;
+import com.distesala.android_concorsi_gazzetta.database.ConcorsiGazzetteSQLiteHelper;
 import com.distesala.android_concorsi_gazzetta.execptions.HttpErrorException;
 import com.distesala.android_concorsi_gazzetta.model.Concorso;
 import com.distesala.android_concorsi_gazzetta.model.ConcorsoContent;
@@ -39,9 +39,9 @@ import java.util.List;
 
 public class JSONDownloader extends IntentService
 {
-    private static final String URL_WS = "http://marsala.ddns.net:8080/gazzetteWithContests";
+    private static final String URL_HOME = "http://marsala.ddns.net:8080/gazzetteWithContests";
     private static final String URL = "http://marsala.ddns.net:8080/";
-    private static final String LATEST_GAZZETTA = "http://marsala.ddns.net:8080/latestGazzetta";
+    private static final String LATEST_GAZZETTA_URL = "http://marsala.ddns.net:8080/latestGazzetta";
     private static final String GAZZETTA_URL = "http://www.gazzettaufficiale.it/eli/id/";
     public static final String DOWNLOAD_GAZZETTA = "DownloadGazzetta";
     public static final String DOWNLOAD_CONTEST = "DownloadContest";
@@ -57,12 +57,12 @@ public class JSONDownloader extends IntentService
 
         for(Gazzetta g: gazzette)
         {
-            ContentValues gazzettaValues = GazzetteSQLiteHelper.createContentValuesForGazzetta(g);
+            ContentValues gazzettaValues = ConcorsiGazzetteSQLiteHelper.createContentValuesForGazzetta(g);
 
             List<ContentValues> contestsValueList = new ArrayList<>();
 
             for(Concorso c: g.getConcorsi())
-                contestsValueList.add(GazzetteSQLiteHelper.createContentValuesForContest(c));
+                contestsValueList.add(ConcorsiGazzetteSQLiteHelper.createContentValuesForContest(c));
 
             ContentValues[] contestsContentValues = contestsValueList.toArray(new ContentValues[0]);
             getContentResolver().bulkInsert(ConcorsiGazzettaContentProvider.CONTESTS_URI, contestsContentValues);
@@ -95,8 +95,7 @@ public class JSONDownloader extends IntentService
 
                         try
                         {
-
-                            String json = downloadJSON(new URL(URL_WS));
+                            String json = downloadJSON(new URL(URL_HOME));
                             JSONObject jsonObject = new JSONObject(json);
                             JSONArray gazzetteJsonArray = jsonObject.getJSONArray("gazzette");
 
@@ -108,8 +107,6 @@ public class JSONDownloader extends IntentService
                             Gazzetta[] gazzette = gson.fromJson(gazzetteJsonArray.toString(), Gazzetta[].class);
 
                             insertGazzetteWithContests(gazzette);
-
-
                         }
 
                         catch (Exception e)
@@ -122,7 +119,7 @@ public class JSONDownloader extends IntentService
                 }
                 else
                 {
-                    Log.i("IntentService", "Manca la Conneccione");
+                    Log.i("IntentService", "Manca la Connessione");
                     rec.send(Connectivity.CONNECTION_LOCKED, null);
                 }
 
@@ -168,7 +165,7 @@ public class JSONDownloader extends IntentService
                     }
                     else
                     {
-                        Log.i("IntentService", "Manca la Conneccione");
+                        Log.i("IntentService", "Manca la Connessione");
                         rec.send(Connectivity.CONNECTION_LOCKED, null);
                     }
 
@@ -197,7 +194,7 @@ public class JSONDownloader extends IntentService
     {
         try
         {
-            String json = downloadJSON(new URL(LATEST_GAZZETTA));
+            String json = downloadJSON(new URL(LATEST_GAZZETTA_URL));
             Gson gson = new Gson();
 
 
@@ -205,12 +202,10 @@ public class JSONDownloader extends IntentService
             Cursor cursor = getContentResolver().query(
                     ConcorsiGazzettaContentProvider.GAZZETTE_URI,
                     null,
-                    GazzetteSQLiteHelper.GazzettaEntry.COLUMN_NUMBER_OF_PUBLICATION + " =?",
+                    ConcorsiGazzetteSQLiteHelper.GazzettaEntry.COLUMN_NUMBER_OF_PUBLICATION + " =?",
                     new String[]{latest.getNumberOfPublication()},
                     null);
 
-            Log.d("DEBUG", String.valueOf(cursor.getCount()));
-            Log.d("DDEBUG", latest.getNumberOfPublication());
             return cursor.moveToNext();
         }
 

@@ -27,7 +27,7 @@ import java.util.List;
 public abstract class HostSearchablesFragment extends BaseFragment
 {
     private List<SearchableFragment> searchables;
-    private SearchableTabsAdapter adapter;
+    private SearchableViewPagerAdapter adapter;
 
     protected ViewPager viewPager;
     protected TabLayout tabLayout;
@@ -54,22 +54,6 @@ public abstract class HostSearchablesFragment extends BaseFragment
     protected abstract SearchableFragment getChild(int position);
     protected abstract String[] getTabTitles();
     protected abstract int getLayoutResource();
-
-    //questa è la funziona che fornisce il bundle per il refresh
-    //può essere usata per fornire anche il bundle in fase di inizializzazione del child
-    //se questo è uguale (come struttura) a quello per il refresh.
-    @Nullable
-    protected abstract Bundle getQueryBundleForPosition(int position);
-
-    public final void refreshQueryBundle()
-    {
-        //int position = viewPager.getCurrentItem();
-
-        for(SearchableFragment sf: searchables)
-        {
-            sf.onRefreshQueryBundle(getQueryBundleForPosition(sf.getPosition()));
-        }
-    }
 
     private void notifyChildrenForSearch()
     {
@@ -179,7 +163,8 @@ public abstract class HostSearchablesFragment extends BaseFragment
 
     protected final void setupViewPager()
     {
-        adapter = new SearchableTabsAdapter(getChildFragmentManager(),
+        //sono già dentro un fragment, quindi devo usare getChildFragmentManager.
+        adapter = new SearchableViewPagerAdapter(getChildFragmentManager(),
                 getTabTitles());
         viewPager.setAdapter(adapter);
 
@@ -194,7 +179,7 @@ public abstract class HostSearchablesFragment extends BaseFragment
                 //expand appbar
                 fragmentListener.expandAppBar();
 
-                //onPageSelected notify new Searchable item for search.
+                //onPageSelected notifica gli altri searchables.
                 if(isSearchActive())
                     notifyChildrenForSearch();
 
@@ -213,11 +198,11 @@ public abstract class HostSearchablesFragment extends BaseFragment
         tabLayout.setTabTextColors(Color.WHITE, Color.WHITE);
     }
 
-    private class SearchableTabsAdapter extends FragmentStatePagerAdapter
+    private class SearchableViewPagerAdapter extends FragmentStatePagerAdapter
     {
         private String[] titles;
 
-        public SearchableTabsAdapter(FragmentManager fm, String[] titles)
+        public SearchableViewPagerAdapter(FragmentManager fm, String[] titles)
         {
             super(fm);
             this.titles = titles;
@@ -227,9 +212,7 @@ public abstract class HostSearchablesFragment extends BaseFragment
         public Fragment getItem(int position)
         {
             Fragment f = getChild(position);
-            SearchableFragment sf = (SearchableFragment) f;
-            sf.setPosition(position);
-            addSearchable(sf);
+            addSearchable((SearchableFragment) f);
 
             return f;
         }
@@ -256,6 +239,7 @@ public abstract class HostSearchablesFragment extends BaseFragment
         public void destroyItem(ViewGroup container, int position, Object object)
         {
             super.destroyItem(container, position, object);
+            //importante per rimuovere il searchable dalla lista.
             removeSearchable(object);
         }
     }

@@ -51,10 +51,6 @@
                     android:key="@string/key_clear_db"
                     android:title="@string/clear_db"
                     android:summary="Il database contiene attualmente 30 gazzette."/>
-
-
-
-
     </PreferenceCategory>
 
 </PreferenceScreen>

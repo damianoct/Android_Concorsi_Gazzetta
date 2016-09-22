@@ -19,12 +19,6 @@ public class SettingsFragment extends PreferenceFragment
                               implements SharedPreferences.OnSharedPreferenceChangeListener,
                                             LoaderManager.LoaderCallbacks<Cursor>
 {
-
-    public SettingsFragment()
-    {
-        // Required empty public constructor
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -50,7 +44,7 @@ public class SettingsFragment extends PreferenceFragment
     {
         String key = getString(R.string.key_num_gazzette);
         Preference connectionPref = findPreference(key);
-        connectionPref.setSummary("Verranno salvate e visualizzate fin a un massimo di " +
+        connectionPref.setSummary("Verranno visualizzate fin a un massimo di " +
                 PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt(key, 0) +
                 " gazzette.");
 

@@ -3,8 +3,6 @@ package com.distesala.android_concorsi_gazzetta.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,7 +56,7 @@ public class ContentFragment extends SearchableFragment
     @Override
     protected void performSearch(String querySearch)
     {
-
+        //da implementare nelle future iterazioni per cercare all'interno del content.
     }
 
 }

@@ -4,14 +4,16 @@ package com.distesala.android_concorsi_gazzetta.ui.fragment;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.SubMenu;
+import android.view.View;
 
 import com.distesala.android_concorsi_gazzetta.R;
-import com.distesala.android_concorsi_gazzetta.database.GazzetteSQLiteHelper;
+import com.distesala.android_concorsi_gazzetta.database.ConcorsiGazzetteSQLiteHelper;
 import com.distesala.android_concorsi_gazzetta.utils.Helper;
 
 /**
@@ -31,7 +33,7 @@ public class ConcorsiListFragment extends HostSearchablesFragment
     private static final String[] childTitles = new String[]{   IN_SCADENZA,
                                                                 PREFERITI
                                                             };
-    private String threshold;
+    private int threshold;
 
     private int filterAreaId = R.id.action_no_filter;
 
@@ -57,7 +59,7 @@ public class ConcorsiListFragment extends HostSearchablesFragment
     @Override
     protected int getLayoutResource()
     {
-        return R.layout.fragment_concorsi_list;
+        return R.layout.fragment_contest_host;
     }
 
     @Override
@@ -69,7 +71,7 @@ public class ConcorsiListFragment extends HostSearchablesFragment
         switch (position)
         {
             case IN_SCADENZA_POS:
-                f = ContestCategoryFragment.newInstance(bundle);
+                f = ContestFragment.newInstance(bundle);
                 break;
             case PREFERITI_POS:
                 f = FavContestListFragment.newInstance(bundle);
@@ -79,25 +81,27 @@ public class ConcorsiListFragment extends HostSearchablesFragment
         return f;
     }
 
-    @Override
-    protected Bundle getQueryBundleForPosition(int position)
+    private Bundle getQueryBundleForPosition(int position)
     {
         Bundle args = new Bundle(2);
         String whereClause = null;
         String[] whereArgs = null;
 
+        String key = getString(R.string.key_scadenza_threshold);
+        threshold = PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt(key, 0);
+
         switch (position)
         {
             case IN_SCADENZA_POS:
-                whereClause = GazzetteSQLiteHelper.ContestEntry.COLUMN_SCADENZA + " <= date('now', '+" + threshold +
+                whereClause = ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_SCADENZA + " <= date('now', '+" + threshold +
                                                                                 " days') AND " +
-                        GazzetteSQLiteHelper.ContestEntry.COLUMN_SCADENZA + " >= date('now') AND " +
-                        GazzetteSQLiteHelper.ContestEntry.COLUMN_AREA + " LIKE? ";
+                        ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_SCADENZA + " >= date('now') AND " +
+                        ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_AREA + " LIKE? ";
                         whereArgs = new String[]{"%" + getString(Helper.getStringResourceForFilterAreaId(filterAreaId)) + "%" };
                 break;
             case PREFERITI_POS:
-                whereClause = GazzetteSQLiteHelper.ContestEntry.COLUMN_FAVORITE + "=? AND " +
-                                GazzetteSQLiteHelper.ContestEntry.COLUMN_AREA + " LIKE? ";
+                whereClause = ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_FAVORITE + "=? AND " +
+                                ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_AREA + " LIKE? ";
                 whereArgs = new String[]{"1", "%" + getString(Helper.getStringResourceForFilterAreaId(filterAreaId)) + "%"};
                 break;
         }
@@ -112,6 +116,7 @@ public class ConcorsiListFragment extends HostSearchablesFragment
     public void onCreate(@Nullable Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
         if(savedInstanceState != null)
         {
             filterAreaId = savedInstanceState.getInt(FILTER_AREA);
@@ -130,6 +135,13 @@ public class ConcorsiListFragment extends HostSearchablesFragment
     {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_filtering, menu);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
+    {
+        super.onViewCreated(view, savedInstanceState);
+        tabLayout.setTabMode(TabLayout.MODE_FIXED);
     }
 
     @Override
@@ -158,13 +170,13 @@ public class ConcorsiListFragment extends HostSearchablesFragment
     public void onResume()
     {
         super.onResume();
-        //check for new preference value
-        String key = getString(R.string.key_scadenza_threshold);
-        threshold = String.valueOf(PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt(key, 0));
 
-        //TODO [IMPORTANTE] provare con meccanismo viewpager.getAdapter().notifyDataSetChange()!!!
-        //controllare se devo refreshare il cursore a questa posizione
-        //all'esatta posizione ci pensa la super classe.
-        refreshQueryBundle();
+        String key = getString(R.string.key_scadenza_threshold);
+        int newThreshold = PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt(key, 0);
+        if(threshold != newThreshold)
+            viewPager.getAdapter().notifyDataSetChanged();
+
+
+
     }
 }

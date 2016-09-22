@@ -17,7 +17,7 @@ public class JSONResultReceiver extends ResultReceiver
 
     public interface Receiver
     {
-        public void onReceiveResult(int resultCode, Bundle resultData);
+        void onReceiveResult(int resultCode, Bundle resultData);
     }
 
     public void setReceiver(Receiver receiver)

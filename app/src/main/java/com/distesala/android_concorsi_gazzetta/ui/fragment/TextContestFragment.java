@@ -8,14 +8,10 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewCompat;
-import android.util.Log;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.distesala.android_concorsi_gazzetta.R;
-import com.distesala.android_concorsi_gazzetta.database.GazzetteSQLiteHelper;
 import com.distesala.android_concorsi_gazzetta.model.Concorso;
 import com.distesala.android_concorsi_gazzetta.model.Gazzetta;
 import com.distesala.android_concorsi_gazzetta.networking.Connectivity;
@@ -34,8 +30,6 @@ public class TextContestFragment extends HostSearchablesFragment implements JSON
     protected static final String GAZZETTA_NUM_OF_PUB = "numberOfPublication";
     protected static final String EMETTITORE = "emettitore";
     protected static final String CONTEST_ID = "contestID";
-    protected static final String TIPOLOGIA = "tipologia";
-    protected static final String EXPIRING_DATE = "expiring";
 
     private static final int PERCENTAGE_TO_SHOW_IMAGE = 80;
 
@@ -43,20 +37,13 @@ public class TextContestFragment extends HostSearchablesFragment implements JSON
     private FloatingActionButton mFab;
     private int mMaxScrollSize;
     private boolean mIsImageHidden;
-    private String tipologia;
     private String dateOfPublication;
+    private String contestID;
     private String numberOfPublication;
     private String emettitore;
-    private String contestID;
     private JSONResultReceiver mReceiver;
-    private LinearLayout expiringLayout;
-    private String expiring;
     private String mURL;
     private List<String> articles;
-    private TextView emettitoreTextView;
-    private TextView tipologiaTextView;
-    private TextView gazzettaInfoTextView;
-    private TextView expiringTextView;
     private int nArticoli;
 
     public static TextContestFragment newInstance(Bundle bundle)
@@ -99,24 +86,6 @@ public class TextContestFragment extends HostSearchablesFragment implements JSON
     }
 
     @Override
-    protected Bundle getQueryBundleForPosition(int position)
-    {
-        Bundle args = new Bundle(2);
-
-        String category = getResources().getStringArray(R.array.contests_categories)[position];
-
-        String whereClause = GazzetteSQLiteHelper.ContestEntry.COLUMN_GAZZETTA_NUMBER_OF_PUBLICATION + " =? AND "
-                + GazzetteSQLiteHelper.ContestEntry.COLUMN_TIPOLOGIA + " LIKE? ";
-
-        String[] whereArgs = new String[]{"70", "%" + category + "%"};
-
-        args.putString(WHERE_CLAUSE, whereClause);
-        args.putStringArray(WHERE_ARGS, whereArgs);
-
-        return args;
-    }
-
-    @Override
     public void onReceiveResult(int resultCode, Bundle resultData)
     {
         if (resultCode == Activity.RESULT_OK)
@@ -151,6 +120,7 @@ public class TextContestFragment extends HostSearchablesFragment implements JSON
     public void onCreate(@Nullable Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        //tolgo la searchview momentaneamente, sarà abilitato nelle future iterazioni.
         setHasOptionsMenu(false);
         nArticoli = getArguments().getInt(N_ARTICOLI);
         //dateOfPublication = Helper.formatDate(getArguments().getString(GAZZETTA_DATE_OF_PUB), "dd MMMM yyyy");
@@ -158,9 +128,6 @@ public class TextContestFragment extends HostSearchablesFragment implements JSON
         numberOfPublication = getArguments().getString(GAZZETTA_NUM_OF_PUB);
         contestID = getArguments().getString(CONTEST_ID);
         emettitore = getArguments().getString(EMETTITORE);
-        tipologia = getArguments().getString(TIPOLOGIA);
-
-        expiring = Helper.formatDate(getArguments().getString(EXPIRING_DATE, null), "dd MMMM yyyy");
 
         if(savedInstanceState == null)
         {
@@ -178,8 +145,6 @@ public class TextContestFragment extends HostSearchablesFragment implements JSON
         {
             articles = savedInstanceState.getStringArrayList("articles");
         }
-
-
     }
 
     @Override
@@ -189,29 +154,6 @@ public class TextContestFragment extends HostSearchablesFragment implements JSON
 
         AppBarLayout appbar = (AppBarLayout) view.findViewById(R.id.appbarlayout);
         appbar.addOnOffsetChangedListener(this);
-
-        /*tipologiaTextView = (TextView) getActivity().findViewById(R.id.tipologia);
-        tipologiaTextView.setText(tipologia);
-
-        emettitoreTextView = (TextView) getActivity().findViewById(R.id.emettitore);
-        emettitoreTextView.setText(emettitore);
-
-        gazzettaInfoTextView = (TextView) getActivity().findViewById(R.id.gazetta_num);
-        dateOfPublication = Helper.formatDate(dateOfPublication, "dd MMMM yyyy");
-        gazzettaInfoTextView.setText("Gazzetta n. " + numberOfPublication + " del " + dateOfPublication);
-
-
-        expiringLayout = (LinearLayout) getActivity().findViewById(R.id.expiringLayout);
-
-        if(expiring != null)
-        {
-            expiringTextView = (TextView) getActivity().findViewById(R.id.expiringDate);
-            expiringTextView.setText(expiring);
-        }
-        else
-        {
-            expiringLayout.setVisibility(View.GONE);
-        }*/
 
         //Sharing
 
@@ -249,9 +191,6 @@ public class TextContestFragment extends HostSearchablesFragment implements JSON
 
         int currentScrollPercentage = (Math.abs(i)) * 100
                 / mMaxScrollSize;
-
-        Log.i("collapse" , "onOffsetChanged currentScrollPercentage -> " + String.valueOf(currentScrollPercentage));
-
 
         if (currentScrollPercentage >= PERCENTAGE_TO_SHOW_IMAGE) {
             if (!mIsImageHidden) {
