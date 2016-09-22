@@ -50,17 +50,17 @@ public class GazzettaCursorAdapter extends CursorAdapter
 
         int numContest = context.getContentResolver().query(ConcorsiGazzettaContentProvider.CONTESTS_URI, null, whereClause, whereArgs, null).getCount();
 
-        numberOfPublication.setText("PUBBLICAZIONE " + numberOfPup);
+        numberOfPublication.setText(context.getString(R.string.pubblicazione) + numberOfPup);
         nContest.setText(String.valueOf(numContest));
 
 
         String key = context.getString(R.string.key_scadenza_threshold);
         String threshold = String.valueOf(PreferenceManager.getDefaultSharedPreferences(context).getInt(key, 0));
 
-        whereClause = GazzetteSQLiteHelper.ContestEntry.COLUMN_SCADENZA + " <= date('now', '+" + threshold +
-                " days') AND " +
-                GazzetteSQLiteHelper.ContestEntry.COLUMN_SCADENZA + " >= date('now') " + "AND "
-                + GazzetteSQLiteHelper.ContestEntry.COLUMN_GAZZETTA_NUMBER_OF_PUBLICATION + " =?";
+        whereClause = GazzetteSQLiteHelper.ContestEntry.COLUMN_SCADENZA +
+                        " <= date('now', '+" + threshold + " days') AND " +
+                        GazzetteSQLiteHelper.ContestEntry.COLUMN_SCADENZA + " >= date('now') " + "AND " +
+                        GazzetteSQLiteHelper.ContestEntry.COLUMN_GAZZETTA_NUMBER_OF_PUBLICATION + " =?";
 
         int numExp = context.getContentResolver().query(ConcorsiGazzettaContentProvider.CONTESTS_URI, null, whereClause, whereArgs, null).getCount();
         nExpiring.setText(String.valueOf(numExp));

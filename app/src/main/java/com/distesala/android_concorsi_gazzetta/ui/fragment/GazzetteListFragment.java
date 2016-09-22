@@ -46,9 +46,6 @@ import com.pnikosis.materialishprogress.ProgressWheel;
 
 public class GazzetteListFragment extends BaseFragment implements JSONResultReceiver.Receiver, LoaderManager.LoaderCallbacks<Cursor>
 {
-    //TODO provare a spostare le chiamate al loaderManager.init nei metodi onActivityCreated()
-    //vedere -> http://stackoverflow.com/questions/14559573/getting-called-dostart-when-already-started-from-loadermanager-why
-
     private JSONResultReceiver mReceiver;
     private ListView gazzetteList;
     private CursorAdapter adapter;

@@ -1,6 +1,5 @@
 package com.distesala.android_concorsi_gazzetta.ui.fragment;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,7 +7,6 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.widget.CursorAdapter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +18,9 @@ import com.distesala.android_concorsi_gazzetta.adapter.ContestCursorAdapter;
 import com.distesala.android_concorsi_gazzetta.contentprovider.ConcorsiGazzettaContentProvider;
 import com.distesala.android_concorsi_gazzetta.database.GazzetteSQLiteHelper;
 import com.distesala.android_concorsi_gazzetta.ui.HomeActivity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class ContestCategoryFragment extends SearchableFragment implements LoaderManager.LoaderCallbacks<Cursor>
@@ -121,7 +122,53 @@ public class ContestCategoryFragment extends SearchableFragment implements Loade
     @Override
     public void performSearch(String s)
     {
-        //TODO implementare ricerca fragment child.
+        Bundle args = getSearchBundle(s);
+
+        getLoaderManager().restartLoader(0, args, this);
+    }
+
+    @Nullable
+    private Bundle getSearchBundle(String s)
+    {
+        Bundle args = null;
+
+        if(s != null)
+        {
+            args = new Bundle(2);
+
+            List<String> listArgs = new ArrayList<>();
+
+            String whereClause = "(" +
+                    GazzetteSQLiteHelper.ContestEntry.COLUMN_EMETTITORE + " LIKE? OR " +
+                    GazzetteSQLiteHelper.ContestEntry.COLUMN_TITOLO + " LIKE? ) ";
+
+            listArgs.add("%" + s + "%");
+            listArgs.add("%" + s + "%");
+
+            if(queryBundle.getStringArray(BaseFragment.WHERE_ARGS).length > 1) //filter for category
+            {
+                String category = queryBundle.getStringArray(BaseFragment.WHERE_ARGS)[1];
+                String filter = queryBundle.getStringArray(BaseFragment.WHERE_ARGS)[2];
+                whereClause += "AND " + GazzetteSQLiteHelper.ContestEntry.COLUMN_TIPOLOGIA + " LIKE? ";
+                listArgs.add(category);
+                listArgs.add(filter);
+            }
+
+            else
+            {
+                String filter = queryBundle.getStringArray(BaseFragment.WHERE_ARGS)[0];
+                listArgs.add(filter);
+            }
+
+            whereClause += "AND " + GazzetteSQLiteHelper.ContestEntry.COLUMN_AREA + " LIKE? ";
+
+
+            args.putString(BaseFragment.WHERE_CLAUSE, whereClause);
+            args.putStringArray(BaseFragment.WHERE_ARGS, listArgs.toArray(new String[0]));
+
+        }
+
+        return args;
     }
 
     @Override
@@ -138,7 +185,6 @@ public class ContestCategoryFragment extends SearchableFragment implements Loade
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data)
     {
-        Log.i("TANO", "contest category loadfinish, SIZE -> " + String.valueOf(data.getCount()));
         cursorAdapter.changeCursor(data);
     }
 
@@ -146,16 +192,5 @@ public class ContestCategoryFragment extends SearchableFragment implements Loade
     public void onLoaderReset(Loader<Cursor> loader)
     {
         cursorAdapter.changeCursor(null);
-    }
-
-    public void updateItem(int isFav, String contestID)
-    {
-        ContentValues contentValues = new ContentValues(1);
-        contentValues.put(GazzetteSQLiteHelper.ContestEntry.COLUMN_FAVORITE,  isFav);
-
-        getActivity().getContentResolver().update(ConcorsiGazzettaContentProvider.CONTESTS_URI,
-                contentValues,
-                GazzetteSQLiteHelper.ContestEntry.COLUMN_ID_CONCORSO + " =?",
-                new String[]{contestID});
     }
 }

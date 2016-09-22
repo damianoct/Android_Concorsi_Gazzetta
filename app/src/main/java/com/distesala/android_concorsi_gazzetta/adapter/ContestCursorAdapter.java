@@ -30,14 +30,13 @@ public class ContestCursorAdapter extends CursorAdapter
     public View newView(Context context, Cursor cursor, ViewGroup parent)
     {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.contest_item_star, parent, false);
+        View view = inflater.inflate(R.layout.contest_item, parent, false);
         return view;
     }
 
     @Override
-    public void bindView(View view, Context context, final Cursor cursor)
+    public void bindView(View view, final Context context, final Cursor cursor)
     {
-        final Context c = context;
         TextView emettitoreTextView = (TextView) view.findViewById(R.id.emettitore);
         TextView titoloTextView = (TextView) view.findViewById(R.id.titolo);
         TextView expiringTextView = (TextView) view.findViewById(R.id.expiringDate);
@@ -51,8 +50,7 @@ public class ContestCursorAdapter extends CursorAdapter
         String expiringDateString = Helper.formatDate(expiringDate, "dd MMM");
 
         final int isFav = cursor.getInt(cursor.getColumnIndex(GazzetteSQLiteHelper.ContestEntry.COLUMN_FAVORITE));
-        favButton.setImageResource((isFav == 0) ? R.drawable.star_off :
-                R.drawable.star_on );
+        favButton.setImageResource((isFav == 0) ? R.drawable.star_off : R.drawable.star_on );
 
         if(expiringDateString != null)
             expiringTextView.setText(expiringDateString);
@@ -69,7 +67,7 @@ public class ContestCursorAdapter extends CursorAdapter
                 ContentValues contentValues = new ContentValues(1);
                 contentValues.put(GazzetteSQLiteHelper.ContestEntry.COLUMN_FAVORITE,  isFav ^ 1);
 
-                c.getContentResolver().update(ConcorsiGazzettaContentProvider.CONTESTS_URI,
+                context.getContentResolver().update(ConcorsiGazzettaContentProvider.CONTESTS_URI,
                         contentValues,
                         GazzetteSQLiteHelper.ContestEntry.COLUMN_ID_CONCORSO + " =?",
                         new String[]{contestID});

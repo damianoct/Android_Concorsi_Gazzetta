@@ -35,7 +35,7 @@
     <string name="action_settings">Settings</string>
     <string name="search_title">Cerca</string>
     <string name="search_hint">Cerca qualcosa...</string>
-    <string name="settings_title">Impostaccioni</string>
+    <string name="settings_title">Impostazioni</string>
     <string name="utilizzo_dati">Utilizza anche con rete dati</string>
     <string name="connettività">Connettività</string>
     <string name="summary_rete_dati">L\'applicazione utilizzerà la rete dati per scaricare le nuove gazzette se non è disponibile una rete Wifi.</string>
@@ -43,7 +43,7 @@
     <string name="rete_dati_title">Utilizza rete dati</string>
     <string name="archiviazione">Archiviaccione</string>
     <string name="limite_gazzette">Limite Gazzette</string>
-    <string name="visualizzazione">Visualizzaccione</string>
+    <string name="visualizzazione">Visualizzazione</string>
     <string name="soglia_scadenza">Soglia concorsi in scadenza</string>
     <string name="key_num_gazzette">num_gazzette</string>
     <string name="key_scadenza_threshold">scadenza_threshold</string>
@@ -116,5 +116,6 @@
     <string name="gaggetta">Concorsi Gaggetta</string>
     <string name="filter_none"/>
     <string name="lorem">Lorem ipsum dolor sit amet, consectetur adipiscing elit. \t\tIn mollis est vitae erat laoreet consectetur. Mauris dui mauris, \t\tdictum vel egestas vel, porta sed ante. Phasellus congue viverra ipsum, \t\tin elementum arcu ultricies nec.Morbi tincidunt nisl lacinia, placerat nisi eget, luctus tortor. \t\tMorbi efficitur dictum leo, sit amet volutpat lorem sodales nec. Quisque et erat et turpis fringilla condimentum. \t\tLorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris auctor vulputate libero vitae iaculis. \t\tCurabitur id blandit quam. Praesent massa ante, pulvinar vitae sagittis commodo, scelerisque porttitor eros. \t\tMauris suscipit a enim nec congue. Mauris tristique cursus aliquet. Nunc quis hendrerit nunc. Praesent tristique tellus purus, \t\ta pretium ex gravida id. Cras laoreet malesuada nulla, at bibendum metus ultricies a. Fusce eu ornare arcu. Proin ut molestie est. \t\tVestibulum quis vehicula erat. Nam sed tempus nibh. Sed tortor ante, maximus venenatis odio sed, ultricies maximus lectus. \t\tAliquam sed volutpat ligula. Integer bibendum, magna ac lacinia suscipit, \t\trisus libero rutrum justo, sed tempus augue tellus eget est. Curabitur convallis augue nisl, \t\tid efficitur urna posuere faucibus. Ut sed egestas nulla, eu finibus metus. Nunc a arcu ante. \t\tAenean ullamcorper dolor non condimentum congue. Aenean mauris nunc, pellentesque at placerat vitae, \t\taliquet quis orci. Curabitur maximus augue ut bibendum sagittis.</string>
+    <string name="pubblicazione">PUBBLICAZIONE</string>
 
 </resources>

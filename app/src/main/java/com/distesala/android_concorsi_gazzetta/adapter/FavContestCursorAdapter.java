@@ -35,7 +35,7 @@ public class FavContestCursorAdapter extends CursorAdapter
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent)
     {
-        return LayoutInflater.from(context).inflate(R.layout.contest_item_star, parent, false);
+        return LayoutInflater.from(context).inflate(R.layout.contest_item, parent, false);
     }
 
     @Override

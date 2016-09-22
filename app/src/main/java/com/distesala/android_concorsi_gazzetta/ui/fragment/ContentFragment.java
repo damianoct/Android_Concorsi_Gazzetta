@@ -45,9 +45,6 @@ public class ContentFragment extends SearchableFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
-        //TODO alcuni concorsi non si visualizzano tutti, controllare il replace ALL...
-        //esempio comune di canonica d'adda -> ENTI LOCALI, gazzetta 73.
-
         View rootView = inflater.inflate(R.layout.fragment_cardview, container, false);
         contentTextView = (TextView) rootView.findViewById(R.id.content);
         contentTextView.setText(content.replaceAll("\\s+", " "));

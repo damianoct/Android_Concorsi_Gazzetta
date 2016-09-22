@@ -49,7 +49,37 @@ public class FavContestListFragment extends SearchableFragment implements Loader
     @Override
     protected void performSearch(String querySearch)
     {
-        //TODO implementare ricerca fragment child.
+        Bundle args = getSearchBundle(querySearch);
+
+        getLoaderManager().restartLoader(0, args, this);
+    }
+
+    @Nullable
+    private Bundle getSearchBundle(String s)
+    {
+        Bundle args = null;
+
+        if (s != null)
+        {
+            args = new Bundle(2);
+
+            String whereClause = "(" +
+                    GazzetteSQLiteHelper.ContestEntry.COLUMN_EMETTITORE + " LIKE? OR " +
+                    GazzetteSQLiteHelper.ContestEntry.COLUMN_TITOLO + " LIKE? ) AND " +
+                    GazzetteSQLiteHelper.ContestEntry.COLUMN_AREA + " LIKE? AND " +
+                    GazzetteSQLiteHelper.ContestEntry.COLUMN_FAVORITE + " =? ";
+
+
+            String[] whereArgs = new String[]{  "%" + s + "%",
+                                                "%" + s + "%",
+                                                queryBundle.getStringArray(BaseFragment.WHERE_ARGS)[1] ,
+                                                "1" };
+
+            args.putString(BaseFragment.WHERE_CLAUSE, whereClause);
+            args.putStringArray(BaseFragment.WHERE_ARGS, whereArgs);
+        }
+
+        return args;
     }
 
     @Override
@@ -74,8 +104,7 @@ public class FavContestListFragment extends SearchableFragment implements Loader
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
-        //TODO sto usando un altro layout.
-        //si possono eliminare tutti e farne uno generico, dato che sono tutti identici.
+        //same layout of contest category fragment
         View rootView = inflater.inflate(R.layout.fragment_contest_category, container, false);
 
         contestsList = (ListView) rootView.findViewById(R.id.contestsList);
