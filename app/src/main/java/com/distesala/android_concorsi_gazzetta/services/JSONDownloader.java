@@ -39,9 +39,9 @@ import java.util.List;
 
 public class JSONDownloader extends IntentService
 {
-    private static final String URL_HOME = "http://marsala.ddns.net:8080/gazzetteWithContests";
-    private static final String URL = "http://marsala.ddns.net:8080/";
-    private static final String LATEST_GAZZETTA_URL = "http://marsala.ddns.net:8080/latestGazzetta";
+    private static final String URL = "http://dds.zapto.org:8080/";
+    private static final String URL_HOME = URL + "gazzetteWithContests";
+    private static final String LATEST_GAZZETTA_URL = URL + "latestGazzetta";
     private static final String GAZZETTA_URL = "http://www.gazzettaufficiale.it/eli/id/";
     public static final String DOWNLOAD_GAZZETTA = "DownloadGazzetta";
     public static final String DOWNLOAD_CONTEST = "DownloadContest";

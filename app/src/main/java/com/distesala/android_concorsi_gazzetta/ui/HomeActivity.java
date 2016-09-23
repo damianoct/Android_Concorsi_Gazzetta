@@ -20,7 +20,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import com.distesala.android_concorsi_gazzetta.R;
-import com.distesala.android_concorsi_gazzetta.ui.fragment.ConcorsiListFragment;
+import com.distesala.android_concorsi_gazzetta.ui.fragment.ContestListFragment;
 import com.distesala.android_concorsi_gazzetta.ui.fragment.FragmentListener;
 import com.distesala.android_concorsi_gazzetta.ui.fragment.GazzetteListFragment;
 
@@ -76,7 +76,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener,
             case R.id.gazzette:
                 return new GazzetteListFragment();
             case R.id.concorsi:
-                return new ConcorsiListFragment();
+                return new ContestListFragment();
             default:
                 return null;
         }

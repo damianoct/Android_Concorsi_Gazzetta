@@ -23,8 +23,12 @@ import com.distesala.android_concorsi_gazzetta.contentprovider.ConcorsiGazzettaC
 import com.distesala.android_concorsi_gazzetta.database.ConcorsiGazzetteSQLiteHelper;
 import com.distesala.android_concorsi_gazzetta.ui.HomeActivity;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-public class FavContestListFragment extends SearchableFragment implements LoaderManager.LoaderCallbacks<Cursor>
+
+public class FavContestFragment extends SearchableFragment implements LoaderManager.LoaderCallbacks<Cursor>
 {
     private ListView contestsList;
     private CursorAdapter cursorAdapter;
@@ -39,9 +43,9 @@ public class FavContestListFragment extends SearchableFragment implements Loader
             behavior.onNestedFling(rootLayout, appBarLayout, null, 0, -10000, true);
     }
 
-    public static FavContestListFragment newInstance(Bundle queryBundle)
+    public static FavContestFragment newInstance(Bundle queryBundle)
     {
-        FavContestListFragment f = new FavContestListFragment();
+        FavContestFragment f = new FavContestFragment();
         f.setArguments(queryBundle);
         return f;
     }
@@ -62,26 +66,27 @@ public class FavContestListFragment extends SearchableFragment implements Loader
         if (s != null)
         {
             args = new Bundle(2);
+            List<String> listArgs = new ArrayList<>();
 
             String whereClause = "(" +
                     ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_EMETTITORE + " LIKE? OR " +
-                    ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_TITOLO + " LIKE? ) AND " +
-                    ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_AREA + " LIKE? AND " +
-                    ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_FAVORITE + " =? ";
+                    ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_TITOLO + " LIKE? ) AND ";
 
+            listArgs.add("%" + s + "%");
+            listArgs.add("%" + s + "%");
 
-            String[] whereArgs = new String[]{  "%" + s + "%",
-                                                "%" + s + "%",
-                                                queryBundle.getStringArray(BaseFragment.WHERE_ARGS)[1] ,
-                                                "1" };
+            listArgs.addAll(Arrays.asList(queryBundle.getStringArray(BaseFragment.WHERE_ARGS)));
+
+            whereClause += queryBundle.getString(BaseFragment.WHERE_CLAUSE);
 
             args.putString(BaseFragment.WHERE_CLAUSE, whereClause);
-            args.putStringArray(BaseFragment.WHERE_ARGS, whereArgs);
+            args.putStringArray(BaseFragment.WHERE_ARGS, listArgs.toArray(new String[0]));
+
         }
 
         return args;
     }
-
+    
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState)
     {

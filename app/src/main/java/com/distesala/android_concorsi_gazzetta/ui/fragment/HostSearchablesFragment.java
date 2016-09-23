@@ -62,13 +62,13 @@ public abstract class HostSearchablesFragment extends BaseFragment
     }
 
     @Override
-    public final void searchFor(String s)
+    public final void searchFor(String s) //final!
     {
         notifyChildrenForSearch();
     }
 
     @Override
-    public final void onSearchFinished()
+    public final void onSearchFinished() //final!
     {
         //Future implementations
     }
@@ -161,7 +161,7 @@ public abstract class HostSearchablesFragment extends BaseFragment
         searchables.remove(o);
     }
 
-    protected final void setupViewPager()
+    private void setupViewPager()
     {
         //sono già dentro un fragment, quindi devo usare getChildFragmentManager.
         adapter = new SearchableViewPagerAdapter(getChildFragmentManager(),
@@ -190,7 +190,7 @@ public abstract class HostSearchablesFragment extends BaseFragment
         });
     }
 
-    protected final void setupTabLayout()
+    private void setupTabLayout()
     {
         if (getTabTitles().length > 10) //MAGIC NUMBER....
             tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);

@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ import com.distesala.android_concorsi_gazzetta.database.ConcorsiGazzetteSQLiteHe
 import com.distesala.android_concorsi_gazzetta.ui.HomeActivity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -131,6 +133,34 @@ public class ContestFragment extends SearchableFragment implements LoaderManager
         if(s != null)
         {
             args = new Bundle(2);
+            List<String> listArgs = new ArrayList<>();
+
+            String whereClause = "(" +
+                    ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_EMETTITORE + " LIKE? OR " +
+                    ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_TITOLO + " LIKE? ) AND ";
+
+            listArgs.add("%" + s + "%");
+            listArgs.add("%" + s + "%");
+
+            listArgs.addAll(Arrays.asList(queryBundle.getStringArray(BaseFragment.WHERE_ARGS)));
+
+            whereClause += queryBundle.getString(BaseFragment.WHERE_CLAUSE);
+
+            args.putString(BaseFragment.WHERE_CLAUSE, whereClause);
+            args.putStringArray(BaseFragment.WHERE_ARGS, listArgs.toArray(new String[0]));
+        }
+
+        return args;
+    }
+
+    /*@Nullable
+    private Bundle getSearchBundle(String s)
+    {
+        Bundle args = null;
+
+        if(s != null)
+        {
+            args = new Bundle(2);
 
             List<String> listArgs = new ArrayList<>();
 
@@ -165,7 +195,7 @@ public class ContestFragment extends SearchableFragment implements LoaderManager
         }
 
         return args;
-    }
+    }*/
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args)

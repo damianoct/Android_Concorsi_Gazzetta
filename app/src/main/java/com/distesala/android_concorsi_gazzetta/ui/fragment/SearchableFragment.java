@@ -9,8 +9,7 @@ import android.support.v4.app.Fragment;
 
 public abstract class SearchableFragment extends Fragment
 {
-    public SearchableFragment() {}
-
+    //ogni SearchableFragment possiede un Bundle che utilizza per indirizzare il loader.
     protected Bundle queryBundle;
 
     protected abstract void performSearch(String querySearch);

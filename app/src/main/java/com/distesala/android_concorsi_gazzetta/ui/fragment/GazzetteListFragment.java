@@ -47,7 +47,6 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
     private CursorAdapter adapter;
     private AppBarLayout appBarLayout;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-
     private ProgressWheel progressWheel;
 
     @Override

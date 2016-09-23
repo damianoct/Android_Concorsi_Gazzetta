@@ -19,14 +19,13 @@ import com.distesala.android_concorsi_gazzetta.utils.Helper;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ConcorsiListFragment extends HostSearchablesFragment
+public class ContestListFragment extends HostSearchablesFragment
 {
     private static final String FILTER_AREA = "filter" ;
     private static String APPBAR_TITLE = "Concorsi";
     private static final String CONCORSI_FRAGMENT = String.valueOf(R.id.concorsi);
     private static final String IN_SCADENZA = "In Scadenza";
     private static final String PREFERITI = "Preferiti";
-
     private static final int IN_SCADENZA_POS = 0;
     private static final int PREFERITI_POS = 1;
 
@@ -34,7 +33,6 @@ public class ConcorsiListFragment extends HostSearchablesFragment
                                                                 PREFERITI
                                                             };
     private int threshold;
-
     private int filterAreaId = R.id.action_no_filter;
 
 
@@ -74,7 +72,7 @@ public class ConcorsiListFragment extends HostSearchablesFragment
                 f = ContestFragment.newInstance(bundle);
                 break;
             case PREFERITI_POS:
-                f = FavContestListFragment.newInstance(bundle);
+                f = FavContestFragment.newInstance(bundle);
                 break;
         }
 
