@@ -1,6 +1,5 @@
 package com.distesala.android_concorsi_gazzetta.ui.fragment;
 
-
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;

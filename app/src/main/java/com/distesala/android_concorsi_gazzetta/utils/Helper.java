@@ -68,7 +68,7 @@ public class Helper
             }
         }
         else
-            Log.e("[]", "Helper -> DATA NULLA.");
+            //Log.e("[]", "Helper -> DATA NULLA.");
             return null;
     }
 

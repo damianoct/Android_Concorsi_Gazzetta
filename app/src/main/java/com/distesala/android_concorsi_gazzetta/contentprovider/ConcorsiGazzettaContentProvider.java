@@ -82,8 +82,6 @@ public class ConcorsiGazzettaContentProvider extends ContentProvider
                         projection,
                         selection, selectionArgs,
                         null, null, null);
-
-                Log.i("provider","cursor contests -> " + String.valueOf(c.getCount()));
                 break;
             }
         }

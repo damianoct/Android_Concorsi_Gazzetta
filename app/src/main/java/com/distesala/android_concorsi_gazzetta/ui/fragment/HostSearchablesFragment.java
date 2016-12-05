@@ -26,6 +26,10 @@ import java.util.List;
 
 public abstract class HostSearchablesFragment extends BaseFragment
 {
+    /*TODO il problema deriva dalla lista searchables che dopo la rotazione
+     * non contiene nessun elemento. Quindi dopo la rotazione
+     * la addSearchable dentro la getItem() non viene chiamata.
+     */
     private List<SearchableFragment> searchables;
     private SearchableViewPagerAdapter adapter;
 
@@ -59,6 +63,8 @@ public abstract class HostSearchablesFragment extends BaseFragment
     {
         for(SearchableFragment sf: searchables)
             sf.performSearch(querySearch);
+
+        Log.i("querySearch", "numberOfSearchables -> " + searchables.size());
     }
 
     @Override

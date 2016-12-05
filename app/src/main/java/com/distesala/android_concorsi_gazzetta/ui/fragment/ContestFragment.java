@@ -114,6 +114,8 @@ public class ContestFragment extends SearchableFragment implements LoaderManager
     {
         super.onResume();
         //force restart for preference changed.
+
+
         getLoaderManager().restartLoader(0, queryBundle, this);
     }
 
@@ -121,6 +123,9 @@ public class ContestFragment extends SearchableFragment implements LoaderManager
     public void performSearch(String s)
     {
         Bundle args = getSearchBundle(s);
+
+        Log.i("querySearch", "[QS]" + s);
+
 
         getLoaderManager().restartLoader(0, args, this);
     }
