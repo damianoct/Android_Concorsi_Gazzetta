@@ -7,6 +7,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -142,12 +143,6 @@ public abstract class HostSearchablesFragment extends BaseFragment
     }
 
     @Override
-    public void onResume()
-    {
-        super.onResume();
-    }
-
-    @Override
     public void onSaveInstanceState(Bundle outState)
     {
         //check if viewpager is null for entry in backstack.
@@ -160,6 +155,10 @@ public abstract class HostSearchablesFragment extends BaseFragment
     private void addSearchable(SearchableFragment sf)
     {
         searchables.add(sf);
+        //dopo la rotazione del dispositivo vengono riaggiunti tutti i searchables perchè la lista si resetta.
+        //quindi se ho attiva una ricerca devo mantenerla anche dopo la rotazione.
+        if(isSearchActive())
+            notifyChildrenForSearch();
     }
 
     private void removeSearchable(Object o)
@@ -214,13 +213,21 @@ public abstract class HostSearchablesFragment extends BaseFragment
             this.titles = titles;
         }
 
+        //questa callback NON viene richiamata in seguito alla rotazione.
         @Override
         public Fragment getItem(int position)
         {
             Fragment f = getChild(position);
-            addSearchable((SearchableFragment) f);
-
             return f;
+        }
+
+        //questa callback viene richiamata SEMPRE anche in seguito alla rotazione.
+        @Override
+        public Object instantiateItem(ViewGroup container, int position)
+        {
+            SearchableFragment sf = (SearchableFragment) super.instantiateItem(container, position);
+            addSearchable(sf);
+            return sf;
         }
 
         @Override
@@ -247,6 +254,14 @@ public abstract class HostSearchablesFragment extends BaseFragment
             super.destroyItem(container, position, object);
             //importante per rimuovere il searchable dalla lista.
             removeSearchable(object);
+        }
+
+        @Override
+        public void finishUpdate(ViewGroup container)
+        {
+            super.finishUpdate(container);
+            /*if(isSearchActive())
+                notifyChildrenForSearch();*/
         }
     }
 

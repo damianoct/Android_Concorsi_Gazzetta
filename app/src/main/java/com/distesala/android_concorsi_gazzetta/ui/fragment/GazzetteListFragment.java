@@ -196,7 +196,7 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
         }
         else if (resultCode == Activity.RESULT_CANCELED)
         {
-            Toast.makeText(getActivity(), "ERROR", Toast.LENGTH_LONG).show();
+            //Toast.makeText(getActivity(), "ERROR", Toast.LENGTH_LONG).show();
             getLoaderManager().initLoader(0, null, this);
         }
         else if (resultCode == Connectivity.CONNECTION_LOCKED)

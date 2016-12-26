@@ -60,6 +60,13 @@ public class ContestForGazzettaFragment extends HostSearchablesFragment
     }
 
     @Override
+    public void onResume()
+    {
+        super.onResume();
+        viewPager.getAdapter().notifyDataSetChanged();
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle outState)
     {
         outState.putInt(FILTER_AREA, filterAreaId);
