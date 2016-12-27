@@ -1,7 +1,10 @@
 package com.distesala.android_concorsi_gazzetta.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -15,14 +18,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import com.distesala.android_concorsi_gazzetta.R;
 import com.distesala.android_concorsi_gazzetta.ui.fragment.ContestListFragment;
 import com.distesala.android_concorsi_gazzetta.ui.fragment.FragmentListener;
 import com.distesala.android_concorsi_gazzetta.ui.fragment.GazzetteListFragment;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
+import static com.distesala.android_concorsi_gazzetta.R.id.content;
 
 public class HomeActivity extends AppCompatActivity implements FragmentListener,
                                                                 NavigationView.OnNavigationItemSelectedListener
@@ -34,6 +45,8 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener,
     private static final String DRAWER_TRANSACTION = "DRAWER";
 
     public static final String SEGUE_TRANSACTION = "SEGUE";
+
+    private FrameLayout content;
 
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
@@ -134,6 +147,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener,
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_home);
+        setupAdAtBottom();
 
         //solo al PRIMO avvio dell'app setto le preferences di default.
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
@@ -240,5 +254,61 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener,
         }
         drawerLayout.closeDrawers();
         return true;
+    }
+
+    @SuppressLint("NewApi")
+    protected void setupAdAtBottom()
+    {
+        content = (FrameLayout) findViewById(android.R.id.content);
+        // inflate ad layout and set it to bottom by layouparams
+        final LinearLayout ad = (LinearLayout) getLayoutInflater()
+                .inflate(R.layout.ad_layout, null);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(AppBarLayout.LayoutParams.MATCH_PARENT,
+                AppBarLayout.LayoutParams.WRAP_CONTENT);
+        params.gravity = Gravity.BOTTOM;
+        ad.setLayoutParams(params);
+        //ad.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+
+        // adding viewtreeobserver to get height of ad layout , so that
+        // android.R.id.content will set margin of that height
+        ViewTreeObserver vto = ad.getViewTreeObserver();
+        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (Build.VERSION.SDK_INT < 16) {
+                    ad.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                } else {
+                    ad.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                }
+                int width = ad.getMeasuredWidth();
+                int height = ad.getMeasuredHeight();
+                Log.i("ad hight", height + "");
+                setSpaceForAd(height);
+
+            }
+
+        });
+        addLayoutToContent(ad);
+
+    }
+
+    private void setSpaceForAd(int height)
+    {
+        // content.getChildAt(0).setPadding(0, 0, 0, 50);
+        View child0 = content.getChildAt(0);
+        FrameLayout.LayoutParams layoutparams = (android.widget.FrameLayout.LayoutParams) child0
+                .getLayoutParams();
+        layoutparams.bottomMargin = height;
+        child0.setLayoutParams(layoutparams);
+
+    }
+
+    private void addLayoutToContent(View ad)
+    {
+        // content.addView(ad);
+        content.addView(ad);
+        AdView mAdView = (AdView) ad.findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
     }
 }

@@ -8,7 +8,9 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewCompat;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.distesala.android_concorsi_gazzetta.R;
@@ -18,6 +20,8 @@ import com.distesala.android_concorsi_gazzetta.networking.Connectivity;
 import com.distesala.android_concorsi_gazzetta.services.JSONDownloader;
 import com.distesala.android_concorsi_gazzetta.services.JSONResultReceiver;
 import com.distesala.android_concorsi_gazzetta.utils.Helper;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +37,7 @@ public class TextContestFragment extends HostSearchablesFragment implements JSON
 
     private static final int PERCENTAGE_TO_SHOW_IMAGE = 80;
 
-
+    private AdView mAdView;
     private FloatingActionButton mFab;
     private int mMaxScrollSize;
     private boolean mIsImageHidden;
@@ -145,6 +149,19 @@ public class TextContestFragment extends HostSearchablesFragment implements JSON
         {
             articles = savedInstanceState.getStringArrayList("articles");
         }
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
+    {
+        View rootView = super.onCreateView(inflater, container, savedInstanceState);
+        /*mAdView = (AdView) rootView.findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);*/
+
+        return rootView;
+
     }
 
     @Override

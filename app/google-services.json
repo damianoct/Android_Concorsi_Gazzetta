@@ -1,0 +1,50 @@
+{
+  "project_info": {
+    "project_number": "753434325891",
+    "firebase_url": "https://concorsi-gazzetta-37205.firebaseio.com",
+    "project_id": "concorsi-gazzetta-37205",
+    "storage_bucket": "concorsi-gazzetta-37205.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:753434325891:android:22ecc3a0a609abee",
+        "android_client_info": {
+          "package_name": "com.distesala.android_concorsi_gazzetta"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "753434325891-gs99lb2gb7ehb7gatsdpaq7n643dduoh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.distesala.android_concorsi_gazzetta",
+            "certificate_hash": "F4931F1F504C8D3DDD19013CD8281E323D1F8844"
+          }
+        },
+        {
+          "client_id": "753434325891-qh5mg5jmfui6el9u3f7bhse9edngd8eg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDf7iRzBgY-EvpxOBs7DlgbR5FhKY88doM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

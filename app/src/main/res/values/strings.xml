@@ -19,6 +19,8 @@
         <item>Nomina</item>
     </string-array>
 
+    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
     <string name="action_settings">Settings</string>
