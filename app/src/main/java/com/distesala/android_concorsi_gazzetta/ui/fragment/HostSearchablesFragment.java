@@ -7,7 +7,6 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -155,6 +154,7 @@ public abstract class HostSearchablesFragment extends BaseFragment
     private void addSearchable(SearchableFragment sf)
     {
         searchables.add(sf);
+
         //dopo la rotazione del dispositivo vengono riaggiunti tutti i searchables perchè la lista si resetta.
         //quindi se ho attiva una ricerca devo mantenerla anche dopo la rotazione.
         if(isSearchActive())
@@ -254,14 +254,6 @@ public abstract class HostSearchablesFragment extends BaseFragment
             super.destroyItem(container, position, object);
             //importante per rimuovere il searchable dalla lista.
             removeSearchable(object);
-        }
-
-        @Override
-        public void finishUpdate(ViewGroup container)
-        {
-            super.finishUpdate(container);
-            /*if(isSearchActive())
-                notifyChildrenForSearch();*/
         }
     }
 
