@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.SubMenu;
 
 import com.distesala.android_concorsi_gazzetta.R;
 import com.distesala.android_concorsi_gazzetta.database.ConcorsiGazzetteSQLiteHelper;
@@ -19,6 +18,7 @@ public class ContestForGazzettaFragment extends HostSearchablesFragment
     private static final String FILTER_AREA = "filter";
     private CharSequence numberOfPublication;
     private int filterAreaId = R.id.action_no_filter;
+    private Menu filterMenu;
 
     public static ContestForGazzettaFragment newInstance(Bundle bundle)
     {
@@ -79,28 +79,24 @@ public class ContestForGazzettaFragment extends HostSearchablesFragment
     {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_filtering, menu);
+        filterMenu = menu;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
         if(item.getItemId() != R.id.menu_item_filtering
-                && item.getItemId() != R.id.action_search)
+                && item.getItemId() != R.id.action_search
+                && !item.isChecked())
         {
+            Helper.selectItem(filterMenu, item.getItemId());
             filterAreaId = item.getItemId();
-            getActivity().invalidateOptionsMenu();
             viewPager.getAdapter().notifyDataSetChanged();
+            return true;
         }
 
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onPrepareOptionsMenu(Menu menu)
-    {
-        SubMenu filterMenu = menu.findItem(R.id.menu_item_filtering).getSubMenu();
-        filterMenu.findItem(filterAreaId).setEnabled(false);
-        super.onPrepareOptionsMenu(menu);
+        else
+            return super.onOptionsItemSelected(item);
     }
 
     @Override

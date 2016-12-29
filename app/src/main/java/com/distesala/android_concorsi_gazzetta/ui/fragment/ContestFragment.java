@@ -44,26 +44,6 @@ public class ContestFragment extends SearchableFragment implements LoaderManager
     {
         super.onActivityCreated(savedInstanceState);
         getLoaderManager().initLoader(0, searchBundle != null ? concatenateBundles() : getArguments(), this);
-
-        /*if(queryBundle != null)
-            Log.i("getChild", "onActivityCreated queryBundle NON null");
-        else
-            Log.i("getChild", "onActivityCreated queryBundle NULL");
-
-        if(searchBundle != null)
-            Log.i("getChild", "onActivityCreated searchBundle NON null");
-        else
-            Log.i("getChild", "onActivityCreated searchBundle NULL");
-
-        if(searchBundle == null)
-        {
-            getLoaderManager().initLoader(0, queryBundle, this);
-        }
-        else
-        {
-            getLoaderManager().initLoader(0, searchBundle, this);
-        }*/
-
     }
 
     @Override
@@ -177,8 +157,7 @@ public class ContestFragment extends SearchableFragment implements LoaderManager
 
     private Bundle concatenateBundles()
     {
-        Bundle args = null;
-        args = new Bundle(2);
+        Bundle args = new Bundle(2);
 
         String whereClause;
         List<String> listArgs = new ArrayList<>();

@@ -31,6 +31,7 @@ public abstract class BaseFragment extends Fragment implements MenuItemCompat.On
     protected FragmentListener fragmentListener;
 
     protected String querySearch = null;
+    private String tmpSearch = null;
 
     private boolean isFromSegue = false;
 

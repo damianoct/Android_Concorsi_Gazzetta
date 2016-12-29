@@ -55,7 +55,7 @@ public class FavContestFragment extends SearchableFragment implements LoaderMana
     {
         searchBundle = getSearchBundle(querySearch);
 
-        getLoaderManager().restartLoader(0, searchBundle, this);
+        getLoaderManager().restartLoader(0, concatenateBundles(), this);
     }
 
     @Nullable
@@ -75,14 +75,31 @@ public class FavContestFragment extends SearchableFragment implements LoaderMana
             listArgs.add("%" + s + "%");
             listArgs.add("%" + s + "%");
 
-            listArgs.addAll(Arrays.asList(getArguments().getStringArray(BaseFragment.WHERE_ARGS)));
+            //listArgs.addAll(Arrays.asList(querySearch.getStringArray(BaseFragment.WHERE_ARGS)));
 
-            whereClause += getArguments().getString(BaseFragment.WHERE_CLAUSE);
+            //whereClause += getArguments().getString(BaseFragment.WHERE_CLAUSE);
 
             args.putString(BaseFragment.WHERE_CLAUSE, whereClause);
             args.putStringArray(BaseFragment.WHERE_ARGS, listArgs.toArray(new String[0]));
 
         }
+
+        return args;
+    }
+
+    private Bundle concatenateBundles()
+    {
+        Bundle args = new Bundle(2);
+
+        String whereClause;
+        List<String> listArgs = new ArrayList<>();
+
+        whereClause = searchBundle.getString(BaseFragment.WHERE_CLAUSE) + queryBundle.getString(BaseFragment.WHERE_CLAUSE);
+        listArgs.addAll(Arrays.asList(searchBundle.getStringArray(BaseFragment.WHERE_ARGS)));
+        listArgs.addAll(Arrays.asList(queryBundle.getStringArray(BaseFragment.WHERE_ARGS)));
+
+        args.putString(BaseFragment.WHERE_CLAUSE, whereClause);
+        args.putStringArray(BaseFragment.WHERE_ARGS, listArgs.toArray(new String[0]));
 
         return args;
     }
@@ -92,7 +109,7 @@ public class FavContestFragment extends SearchableFragment implements LoaderMana
     {
         super.onActivityCreated(savedInstanceState);
 
-        getLoaderManager().initLoader(0, searchBundle != null ? searchBundle : getArguments(), this);
+        getLoaderManager().initLoader(0, searchBundle != null ? concatenateBundles() : getArguments(), this);
     }
 
     @Override

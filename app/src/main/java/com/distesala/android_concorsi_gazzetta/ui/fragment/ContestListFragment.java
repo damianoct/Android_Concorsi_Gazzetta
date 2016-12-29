@@ -4,20 +4,15 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.SubMenu;
 import android.view.View;
 
 import com.distesala.android_concorsi_gazzetta.R;
 import com.distesala.android_concorsi_gazzetta.database.ConcorsiGazzetteSQLiteHelper;
 import com.distesala.android_concorsi_gazzetta.utils.Helper;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class ContestListFragment extends HostSearchablesFragment
 {
     private static final String FILTER_AREA = "filter" ;
@@ -31,6 +26,7 @@ public class ContestListFragment extends HostSearchablesFragment
     private static final String[] childTitles = new String[]{   IN_SCADENZA,
                                                                 PREFERITI
                                                             };
+    private Menu filterMenu;
     private int threshold;
     private int filterAreaId = R.id.action_no_filter;
 
@@ -128,13 +124,6 @@ public class ContestListFragment extends HostSearchablesFragment
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
-    {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_filtering, menu);
-    }
-
-    @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
@@ -142,25 +131,28 @@ public class ContestListFragment extends HostSearchablesFragment
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
     {
-        if(item.getItemId() != R.id.menu_item_filtering
-                && item.getItemId() != R.id.action_search)
-        {
-            filterAreaId = item.getItemId();
-            getActivity().invalidateOptionsMenu();
-            viewPager.getAdapter().notifyDataSetChanged();
-        }
-
-        return super.onOptionsItemSelected(item);
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_filtering, menu);
+        filterMenu = menu;
     }
 
     @Override
-    public void onPrepareOptionsMenu(Menu menu)
+    public boolean onOptionsItemSelected(MenuItem item)
     {
-        SubMenu filterMenu = menu.findItem(R.id.menu_item_filtering).getSubMenu();
-        filterMenu.findItem(filterAreaId).setEnabled(false);
-        super.onPrepareOptionsMenu(menu);
+        if(item.getItemId() != R.id.menu_item_filtering
+                && item.getItemId() != R.id.action_search
+                && !item.isChecked())
+        {
+            Helper.selectItem(filterMenu, item.getItemId());
+            filterAreaId = item.getItemId();
+            viewPager.getAdapter().notifyDataSetChanged();
+            return true;
+        }
+
+        else
+            return super.onOptionsItemSelected(item);
     }
 
     @Override
