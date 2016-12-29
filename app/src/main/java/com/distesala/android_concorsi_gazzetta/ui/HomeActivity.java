@@ -3,7 +3,7 @@ package com.distesala.android_concorsi_gazzetta.ui;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
+import android.content.res.Configuration;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.design.widget.AppBarLayout;
@@ -25,15 +25,15 @@ import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.distesala.android_concorsi_gazzetta.R;
 import com.distesala.android_concorsi_gazzetta.ui.fragment.ContestListFragment;
 import com.distesala.android_concorsi_gazzetta.ui.fragment.FragmentListener;
 import com.distesala.android_concorsi_gazzetta.ui.fragment.GazzetteListFragment;
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-
-import static com.distesala.android_concorsi_gazzetta.R.id.content;
 
 public class HomeActivity extends AppCompatActivity implements FragmentListener,
                                                                 NavigationView.OnNavigationItemSelectedListener
@@ -47,6 +47,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener,
     public static final String SEGUE_TRANSACTION = "SEGUE";
 
     private FrameLayout content;
+    private LinearLayout adLayout;
 
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
@@ -147,7 +148,11 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener,
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_home);
-        setupAdAtBottom();
+
+        //setupAdAtBottom();
+
+
+
 
         //solo al PRIMO avvio dell'app setto le preferences di default.
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
@@ -172,6 +177,51 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener,
                     , HOME_FRAGMENT).commit();
         }
     }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+
+        adLayout = (LinearLayout) getLayoutInflater()
+                .inflate(R.layout.ad_layout, null);
+
+        AdView mAdView = (AdView) adLayout.findViewById(R.id.adView);
+        mAdView.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded()
+            {
+                Log.i("AdLoaded", "\t\t\t\t\tAD LOADED");
+                super.onAdLoaded();
+                setupAdAtBottom();
+            }
+
+            @Override
+            public void onAdLeftApplication()
+            {
+                super.onAdLeftApplication();
+                removeAd();
+            }
+
+            @Override
+            public void onAdFailedToLoad(int i)
+            {
+                super.onAdFailedToLoad(i);
+                removeAd();
+            }
+
+            @Override
+            public void onAdClosed()
+            {
+                super.onAdClosed();
+                removeAd();
+            }
+        });
+
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+    }
+
 
     @Override
     public void onBackPressed()
@@ -260,35 +310,34 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener,
     protected void setupAdAtBottom()
     {
         content = (FrameLayout) findViewById(android.R.id.content);
-        // inflate ad layout and set it to bottom by layouparams
-        final LinearLayout ad = (LinearLayout) getLayoutInflater()
-                .inflate(R.layout.ad_layout, null);
+        // inflate adLayout layout and set it to bottom by layouparams
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(AppBarLayout.LayoutParams.MATCH_PARENT,
                 AppBarLayout.LayoutParams.WRAP_CONTENT);
         params.gravity = Gravity.BOTTOM;
-        ad.setLayoutParams(params);
-        //ad.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        adLayout.setLayoutParams(params);
+        //adLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
 
-        // adding viewtreeobserver to get height of ad layout , so that
+        // adding viewtreeobserver to get height of adLayout layout , so that
         // android.R.id.content will set margin of that height
-        ViewTreeObserver vto = ad.getViewTreeObserver();
+        ViewTreeObserver vto = adLayout.getViewTreeObserver();
         vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
                 if (Build.VERSION.SDK_INT < 16) {
-                    ad.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                    adLayout.getViewTreeObserver().removeGlobalOnLayoutListener(this);
                 } else {
-                    ad.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    adLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 }
-                int width = ad.getMeasuredWidth();
-                int height = ad.getMeasuredHeight();
-                Log.i("ad hight", height + "");
+                int width = adLayout.getMeasuredWidth();
+                int height = adLayout.getMeasuredHeight();
+                Log.i("adLayout hight", height + "");
                 setSpaceForAd(height);
 
             }
 
         });
-        addLayoutToContent(ad);
+        content.removeView(adLayout);
+        content.addView(adLayout);
 
     }
 
@@ -300,15 +349,16 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener,
                 .getLayoutParams();
         layoutparams.bottomMargin = height;
         child0.setLayoutParams(layoutparams);
-
     }
 
-    private void addLayoutToContent(View ad)
+    private void removeAd()
     {
-        // content.addView(ad);
-        content.addView(ad);
-        AdView mAdView = (AdView) ad.findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
+        int height = adLayout.getMeasuredHeight();
+        View child0 = content.getChildAt(0);
+        FrameLayout.LayoutParams layoutparams = (android.widget.FrameLayout.LayoutParams) child0
+                .getLayoutParams();
+        layoutparams.bottomMargin = -height;
+        child0.setLayoutParams(layoutparams);
+        content.removeView(adLayout);
     }
 }

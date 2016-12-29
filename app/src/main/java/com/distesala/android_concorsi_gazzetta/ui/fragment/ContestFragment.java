@@ -43,17 +43,33 @@ public class ContestFragment extends SearchableFragment implements LoaderManager
     public void onActivityCreated(@Nullable Bundle savedInstanceState)
     {
         super.onActivityCreated(savedInstanceState);
+        getLoaderManager().initLoader(0, searchBundle != null ? concatenateBundles() : getArguments(), this);
 
-        getLoaderManager().initLoader(0, queryBundle, this);
+        /*if(queryBundle != null)
+            Log.i("getChild", "onActivityCreated queryBundle NON null");
+        else
+            Log.i("getChild", "onActivityCreated queryBundle NULL");
+
+        if(searchBundle != null)
+            Log.i("getChild", "onActivityCreated searchBundle NON null");
+        else
+            Log.i("getChild", "onActivityCreated searchBundle NULL");
+
+        if(searchBundle == null)
+        {
+            getLoaderManager().initLoader(0, queryBundle, this);
+        }
+        else
+        {
+            getLoaderManager().initLoader(0, searchBundle, this);
+        }*/
+
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
-        queryBundle = getArguments();
-
         cursorAdapter = new ContestCursorAdapter(getActivity(), null);
     }
 
@@ -115,19 +131,18 @@ public class ContestFragment extends SearchableFragment implements LoaderManager
         super.onResume();
         //force restart for preference changed.
 
-
-        getLoaderManager().restartLoader(0, queryBundle, this);
+        getLoaderManager().restartLoader(0, searchBundle != null ? concatenateBundles() : queryBundle, this);
     }
 
     @Override
     public void performSearch(String s)
     {
-        Bundle args = getSearchBundle(s);
+        //Bundle args = getSearchBundle(s);
+        searchBundle = getSearchBundle(s);
 
-        Log.i("querySearch", "[QS]" + s);
+        Log.i("notify", "[" + concatenateBundles().getStringArray(BaseFragment.WHERE_ARGS)[1] + "]" + s);
 
-
-        getLoaderManager().restartLoader(0, args, this);
+        getLoaderManager().restartLoader(0, concatenateBundles(), this);
     }
 
     @Nullable
@@ -147,13 +162,33 @@ public class ContestFragment extends SearchableFragment implements LoaderManager
             listArgs.add("%" + s + "%");
             listArgs.add("%" + s + "%");
 
-            listArgs.addAll(Arrays.asList(queryBundle.getStringArray(BaseFragment.WHERE_ARGS)));
+            //aggiungo tutte quelle originarie, che ho avuto al momento dell'inizializzazione
 
-            whereClause += queryBundle.getString(BaseFragment.WHERE_CLAUSE);
+            //whereClause += queryBundle.getString(BaseFragment.WHERE_CLAUSE);
+
+            //listArgs.addAll(Arrays.asList(queryBundle.getStringArray(BaseFragment.WHERE_ARGS)));
 
             args.putString(BaseFragment.WHERE_CLAUSE, whereClause);
             args.putStringArray(BaseFragment.WHERE_ARGS, listArgs.toArray(new String[0]));
         }
+
+        return args;
+    }
+
+    private Bundle concatenateBundles()
+    {
+        Bundle args = null;
+        args = new Bundle(2);
+
+        String whereClause;
+        List<String> listArgs = new ArrayList<>();
+
+        whereClause = searchBundle.getString(BaseFragment.WHERE_CLAUSE) + queryBundle.getString(BaseFragment.WHERE_CLAUSE);
+        listArgs.addAll(Arrays.asList(searchBundle.getStringArray(BaseFragment.WHERE_ARGS)));
+        listArgs.addAll(Arrays.asList(queryBundle.getStringArray(BaseFragment.WHERE_ARGS)));
+
+        args.putString(BaseFragment.WHERE_CLAUSE, whereClause);
+        args.putStringArray(BaseFragment.WHERE_ARGS, listArgs.toArray(new String[0]));
 
         return args;
     }
@@ -205,6 +240,17 @@ public class ContestFragment extends SearchableFragment implements LoaderManager
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args)
     {
+        Log.i("notify", "--------------------");
+        Log.i("notify", "restart loader, args\n");
+        Log.i("notify", args.getString(BaseFragment.WHERE_CLAUSE) + "\n");
+        for(String ss: Arrays.asList(args.getStringArray(BaseFragment.WHERE_ARGS)))
+        {
+            Log.i("notify", ss + "\n");
+        }
+
+        Log.i("notify", "--------------------");
+
+
         return new CursorLoader(getActivity().getApplicationContext(), //context
                 ConcorsiGazzettaContentProvider.CONTESTS_URI, //uri
                 null, //ALL COLUMNS

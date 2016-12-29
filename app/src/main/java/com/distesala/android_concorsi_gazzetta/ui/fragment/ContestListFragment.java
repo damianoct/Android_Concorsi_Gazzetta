@@ -172,8 +172,5 @@ public class ContestListFragment extends HostSearchablesFragment
         int newThreshold = PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt(key, 0);
         if(threshold != newThreshold)
             viewPager.getAdapter().notifyDataSetChanged();
-
-
-
     }
 }

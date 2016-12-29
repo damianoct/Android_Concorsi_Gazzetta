@@ -128,14 +128,14 @@ public class ConcorsiGazzettaContentProvider extends ContentProvider
         {
             case GAZZETTE:
             {
-                long id = db.insertWithOnConflict(ConcorsiGazzetteSQLiteHelper.GazzettaEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+                long id = db.insertWithOnConflict(ConcorsiGazzetteSQLiteHelper.GazzettaEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
                 returnUri = ContentUris.withAppendedId(GAZZETTE_URI, id);
                 break;
             }
 
             case CONTESTS:
             {
-                long id = db.insertWithOnConflict(ConcorsiGazzetteSQLiteHelper.ContestEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+                long id = db.insertWithOnConflict(ConcorsiGazzetteSQLiteHelper.ContestEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
                 returnUri = ContentUris.withAppendedId(CONTESTS_URI, id);
                 break;
             }

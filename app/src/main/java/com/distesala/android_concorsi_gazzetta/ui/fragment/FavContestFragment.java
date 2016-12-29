@@ -53,9 +53,9 @@ public class FavContestFragment extends SearchableFragment implements LoaderMana
     @Override
     protected void performSearch(String querySearch)
     {
-        Bundle args = getSearchBundle(querySearch);
+        searchBundle = getSearchBundle(querySearch);
 
-        getLoaderManager().restartLoader(0, args, this);
+        getLoaderManager().restartLoader(0, searchBundle, this);
     }
 
     @Nullable
@@ -75,9 +75,9 @@ public class FavContestFragment extends SearchableFragment implements LoaderMana
             listArgs.add("%" + s + "%");
             listArgs.add("%" + s + "%");
 
-            listArgs.addAll(Arrays.asList(queryBundle.getStringArray(BaseFragment.WHERE_ARGS)));
+            listArgs.addAll(Arrays.asList(getArguments().getStringArray(BaseFragment.WHERE_ARGS)));
 
-            whereClause += queryBundle.getString(BaseFragment.WHERE_CLAUSE);
+            whereClause += getArguments().getString(BaseFragment.WHERE_CLAUSE);
 
             args.putString(BaseFragment.WHERE_CLAUSE, whereClause);
             args.putStringArray(BaseFragment.WHERE_ARGS, listArgs.toArray(new String[0]));
@@ -92,16 +92,13 @@ public class FavContestFragment extends SearchableFragment implements LoaderMana
     {
         super.onActivityCreated(savedInstanceState);
 
-        getLoaderManager().initLoader(0, queryBundle, this);
+        getLoaderManager().initLoader(0, searchBundle != null ? searchBundle : getArguments(), this);
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
-        queryBundle = getArguments();
-
         cursorAdapter = new FavContestCursorAdapter(getActivity(), null);
     }
 

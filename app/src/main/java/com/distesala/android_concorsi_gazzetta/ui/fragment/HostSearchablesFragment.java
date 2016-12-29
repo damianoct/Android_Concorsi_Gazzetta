@@ -26,10 +26,6 @@ import java.util.List;
 
 public abstract class HostSearchablesFragment extends BaseFragment
 {
-    /*TODO il problema deriva dalla lista searchables che dopo la rotazione
-     * non contiene nessun elemento. Quindi dopo la rotazione
-     * la addSearchable dentro la getItem() non viene chiamata.
-     */
     private List<SearchableFragment> searchables;
     private SearchableViewPagerAdapter adapter;
 
@@ -64,7 +60,7 @@ public abstract class HostSearchablesFragment extends BaseFragment
         for(SearchableFragment sf: searchables)
             sf.performSearch(querySearch);
 
-        Log.i("querySearch", "numberOfSearchables -> " + searchables.size());
+        Log.i("notify", "numberOfSearchables -> " + searchables.size());
     }
 
     @Override
@@ -154,11 +150,6 @@ public abstract class HostSearchablesFragment extends BaseFragment
     private void addSearchable(SearchableFragment sf)
     {
         searchables.add(sf);
-
-        //dopo la rotazione del dispositivo vengono riaggiunti tutti i searchables perchè la lista si resetta.
-        //quindi se ho attiva una ricerca devo mantenerla anche dopo la rotazione.
-        if(isSearchActive())
-            notifyChildrenForSearch();
     }
 
     private void removeSearchable(Object o)
@@ -176,7 +167,7 @@ public abstract class HostSearchablesFragment extends BaseFragment
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener()
         {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels){}
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) { }
 
             @Override
             public void onPageSelected(int position)
@@ -191,7 +182,7 @@ public abstract class HostSearchablesFragment extends BaseFragment
             }
 
             @Override
-            public void onPageScrollStateChanged(int state){}
+            public void onPageScrollStateChanged(int state) { }
         });
     }
 
@@ -217,6 +208,7 @@ public abstract class HostSearchablesFragment extends BaseFragment
         @Override
         public Fragment getItem(int position)
         {
+            Log.i("viewpager", "getItem");
             Fragment f = getChild(position);
             return f;
         }
@@ -252,7 +244,6 @@ public abstract class HostSearchablesFragment extends BaseFragment
         public void destroyItem(ViewGroup container, int position, Object object)
         {
             super.destroyItem(container, position, object);
-            //importante per rimuovere il searchable dalla lista.
             removeSearchable(object);
         }
     }
