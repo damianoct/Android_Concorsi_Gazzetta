@@ -16,7 +16,10 @@
             android:exported="false">
         </service>
 
-        <activity android:name=".ui.HomeActivity">
+        <activity
+            android:name=".ui.HomeActivity"
+            android:windowSoftInputMode="adjustPan">
+            
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable"/>
