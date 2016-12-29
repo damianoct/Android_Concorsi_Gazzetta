@@ -213,14 +213,26 @@ public class TextContestFragment extends HostSearchablesFragment implements JSON
             if (!mIsImageHidden) {
                 mIsImageHidden = true;
 
-                ViewCompat.animate(mFab).scaleY(0).scaleX(0).start();
+                ViewCompat.animate(mFab).scaleY(0).scaleX(0).withEndAction(new Runnable() {
+                    @Override
+                    public void run()
+                    {
+                        mFab.setClickable(false);
+                    }
+                }).start();
             }
         }
 
         if (currentScrollPercentage < PERCENTAGE_TO_SHOW_IMAGE) {
             if (mIsImageHidden) {
                 mIsImageHidden = false;
-                ViewCompat.animate(mFab).scaleY(1).scaleX(1).start();
+                ViewCompat.animate(mFab).scaleY(1).scaleX(1).withEndAction(new Runnable() {
+                    @Override
+                    public void run()
+                    {
+                        mFab.setClickable(true);
+                    }
+                }).start();
             }
         }
     }

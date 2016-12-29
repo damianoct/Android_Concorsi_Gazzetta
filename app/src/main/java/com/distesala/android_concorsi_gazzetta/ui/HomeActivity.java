@@ -151,9 +151,6 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener,
 
         //setupAdAtBottom();
 
-
-
-
         //solo al PRIMO avvio dell'app setto le preferences di default.
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
