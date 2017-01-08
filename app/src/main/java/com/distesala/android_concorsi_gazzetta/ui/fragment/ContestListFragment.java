@@ -89,9 +89,11 @@ public class ContestListFragment extends HostSearchablesFragment
                 whereClause = ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_SCADENZA + " <= date('now', '+" + threshold +
                                                                                 " days') AND " +
                         ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_SCADENZA + " >= date('now') AND " +
-                        ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_AREA + " LIKE? ";
+                        ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_AREA + " LIKE? ORDER BY " +
+                        ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_SCADENZA;
                         whereArgs = new String[]{"%" + getString(Helper.getStringResourceForFilterAreaId(filterAreaId)) + "%" };
                 break;
+
             case PREFERITI_POS:
                 whereClause = ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_FAVORITE + "=? AND " +
                                 ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_AREA + " LIKE? ";
