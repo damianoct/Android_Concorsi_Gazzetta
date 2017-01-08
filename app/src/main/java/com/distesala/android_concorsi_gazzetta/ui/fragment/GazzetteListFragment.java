@@ -104,19 +104,21 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
 
         mReceiver = new JSONResultReceiver(new Handler());
         mReceiver.setReceiver(this);
-        updateGazzette();
+        //updateGazzette();
 
         adapter = new GazzettaCursorAdapter(getActivity(), null);
 
         setRetainInstance(true);
     }
 
+    @Override
+    protected String getSearchHint()
+    {
+        return getActivity().getResources().getString(R.string.gazzetteListHint);
+    }
+
     private void updateGazzette()
     {
-        progressWheel = (ProgressWheel) getActivity().findViewById(R.id.progress_wheel);
-        Animation animFadeOut = AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out);
-        progressWheel.setAnimation(animFadeOut);
-
         Intent mServiceIntent = new Intent(getActivity(), JSONDownloader.class);
         mServiceIntent.setAction(JSONDownloader.DOWNLOAD_GAZZETTA);
         mServiceIntent.putExtra("receiverTag", mReceiver);
@@ -136,7 +138,13 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_gazzettelist, container, false);
 
+        progressWheel = (ProgressWheel) rootView.findViewById(R.id.progress_wheel);
+        Animation animFadeOut = AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out);
+        progressWheel.setAnimation(animFadeOut);
+
         gazzetteList = (ListView) rootView.findViewById(R.id.gazzetteList);
+
+        gazzetteList.setEmptyView(rootView.findViewById(R.id.emptyView));
         gazzetteList.setNestedScrollingEnabled(true);
 
         gazzetteList.setOnItemClickListener(new AdapterView.OnItemClickListener()
@@ -183,6 +191,7 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
         appBarLayout.setElevation(10);
         fragmentListener.onHomeTransaction();
         gazzetteList.setAdapter(adapter);
+        updateGazzette();
     }
 
     @Override

@@ -61,5 +61,9 @@
     <string name="subjectCondivisione">C\'è un concorso che potrebbe interessarti.</string>
     <string name="filter_none"/>
     <string name="pubblicazione">PUBBLICAZIONE</string>
+    <string name="gazzetteListHint">Cerca per giorno, mese, anno</string>
+    <string name="contestsListHint">Cerca per professione, località, azienda</string>
+    <string name="empty_contest_list">Nessun concorso presente.</string>
+
 
 </resources>

@@ -46,11 +46,18 @@ public abstract class BaseFragment extends Fragment implements MenuItemCompat.On
 
     public abstract void onSearchFinished();
 
+    protected String getSearchHint()
+    {
+        return "Cerca";
+    }
+
     private void initSearchViewForMenu(Menu menu)
     {
         searchViewItem = menu.findItem(R.id.action_search);
 
         final SearchView searchViewAndroidActionBar = (SearchView) MenuItemCompat.getActionView(searchViewItem);
+
+        searchViewAndroidActionBar.setQueryHint(getSearchHint());
 
         //in landscape estende la searchbar per tutto lo schermo
         searchViewAndroidActionBar.setMaxWidth(Integer.MAX_VALUE);

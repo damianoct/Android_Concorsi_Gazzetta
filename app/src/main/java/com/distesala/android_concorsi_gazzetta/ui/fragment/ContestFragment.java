@@ -7,6 +7,8 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.util.Log;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +21,7 @@ import com.distesala.android_concorsi_gazzetta.adapter.ContestCursorAdapter;
 import com.distesala.android_concorsi_gazzetta.contentprovider.ConcorsiGazzettaContentProvider;
 import com.distesala.android_concorsi_gazzetta.database.ConcorsiGazzetteSQLiteHelper;
 import com.distesala.android_concorsi_gazzetta.ui.HomeActivity;
+import com.pnikosis.materialishprogress.ProgressWheel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,6 +32,9 @@ public class ContestFragment extends SearchableFragment implements LoaderManager
 {
     private ListView contestsList;
     private CursorAdapter cursorAdapter;
+    private View emptyView;
+    private ProgressWheel progressWheel;
+
 
     public static ContestFragment newInstance(Bundle queryBundle)
     {
@@ -58,6 +64,13 @@ public class ContestFragment extends SearchableFragment implements LoaderManager
                              Bundle savedInstanceState)
     {
         View rootView = inflater.inflate(R.layout.fragment_contest, container, false);
+
+        progressWheel = (ProgressWheel) rootView.findViewById(R.id.progress_wheel);
+        Animation animFadeOut = AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out);
+        progressWheel.setAnimation(animFadeOut);
+
+        emptyView = rootView.findViewById(R.id.emptyView);
+        emptyView.setVisibility(View.INVISIBLE);
 
         contestsList = (ListView) rootView.findViewById(R.id.contestsList);
 
@@ -103,6 +116,9 @@ public class ContestFragment extends SearchableFragment implements LoaderManager
     {
         super.onViewCreated(view, savedInstanceState);
         contestsList.setAdapter(cursorAdapter);
+        progressWheel.spin();
+        progressWheel.setVisibility(View.VISIBLE);
+        getLoaderManager().restartLoader(0, searchBundle != null ? concatenateBundles() : queryBundle, this);
     }
 
     @Override
@@ -111,7 +127,9 @@ public class ContestFragment extends SearchableFragment implements LoaderManager
         super.onResume();
         //force restart for preference changed.
 
-        getLoaderManager().restartLoader(0, searchBundle != null ? concatenateBundles() : queryBundle, this);
+        /*progressWheel.spin();
+        progressWheel.setVisibility(View.VISIBLE);
+        getLoaderManager().restartLoader(0, searchBundle != null ? concatenateBundles() : queryBundle, this);*/
     }
 
     @Override
@@ -241,9 +259,13 @@ public class ContestFragment extends SearchableFragment implements LoaderManager
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data)
     {
+        progressWheel.setVisibility(View.GONE);
+        progressWheel.clearAnimation();
+        progressWheel.stopSpinning();
         cursorAdapter.changeCursor(data);
-    }
+        emptyView.setVisibility(data.getCount() != 0 ? View.INVISIBLE : View.VISIBLE);
 
+    }
     @Override
     public void onLoaderReset(Loader<Cursor> loader)
     {

@@ -100,6 +100,12 @@ public class ContestForGazzettaFragment extends HostSearchablesFragment
     }
 
     @Override
+    protected String getSearchHint()
+    {
+        return getActivity().getResources().getString(R.string.contestsListHint);
+    }
+
+    @Override
     protected String[] getTabTitles()
     {
         return getResources().getStringArray(R.array.contests_categories_titles);

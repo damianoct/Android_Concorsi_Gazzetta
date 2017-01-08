@@ -56,6 +56,12 @@ public class ContestListFragment extends HostSearchablesFragment
     }
 
     @Override
+    protected String getSearchHint()
+    {
+        return getActivity().getResources().getString(R.string.contestsListHint);
+    }
+
+    @Override
     protected SearchableFragment getChild(int position)
     {
         SearchableFragment f = null;
