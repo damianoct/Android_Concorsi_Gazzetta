@@ -214,7 +214,7 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
     {
         String key = getActivity().getString(R.string.key_num_gazzette);
         int nRow = PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt(key, 0);
-        String orderAndLimit = ConcorsiGazzetteSQLiteHelper.GazzettaEntry.COLUMN_ID_GAZZETTA
+        String orderAndLimit = ConcorsiGazzetteSQLiteHelper.GazzettaEntry.COLUMN_DATE_OF_PUBLICATION
                                     + " DESC" + " LIMIT " + nRow;
 
         return new CursorLoader(getActivity().getApplicationContext(),

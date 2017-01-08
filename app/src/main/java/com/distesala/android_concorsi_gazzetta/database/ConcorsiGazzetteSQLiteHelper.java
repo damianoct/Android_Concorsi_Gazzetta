@@ -89,6 +89,8 @@ public class ConcorsiGazzetteSQLiteHelper extends SQLiteOpenHelper
     {
         ContentValues gazzettaValues = new ContentValues();
 
+        Log.i("contentvalues", "data gazzetta " + g.getDateOfPublication());
+
         gazzettaValues.put(GazzettaEntry.COLUMN_ID_GAZZETTA, g.getIdGazzetta());
         gazzettaValues.put(GazzettaEntry.COLUMN_NUMBER_OF_PUBLICATION, g.getNumberOfPublication());
         gazzettaValues.put(GazzettaEntry.COLUMN_DATE_OF_PUBLICATION,  g.getDateOfPublication());

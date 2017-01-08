@@ -199,6 +199,9 @@ public class JSONDownloader extends IntentService
 
 
             Gazzetta latest = gson.fromJson(json, Gazzetta.class);
+
+            Log.i("latest", "Latest Gazzetta -> " + latest.getDateOfPublication() + " n° " + latest.getNumberOfPublication());
+
             Cursor cursor = getContentResolver().query(
                     ConcorsiGazzettaContentProvider.GAZZETTE_URI,
                     null,
