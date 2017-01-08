@@ -259,6 +259,7 @@ public class ContestFragment extends SearchableFragment implements LoaderManager
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data)
     {
+        //// TODO: 09/01/17 mettere anche questa dinamica in FavContestFragment e ContestListFragment
         progressWheel.setVisibility(View.GONE);
         progressWheel.clearAnimation();
         progressWheel.stopSpinning();
