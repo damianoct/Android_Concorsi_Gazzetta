@@ -20,7 +20,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.distesala.android_concorsi_gazzetta.R;
 import com.distesala.android_concorsi_gazzetta.adapter.GazzettaCursorAdapter;
@@ -46,6 +46,7 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
     private AppBarLayout appBarLayout;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private ProgressWheel progressWheel;
+    private View emptyView;
 
     @Override
     public String getFragmentName()
@@ -126,6 +127,7 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
 
         progressWheel.spin();
         progressWheel.setVisibility(View.VISIBLE);
+        emptyView.setVisibility(View.GONE);
     }
 
     @Override
@@ -138,13 +140,17 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_gazzettelist, container, false);
 
+        emptyView = rootView.findViewById(R.id.emptyView);
+
+        ((TextView) rootView.findViewById(R.id.emptyTextView)).setText(R.string.home_empty_contest_list);
+
         progressWheel = (ProgressWheel) rootView.findViewById(R.id.progress_wheel);
         Animation animFadeOut = AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out);
         progressWheel.setAnimation(animFadeOut);
 
         gazzetteList = (ListView) rootView.findViewById(R.id.gazzetteList);
 
-        gazzetteList.setEmptyView(rootView.findViewById(R.id.emptyView));
+        gazzetteList.setEmptyView(emptyView);
         gazzetteList.setNestedScrollingEnabled(true);
 
         gazzetteList.setOnItemClickListener(new AdapterView.OnItemClickListener()

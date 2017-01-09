@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:src="@drawable/cravatta_grey"/>
 
-    <TextView android:id="@+id/Button01"
+    <TextView android:id="@+id/emptyTextView"
         android:padding="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
