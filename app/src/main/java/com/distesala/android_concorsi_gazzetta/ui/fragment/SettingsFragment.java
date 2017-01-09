@@ -108,6 +108,5 @@ public class SettingsFragment extends PreferenceFragment
     @Override
     public void onLoaderReset(Loader<Cursor> loader)
     {
-        Log.i("observer", "onLoaderReset");
     }
 }

@@ -188,7 +188,6 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener,
             @Override
             public void onAdLoaded()
             {
-                Log.i("AdLoaded", "\t\t\t\t\tAD LOADED");
                 super.onAdLoaded();
                 setupAdAtBottom();
             }
@@ -255,7 +254,6 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener,
         super.onSaveInstanceState(outState);
         //salvo lo stato
         Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-        Log.d("currentFragment", currentFragment.toString());
         getSupportFragmentManager().putFragment(outState, SAVED_FRAGMENT, currentFragment);
     }
 
@@ -327,7 +325,6 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener,
                 }
                 int width = adLayout.getMeasuredWidth();
                 int height = adLayout.getMeasuredHeight();
-                Log.i("adLayout hight", height + "");
                 setSpaceForAd(height);
 
             }

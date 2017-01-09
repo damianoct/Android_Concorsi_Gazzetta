@@ -59,8 +59,6 @@ public abstract class HostSearchablesFragment extends BaseFragment
     {
         for(SearchableFragment sf: searchables)
             sf.performSearch(querySearch);
-
-        Log.i("notify", "numberOfSearchables -> " + searchables.size());
     }
 
     @Override
@@ -98,7 +96,6 @@ public abstract class HostSearchablesFragment extends BaseFragment
 
         } catch (ResourceIDLayoutException e)
         {
-            Log.e("FATAL", e.getMessage());
             getActivity().finish();
         }
 
@@ -208,7 +205,6 @@ public abstract class HostSearchablesFragment extends BaseFragment
         @Override
         public Fragment getItem(int position)
         {
-            Log.i("viewpager", "getItem");
             Fragment f = getChild(position);
             return f;
         }

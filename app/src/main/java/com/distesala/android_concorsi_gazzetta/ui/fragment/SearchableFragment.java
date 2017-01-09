@@ -26,7 +26,6 @@ public abstract class SearchableFragment extends Fragment
         queryBundle = getArguments();
         if(savedInstanceState != null)
         {
-            Log.i("lifecycle", "restore");
             searchBundle = savedInstanceState.getBundle("searchBundle");
         }
     }
@@ -35,7 +34,6 @@ public abstract class SearchableFragment extends Fragment
     public void onSaveInstanceState(Bundle outState)
     {
         super.onSaveInstanceState(outState);
-        Log.i("lifecycle", "saveInstance");
         if(searchBundle != null)
             outState.putBundle("searchBundle", searchBundle);
     }

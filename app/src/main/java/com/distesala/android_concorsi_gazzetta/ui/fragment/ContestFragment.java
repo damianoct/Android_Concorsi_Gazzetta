@@ -138,8 +138,6 @@ public class ContestFragment extends SearchableFragment implements LoaderManager
         //Bundle args = getSearchBundle(s);
         searchBundle = getSearchBundle(s);
 
-        Log.i("notify", "[" + concatenateBundles().getStringArray(BaseFragment.WHERE_ARGS)[1] + "]" + s);
-
         getLoaderManager().restartLoader(0, concatenateBundles(), this);
     }
 
@@ -237,17 +235,6 @@ public class ContestFragment extends SearchableFragment implements LoaderManager
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args)
     {
-        Log.i("notify", "--------------------");
-        Log.i("notify", "restart loader, args\n");
-        Log.i("notify", args.getString(BaseFragment.WHERE_CLAUSE) + "\n");
-        for(String ss: Arrays.asList(args.getStringArray(BaseFragment.WHERE_ARGS)))
-        {
-            Log.i("notify", ss + "\n");
-        }
-
-        Log.i("notify", "--------------------");
-
-
         return new CursorLoader(getActivity().getApplicationContext(), //context
                 ConcorsiGazzettaContentProvider.CONTESTS_URI, //uri
                 null, //ALL COLUMNS

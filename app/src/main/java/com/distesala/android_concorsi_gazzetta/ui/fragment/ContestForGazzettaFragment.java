@@ -138,8 +138,6 @@ public class ContestForGazzettaFragment extends HostSearchablesFragment
         args.putString(WHERE_CLAUSE, whereClause);
         args.putStringArray(WHERE_ARGS, whereArgs);
 
-        Log.i("getChild", "position " + position + " filterarea -> " + whereArgs[2]);
-
         return args;
     }
 }

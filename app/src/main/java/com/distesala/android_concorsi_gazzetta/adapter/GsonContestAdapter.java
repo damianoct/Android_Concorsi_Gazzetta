@@ -57,10 +57,7 @@ public class GsonContestAdapter implements JsonDeserializer<Concorso>
         {
             tipologia = type;
         }
-        catch(ParseException e)
-        {
-            Log.i("errordate","\nErrore parsing data per ." + emettitore + "\n " + titoloConcorso);
-        }
+        catch(ParseException e) { }
 
         final Concorso c = new Concorso();
         c.setAreaDiInteresse(areaDiInteresse);

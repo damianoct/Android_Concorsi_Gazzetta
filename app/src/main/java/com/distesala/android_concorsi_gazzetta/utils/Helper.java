@@ -90,12 +90,10 @@ public class Helper
 
             } catch (ParseException e)
             {
-                Log.e("dateexception", e.getMessage());
                 return null;
             }
         }
         else
-            //Log.e("[]", "Helper -> DATA NULLA.");
             return null;
     }
 

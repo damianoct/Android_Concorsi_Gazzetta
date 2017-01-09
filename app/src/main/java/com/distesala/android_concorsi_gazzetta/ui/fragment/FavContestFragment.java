@@ -200,7 +200,6 @@ public class FavContestFragment extends SearchableFragment implements LoaderMana
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data)
     {
-        Log.i("category", "contest category loadfinish, SIZE -> " + String.valueOf(data.getCount()));
         if(data.getCount() == 0)
             expandAppBarLayout();
         progressWheel.setVisibility(View.GONE);

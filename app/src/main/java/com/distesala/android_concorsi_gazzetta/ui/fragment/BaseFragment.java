@@ -95,8 +95,6 @@ public abstract class BaseFragment extends Fragment implements MenuItemCompat.On
     @Override
     public void onSaveInstanceState(Bundle outState)
     {
-        Log.i("state", "state saved!");
-
         if (querySearch != null)
         {
             outState.putString(SEARCH_KEY, querySearch);
@@ -160,7 +158,6 @@ public abstract class BaseFragment extends Fragment implements MenuItemCompat.On
     @Override
     public boolean onMenuItemActionCollapse(MenuItem item)
     {
-        Log.i("search", "collapsed");
         querySearch = null;
         onSearchFinished();
         return true;

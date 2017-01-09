@@ -82,7 +82,6 @@ public class FavContestCursorAdapter extends CursorAdapter
             {
                 ContentValues contentValues = new ContentValues(1);
                 contentValues.put(ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_FAVORITE,  isFav ^ 1);
-                Log.i("MELINTA", String.valueOf(isFav ^ 1));
 
                 context.getContentResolver().update(ConcorsiGazzettaContentProvider.CONTESTS_URI,
                         contentValues,

@@ -72,7 +72,6 @@ public class ConcorsiGazzettaContentProvider extends ContentProvider
                         selection, selectionArgs, null, null,
                         sortOrder);
 
-                Log.i("provider", "cursor gazzette -> " + String.valueOf(c.getCount()));
                 break;
             }
 

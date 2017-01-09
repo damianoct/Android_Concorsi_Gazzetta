@@ -91,8 +91,6 @@ public class JSONDownloader extends IntentService
                 {
                     if (!updatedGazzette())
                     {
-                        Log.i("INTENT SERVICE", "Sto aggionando il Database");
-
                         try
                         {
                             String json = downloadJSON(new URL(URL_HOME));
@@ -111,7 +109,6 @@ public class JSONDownloader extends IntentService
 
                         catch (Exception e)
                         {
-                            Log.i("IntentService", "Errore");
                             e.printStackTrace();
                             rec.send(Activity.RESULT_CANCELED, null);
                         }
@@ -119,12 +116,10 @@ public class JSONDownloader extends IntentService
                 }
                 else
                 {
-                    Log.i("IntentService", "Manca la Connessione");
                     rec.send(Connectivity.CONNECTION_LOCKED, null);
                 }
 
                 rec.send(Activity.RESULT_OK, null);
-                Log.i("provider", "service finito");
             }
             else if (DOWNLOAD_CONTEST.equals(action))
             {
@@ -139,8 +134,6 @@ public class JSONDownloader extends IntentService
                                     + day + "&mese="
                                     + month + "&anno="
                                     + year + "&codiceRedazionale=" + contestID;
-                Log.i("contentdeb", link);
-
                 try
                 {
                     if(canConnect())
@@ -165,7 +158,6 @@ public class JSONDownloader extends IntentService
                     }
                     else
                     {
-                        Log.i("IntentService", "Manca la Connessione");
                         rec.send(Connectivity.CONNECTION_LOCKED, null);
                     }
 
@@ -200,8 +192,6 @@ public class JSONDownloader extends IntentService
 
             Gazzetta latest = gson.fromJson(json, Gazzetta.class);
 
-            Log.i("latest", "Latest Gazzetta -> " + latest.getDateOfPublication() + " n° " + latest.getNumberOfPublication());
-
             Cursor cursor = getContentResolver().query(
                     ConcorsiGazzettaContentProvider.GAZZETTE_URI,
                     null,
@@ -226,7 +216,6 @@ public class JSONDownloader extends IntentService
         try
         {
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-            Log.i("provider", "download iniziato");
             int statusCode = urlConnection.getResponseCode();
             if (statusCode == 200)
             {
@@ -238,11 +227,7 @@ public class JSONDownloader extends IntentService
             }
         }
 
-        catch (UnknownHostException | HttpErrorException e)
-        {
-            Log.i("IntentService", "UnknownHost Exception or HttpErrorException");
-
-        }
+        catch (UnknownHostException | HttpErrorException e) {}
 
         catch (MalformedURLException e)
         {

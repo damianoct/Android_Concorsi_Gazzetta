@@ -79,8 +79,6 @@ public class ConcorsiGazzetteSQLiteHelper extends SQLiteOpenHelper
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
     {
-        Log.w(ConcorsiGazzetteSQLiteHelper.class.getName(), "Upgrading database from version " + oldVersion + " to "
-                + newVersion + ", which will destroy all old data");
         db.execSQL("DROP TABLE IF EXISTS " + GazzettaEntry.TABLE_NAME);
         onCreate(db);
     }
@@ -88,8 +86,6 @@ public class ConcorsiGazzetteSQLiteHelper extends SQLiteOpenHelper
     public static ContentValues createContentValuesForGazzetta(Gazzetta g)
     {
         ContentValues gazzettaValues = new ContentValues();
-
-        Log.i("contentvalues", "data gazzetta " + g.getDateOfPublication());
 
         gazzettaValues.put(GazzettaEntry.COLUMN_ID_GAZZETTA, g.getIdGazzetta());
         gazzettaValues.put(GazzettaEntry.COLUMN_NUMBER_OF_PUBLICATION, g.getNumberOfPublication());
