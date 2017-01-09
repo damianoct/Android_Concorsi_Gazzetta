@@ -64,6 +64,8 @@
     <string name="gazzetteListHint">Cerca per giorno, mese, anno</string>
     <string name="contestsListHint">Cerca per professione, località, azienda</string>
     <string name="empty_contest_list">Nessun concorso presente.</string>
+    <string name="home_empty_contest_list">Scorri verso il basso per aggiornare la lista.</string>
+    <string name="download_gazzette">Download gazzette in corso...</string>
 
 
 </resources>

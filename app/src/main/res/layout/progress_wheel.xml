@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
+    android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:wheel="http://schemas.android.com/apk/res-auto">
 
@@ -13,10 +14,10 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:layout_gravity="center"
-        android:visibility="invisible"
+        android:visibility="visible"
         wheel:matProg_barColor="@color/colorPrimary"
         wheel:matProg_progressIndeterminate="true"
-        wheel:matProg_barWidth="2.5dp"
-        wheel:matProg_circleRadius="40dp"/>
+        wheel:matProg_barWidth="3dp"
+        wheel:matProg_circleRadius="40dp" />
 
 </LinearLayout>
