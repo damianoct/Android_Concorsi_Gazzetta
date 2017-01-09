@@ -10,6 +10,8 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.util.Log;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 import android.view.LayoutInflater;
@@ -22,6 +24,7 @@ import com.distesala.android_concorsi_gazzetta.adapter.FavContestCursorAdapter;
 import com.distesala.android_concorsi_gazzetta.contentprovider.ConcorsiGazzettaContentProvider;
 import com.distesala.android_concorsi_gazzetta.database.ConcorsiGazzetteSQLiteHelper;
 import com.distesala.android_concorsi_gazzetta.ui.HomeActivity;
+import com.pnikosis.materialishprogress.ProgressWheel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,6 +35,8 @@ public class FavContestFragment extends SearchableFragment implements LoaderMana
 {
     private ListView contestsList;
     private CursorAdapter cursorAdapter;
+    private View emptyView;
+    private ProgressWheel progressWheel;
 
     private void expandAppBarLayout()
     {
@@ -109,7 +114,7 @@ public class FavContestFragment extends SearchableFragment implements LoaderMana
     {
         super.onActivityCreated(savedInstanceState);
 
-        getLoaderManager().initLoader(0, searchBundle != null ? concatenateBundles() : getArguments(), this);
+        //getLoaderManager().initLoader(0, searchBundle != null ? concatenateBundles() : getArguments(), this);
     }
 
     @Override
@@ -125,6 +130,13 @@ public class FavContestFragment extends SearchableFragment implements LoaderMana
     {
         //posso utilizzare lo stesso layout del contest fragment
         View rootView = inflater.inflate(R.layout.fragment_contest, container, false);
+
+        progressWheel = (ProgressWheel) rootView.findViewById(R.id.progress_wheel);
+        Animation animFadeOut = AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out);
+        progressWheel.setAnimation(animFadeOut);
+
+        emptyView = rootView.findViewById(R.id.emptyView);
+        emptyView.setVisibility(View.INVISIBLE);
 
         contestsList = (ListView) rootView.findViewById(R.id.contestsList);
 
@@ -169,6 +181,9 @@ public class FavContestFragment extends SearchableFragment implements LoaderMana
     {
         super.onViewCreated(view, savedInstanceState);
         contestsList.setAdapter(cursorAdapter);
+        progressWheel.spin();
+        progressWheel.setVisibility(View.VISIBLE);
+        getLoaderManager().restartLoader(0, searchBundle != null ? concatenateBundles() : queryBundle, this);
     }
 
     @Override
@@ -188,6 +203,10 @@ public class FavContestFragment extends SearchableFragment implements LoaderMana
         Log.i("category", "contest category loadfinish, SIZE -> " + String.valueOf(data.getCount()));
         if(data.getCount() == 0)
             expandAppBarLayout();
+        progressWheel.setVisibility(View.GONE);
+        progressWheel.clearAnimation();
+        progressWheel.stopSpinning();
+        emptyView.setVisibility(data.getCount() > 0 ? View.INVISIBLE : View.VISIBLE);
         cursorAdapter.changeCursor(data);
     }
 

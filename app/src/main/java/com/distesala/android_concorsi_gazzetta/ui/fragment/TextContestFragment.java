@@ -37,7 +37,6 @@ public class TextContestFragment extends HostSearchablesFragment implements JSON
 
     private static final int PERCENTAGE_TO_SHOW_IMAGE = 80;
 
-    private AdView mAdView;
     private FloatingActionButton mFab;
     private int mMaxScrollSize;
     private boolean mIsImageHidden;
@@ -149,19 +148,6 @@ public class TextContestFragment extends HostSearchablesFragment implements JSON
         {
             articles = savedInstanceState.getStringArrayList("articles");
         }
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
-    {
-        View rootView = super.onCreateView(inflater, container, savedInstanceState);
-        /*mAdView = (AdView) rootView.findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);*/
-
-        return rootView;
-
     }
 
     @Override

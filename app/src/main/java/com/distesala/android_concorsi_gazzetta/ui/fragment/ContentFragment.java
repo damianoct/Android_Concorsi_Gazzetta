@@ -6,19 +6,22 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import com.distesala.android_concorsi_gazzetta.R;
+import com.pnikosis.materialishprogress.ProgressWheel;
 
 public class ContentFragment extends SearchableFragment
 {
-
     protected static final String CONTENT = "content";
     protected static final String EMETTITORE = "emettitore";
     private String content;
     private String emettitore;
     private TextView contentTextView;
     private TextView emettitoreTextView;
+    private ProgressWheel progressWheel;
 
     public static ContentFragment newInstance(String content, String emettitore)
     {
@@ -44,11 +47,24 @@ public class ContentFragment extends SearchableFragment
                              Bundle savedInstanceState)
     {
         View rootView = inflater.inflate(R.layout.fragment_cardview, container, false);
-        contentTextView = (TextView) rootView.findViewById(R.id.content);
-        contentTextView.setText(content.replaceAll("\\s+", " "));
+        progressWheel = (ProgressWheel) rootView.findViewById(R.id.progress_wheel);
+        Animation animFadeOut = AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out);
+        progressWheel.setAnimation(animFadeOut);
 
+        contentTextView = (TextView) rootView.findViewById(R.id.content);
         emettitoreTextView = (TextView) rootView.findViewById(R.id.emettitore);
-        emettitoreTextView.setText(emettitore);
+
+        progressWheel.spin();
+        progressWheel.setVisibility(View.VISIBLE);
+
+        if(!content.isEmpty())
+        {
+            progressWheel.setVisibility(View.GONE);
+            progressWheel.clearAnimation();
+            progressWheel.stopSpinning();
+            contentTextView.setText(content.replaceAll("\\s+", " "));
+            emettitoreTextView.setText(emettitore);
+        }
 
         return rootView;
     }
