@@ -58,7 +58,8 @@ public abstract class HostSearchablesFragment extends BaseFragment
     private void notifyChildrenForSearch()
     {
         for(SearchableFragment sf: searchables)
-            sf.performSearch(querySearch);
+            if(sf.isAdded())
+                sf.performSearch(querySearch);
     }
 
     @Override

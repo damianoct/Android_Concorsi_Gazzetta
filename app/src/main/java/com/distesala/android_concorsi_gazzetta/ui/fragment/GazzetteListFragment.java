@@ -127,7 +127,14 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
 
         progressWheel.spin();
         progressWheel.setVisibility(View.VISIBLE);
-        emptyView.setVisibility(View.GONE);
+        emptyView.post(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                emptyView.setVisibility(View.INVISIBLE);
+            }
+        });
     }
 
     @Override
@@ -141,6 +148,7 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
         View rootView = inflater.inflate(R.layout.fragment_gazzettelist, container, false);
 
         emptyView = rootView.findViewById(R.id.emptyView);
+        emptyView.setVisibility(View.INVISIBLE);
 
         ((TextView) rootView.findViewById(R.id.emptyTextView)).setText(R.string.home_empty_contest_list);
 
@@ -150,14 +158,15 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
 
         gazzetteList = (ListView) rootView.findViewById(R.id.gazzetteList);
 
-        gazzetteList.setEmptyView(emptyView);
         gazzetteList.setNestedScrollingEnabled(true);
+        gazzetteList.setEmptyView(emptyView);
 
         gazzetteList.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3)
             {
+                if(progressWheel.isSpinning()) stopProgressWheel();
 
                 CursorAdapter adapter = (CursorAdapter) arg0.getAdapter();
                 CharSequence numberOfPublication = adapter.getCursor().getString(adapter.getCursor().getColumnIndex(ConcorsiGazzetteSQLiteHelper.GazzettaEntry.COLUMN_NUMBER_OF_PUBLICATION));
@@ -219,6 +228,11 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
 
         mSwipeRefreshLayout.setRefreshing(false);
 
+        stopProgressWheel();
+    }
+
+    private void stopProgressWheel()
+    {
         progressWheel.setVisibility(View.GONE);
         progressWheel.clearAnimation();
         progressWheel.stopSpinning();
@@ -245,7 +259,6 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
     {
         Cursor c = adapter.swapCursor(data);
         if(c != null) c.close();
-
     }
 
     @Override
