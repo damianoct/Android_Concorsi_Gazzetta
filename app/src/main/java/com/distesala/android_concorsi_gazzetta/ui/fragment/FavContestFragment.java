@@ -212,7 +212,8 @@ public class FavContestFragment extends SearchableFragment implements LoaderMana
     @Override
     public void onLoaderReset(Loader<Cursor> loader)
     {
-        cursorAdapter.swapCursor(null);
+        //cursorAdapter.swapCursor(null);
+        cursorAdapter.changeCursor(null);
     }
 
 

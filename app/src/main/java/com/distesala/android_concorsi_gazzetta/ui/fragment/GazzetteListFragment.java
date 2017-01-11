@@ -243,13 +243,15 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data)
     {
-        adapter.swapCursor(data);
+        Cursor c = adapter.swapCursor(data);
+        if(c != null) c.close();
+
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader)
     {
-        adapter.swapCursor(null);
+        adapter.changeCursor(null);
     }
 
     @Override

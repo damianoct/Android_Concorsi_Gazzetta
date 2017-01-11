@@ -42,7 +42,7 @@
     <string name="key_scadenza_threshold">scadenza_threshold</string>
     <string name="key_utilizzo_rete_dati">utilizzo_rete_dati</string>
     <string name="summary_num_gazzette">Verranno visualizzate fino a un massimo di 30 gazzette.</string>
-    <string name="summary_scadenza_threshold">Saranno visualizzate solo i concorsi che scadono entro 10 giorni.</string>
+    <string name="summary_scadenza_threshold">Saranno visualizzati solo i concorsi che scadono entro 10 giorni.</string>
     <string name="clear_db_butotn">clear_db_button</string>
     <string name="clear_db">Svuota Database</string>
     <string name="key_clear_db">key_clear_db</string>
