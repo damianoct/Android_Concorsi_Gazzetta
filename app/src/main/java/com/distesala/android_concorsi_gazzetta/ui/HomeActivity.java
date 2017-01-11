@@ -348,11 +348,14 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener,
     private void removeAd()
     {
         int height = adLayout.getMeasuredHeight();
-        View child0 = content.getChildAt(0);
-        FrameLayout.LayoutParams layoutparams = (android.widget.FrameLayout.LayoutParams) child0
-                .getLayoutParams();
-        layoutparams.bottomMargin = -height;
-        child0.setLayoutParams(layoutparams);
-        content.removeView(adLayout);
+        if(content != null)
+        {
+            View child0 = content.getChildAt(0);
+            FrameLayout.LayoutParams layoutparams = (android.widget.FrameLayout.LayoutParams) child0
+                    .getLayoutParams();
+            layoutparams.bottomMargin = -height;
+            child0.setLayoutParams(layoutparams);
+            content.removeView(adLayout);
+        }
     }
 }

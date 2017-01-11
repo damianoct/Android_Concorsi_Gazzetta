@@ -125,16 +125,14 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
         mServiceIntent.putExtra("receiverTag", mReceiver);
         getActivity().startService(mServiceIntent);
 
-        progressWheel.spin();
-        progressWheel.setVisibility(View.VISIBLE);
-        emptyView.post(new Runnable()
+        /*emptyView.post(new Runnable()
         {
             @Override
             public void run()
             {
                 emptyView.setVisibility(View.INVISIBLE);
             }
-        });
+        });*/
     }
 
     @Override
@@ -206,6 +204,7 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
         appBarLayout.setElevation(10);
         fragmentListener.onHomeTransaction();
         gazzetteList.setAdapter(adapter);
+        startProgressWheel();
         updateGazzette();
     }
 
@@ -229,6 +228,12 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
         mSwipeRefreshLayout.setRefreshing(false);
 
         stopProgressWheel();
+    }
+
+    private void startProgressWheel()
+    {
+        progressWheel.spin();
+        progressWheel.setVisibility(View.VISIBLE);
     }
 
     private void stopProgressWheel()
