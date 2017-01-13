@@ -2,7 +2,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:wheel="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.fragment.GazzetteListFragment"
     android:background="#ffffff">
 
@@ -23,27 +22,57 @@
         
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <!--<LinearLayout android:id="@+id/progressView"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout_emptyView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center">
+        android:layout_height="match_parent">
 
-        <com.pnikosis.materialishprogress.ProgressWheel
-            android:id="@+id/progress_wheel"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:layout_gravity="center"
-            android:visibility="invisible"
-            wheel:matProg_barColor="@color/colorPrimary"
-            wheel:matProg_progressIndeterminate="true"
-            wheel:matProg_barWidth="2.5dp"
-            wheel:matProg_circleRadius="40dp"/>
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    </LinearLayout>-->
+            <include layout="@layout/empty_contest_list" />
+
+            <!--<TextView
+                android:id="@+id/emptyView"
+                android:text="EMPTY"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                android:gravity="center" />-->
+
+        </ScrollView>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <!--<com.distesala.android_concorsi_gazzetta.ui.GazzettaSwipeRefreshLayout
+        android:id="@+id/swiperefresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/gazzetteList"
+                android:clickable="true"
+                />
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <include layout="@layout/empty_contest_list" />
+
+            </ScrollView>
+
+        </FrameLayout>
+
+    </com.distesala.android_concorsi_gazzetta.ui.GazzettaSwipeRefreshLayout> -->
 
     <include layout="@layout/progress_wheel" />
-    <include layout="@layout/empty_contest_list" />
 
 </FrameLayout>

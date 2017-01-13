@@ -144,6 +144,8 @@ public class ContestListFragment extends HostSearchablesFragment
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_filtering, menu);
         filterMenu = menu;
+        Helper.selectItem(filterMenu, filterAreaId);
+
     }
 
     @Override
@@ -162,6 +164,8 @@ public class ContestListFragment extends HostSearchablesFragment
         else
             return super.onOptionsItemSelected(item);
     }
+
+
 
     @Override
     public void onResume()

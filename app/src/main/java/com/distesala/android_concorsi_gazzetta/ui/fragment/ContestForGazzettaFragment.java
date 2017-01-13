@@ -80,6 +80,8 @@ public class ContestForGazzettaFragment extends HostSearchablesFragment
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_filtering, menu);
         filterMenu = menu;
+        Helper.selectItem(filterMenu, filterAreaId);
+
     }
 
     @Override

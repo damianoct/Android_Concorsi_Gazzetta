@@ -14,7 +14,7 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:layout_gravity="center"
-        android:visibility="visible"
+        android:visibility="invisible"
         wheel:matProg_barColor="@color/colorPrimary"
         wheel:matProg_progressIndeterminate="true"
         wheel:matProg_barWidth="3dp"

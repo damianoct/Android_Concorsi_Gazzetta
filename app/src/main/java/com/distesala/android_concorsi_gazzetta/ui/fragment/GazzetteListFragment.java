@@ -11,13 +11,12 @@ import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.widget.CursorAdapter;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -29,6 +28,7 @@ import com.distesala.android_concorsi_gazzetta.database.ConcorsiGazzetteSQLiteHe
 import com.distesala.android_concorsi_gazzetta.networking.Connectivity;
 import com.distesala.android_concorsi_gazzetta.services.JSONDownloader;
 import com.distesala.android_concorsi_gazzetta.services.JSONResultReceiver;
+import com.distesala.android_concorsi_gazzetta.ui.GazzettaSwipeRefreshLayout;
 import com.distesala.android_concorsi_gazzetta.ui.HomeActivity;
 import com.distesala.android_concorsi_gazzetta.utils.Helper;
 import com.pnikosis.materialishprogress.ProgressWheel;
@@ -38,7 +38,8 @@ import com.pnikosis.materialishprogress.ProgressWheel;
  */
 
 public class GazzetteListFragment extends BaseFragment implements JSONResultReceiver.Receiver,
-                                                                    LoaderManager.LoaderCallbacks<Cursor>
+                                                                    LoaderManager.LoaderCallbacks<Cursor>,
+                                                                    GazzettaSwipeRefreshLayout.OnChildScrollUpCallback
 {
     private JSONResultReceiver mReceiver;
     private ListView gazzetteList;
@@ -46,7 +47,7 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
     private AppBarLayout appBarLayout;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private ProgressWheel progressWheel;
-    private View emptyView;
+    private SwipeRefreshLayout emptySwipeRefreshLayout;
 
     @Override
     public String getFragmentName()
@@ -120,19 +121,11 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
 
     private void updateGazzette()
     {
+        Log.d("update", "update gazzette");
         Intent mServiceIntent = new Intent(getActivity(), JSONDownloader.class);
         mServiceIntent.setAction(JSONDownloader.DOWNLOAD_GAZZETTA);
         mServiceIntent.putExtra("receiverTag", mReceiver);
         getActivity().startService(mServiceIntent);
-
-        /*emptyView.post(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                emptyView.setVisibility(View.INVISIBLE);
-            }
-        });*/
     }
 
     @Override
@@ -145,26 +138,25 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_gazzettelist, container, false);
 
-        emptyView = rootView.findViewById(R.id.emptyView);
-        emptyView.setVisibility(View.INVISIBLE);
+        emptySwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout_emptyView);
 
         ((TextView) rootView.findViewById(R.id.emptyTextView)).setText(R.string.home_empty_contest_list);
 
-        progressWheel = (ProgressWheel) rootView.findViewById(R.id.progress_wheel);
+        /*progressWheel = (ProgressWheel) rootView.findViewById(R.id.progress_wheel);
         Animation animFadeOut = AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out);
-        progressWheel.setAnimation(animFadeOut);
+        progressWheel.setAnimation(animFadeOut);*/
 
         gazzetteList = (ListView) rootView.findViewById(R.id.gazzetteList);
 
         gazzetteList.setNestedScrollingEnabled(true);
-        gazzetteList.setEmptyView(emptyView);
+        gazzetteList.setEmptyView(emptySwipeRefreshLayout);
 
         gazzetteList.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3)
             {
-                if(progressWheel.isSpinning()) stopProgressWheel();
+                //if(progressWheel.isSpinning()) stopProgressWheel();
 
                 CursorAdapter adapter = (CursorAdapter) arg0.getAdapter();
                 CharSequence numberOfPublication = adapter.getCursor().getString(adapter.getCursor().getColumnIndex(ConcorsiGazzetteSQLiteHelper.GazzettaEntry.COLUMN_NUMBER_OF_PUBLICATION));
@@ -195,6 +187,30 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
             }
         });
 
+        emptySwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
+        emptySwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
+        {
+            @Override
+            public void onRefresh()
+            {
+                updateGazzette();
+            }
+        });
+
+
+
+        /*//TODO sistemare questa merda!
+        mSwipeRefreshLayout.setOnChildScrollUpCallback(new GazzettaSwipeRefreshLayout.OnChildScrollUpCallback()
+        {
+            @Override
+            public boolean canChildScrollUp()
+            {
+                Log.d("scroll", "canChildScrollUp called!");
+                //return gazzetteList.getFirstVisiblePosition() != 0;
+                return false;
+            }
+        });*/
+
         return rootView;
     }
 
@@ -205,6 +221,15 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
         fragmentListener.onHomeTransaction();
         gazzetteList.setAdapter(adapter);
         startProgressWheel();
+        if(emptySwipeRefreshLayout.getVisibility() == View.VISIBLE)
+        {
+            emptySwipeRefreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    emptySwipeRefreshLayout.setRefreshing(true);
+                }
+            });
+        }
         updateGazzette();
     }
 
@@ -226,21 +251,22 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
         }
 
         mSwipeRefreshLayout.setRefreshing(false);
+        emptySwipeRefreshLayout.setRefreshing(false);
 
         stopProgressWheel();
     }
 
     private void startProgressWheel()
     {
-        progressWheel.spin();
-        progressWheel.setVisibility(View.VISIBLE);
+        //progressWheel.spin();
+        //progressWheel.setVisibility(View.VISIBLE);
     }
 
     private void stopProgressWheel()
     {
-        progressWheel.setVisibility(View.GONE);
-        progressWheel.clearAnimation();
-        progressWheel.stopSpinning();
+        //progressWheel.setVisibility(View.GONE);
+        //progressWheel.clearAnimation();
+        //progressWheel.stopSpinning();
     }
 
     @Override
@@ -281,5 +307,11 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
 
         //force restart for preference changed.
         getLoaderManager().restartLoader(0, args, this);
+    }
+
+    @Override
+    public boolean canChildScrollUp()
+    {
+        return gazzetteList.getFirstVisiblePosition() != 0;
     }
 }

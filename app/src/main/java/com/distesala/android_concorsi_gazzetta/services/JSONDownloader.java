@@ -39,7 +39,7 @@ import java.util.List;
 
 public class JSONDownloader extends IntentService
 {
-    private static final String URL = "http://35.162.163.67:8080/";
+    private static final String URL = "http://concorsigazzetta.ddns.net:8080/";
     private static final String URL_HOME = URL + "gazzetteWithContests";
     private static final String LATEST_GAZZETTA_URL = URL + "latestGazzetta";
     private static final String GAZZETTA_URL = "http://www.gazzettaufficiale.it/eli/id/";

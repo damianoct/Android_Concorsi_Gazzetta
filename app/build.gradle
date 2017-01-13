@@ -15,8 +15,8 @@ android {
         applicationId "com.distesala.android_concorsi_gazzetta"
         minSdkVersion 21
         targetSdkVersion 22
-        versionCode 6
-        versionName "beta1.0"
+        versionCode 7
+        versionName "beta1.1"
     }
     buildTypes {
         release {
