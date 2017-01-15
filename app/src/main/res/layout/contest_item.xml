@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
-            android:text="MINISTERO DELLA DIFESA DIREZIONE GENERALE"
+            android:text="UNIVERSITA' DI CATANIA"
             android:textStyle="bold"
             android:textSize="16.3dp"
             android:textColor="@color/colorPrimaryDark"/>
@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
             android:layout_marginTop="10dp"
-            android:text="Assunzione per titoli e concorsi di due bla blablabla bla"
+            android:text="Procedura di valutazione per due posti di professore di seconda fascia."
             android:textSize="15dp"
             android:textColor="#000000"/>
 
@@ -49,6 +49,7 @@
 
         <TextView
             android:id="@+id/expiringDate"
+            android:text="12 feb"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingBottom="20dp"

@@ -117,7 +117,7 @@
                 android:id="@+id/nExpiring"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="59"
+                android:text="23"
                 android:textColor="@color/colorPrimary"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"/>

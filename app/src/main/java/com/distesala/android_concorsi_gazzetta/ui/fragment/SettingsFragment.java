@@ -11,6 +11,9 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.distesala.android_concorsi_gazzetta.R;
 import com.distesala.android_concorsi_gazzetta.contentprovider.ConcorsiGazzettaContentProvider;
@@ -38,6 +41,13 @@ public class SettingsFragment extends PreferenceFragment
         getLoaderManager().initLoader(0, null, this);
 
         updatePreferenceSummaries();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
+        getPreferenceScreen().removePreference(findPreference(getString(R.string.first_launch)));
+        return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     private void updatePreferenceSummaries()

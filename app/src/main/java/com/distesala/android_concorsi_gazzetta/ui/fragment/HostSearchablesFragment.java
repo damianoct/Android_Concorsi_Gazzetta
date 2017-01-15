@@ -81,6 +81,17 @@ public abstract class HostSearchablesFragment extends BaseFragment
         searchables = new LinkedList<>();
     }
 
+    //TODO dopo che si ritorna indietro da un CONTENT fragment avviato dalla ricerca
+    //la ricerca si spegne
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        if(isSearchActive())
+            notifyChildrenForSearch();
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
@@ -208,6 +219,20 @@ public abstract class HostSearchablesFragment extends BaseFragment
         {
             Fragment f = getChild(position);
             return f;
+        }
+
+        @Override
+        public void finishUpdate(ViewGroup container)
+        {
+            //poor solution -> http://stackoverflow.com/questions/41650721/attempt-to-invoke-virtual-method-android-os-handler-android-support-v4-app-frag
+            try
+            {
+                super.finishUpdate(container);
+            }
+            catch (NullPointerException nullPointerException)
+            {
+               Log.d("nullpointer","Catch the NullPointerException in FragmentPagerAdapter.finishUpdate");
+            }
         }
 
         //questa callback viene richiamata SEMPRE anche in seguito alla rotazione.

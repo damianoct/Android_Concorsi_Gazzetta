@@ -2,9 +2,11 @@ package com.distesala.android_concorsi_gazzetta.ui.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -28,7 +30,6 @@ import com.distesala.android_concorsi_gazzetta.database.ConcorsiGazzetteSQLiteHe
 import com.distesala.android_concorsi_gazzetta.networking.Connectivity;
 import com.distesala.android_concorsi_gazzetta.services.JSONDownloader;
 import com.distesala.android_concorsi_gazzetta.services.JSONResultReceiver;
-import com.distesala.android_concorsi_gazzetta.ui.GazzettaSwipeRefreshLayout;
 import com.distesala.android_concorsi_gazzetta.ui.HomeActivity;
 import com.distesala.android_concorsi_gazzetta.utils.Helper;
 import com.pnikosis.materialishprogress.ProgressWheel;
@@ -38,8 +39,7 @@ import com.pnikosis.materialishprogress.ProgressWheel;
  */
 
 public class GazzetteListFragment extends BaseFragment implements JSONResultReceiver.Receiver,
-                                                                    LoaderManager.LoaderCallbacks<Cursor>,
-                                                                    GazzettaSwipeRefreshLayout.OnChildScrollUpCallback
+                                                                    LoaderManager.LoaderCallbacks<Cursor>
 {
     private JSONResultReceiver mReceiver;
     private ListView gazzetteList;
@@ -58,7 +58,7 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
     @Override
     public String getFragmentTitle()
     {
-        return "Concorsi Gazzetta";
+        return "Gazzette";
     }
 
     @Override
@@ -121,7 +121,6 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
 
     private void updateGazzette()
     {
-        Log.d("update", "update gazzette");
         Intent mServiceIntent = new Intent(getActivity(), JSONDownloader.class);
         mServiceIntent.setAction(JSONDownloader.DOWNLOAD_GAZZETTA);
         mServiceIntent.putExtra("receiverTag", mReceiver);
@@ -141,6 +140,8 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
         emptySwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout_emptyView);
 
         ((TextView) rootView.findViewById(R.id.emptyTextView)).setText(R.string.home_empty_contest_list);
+
+
 
         /*progressWheel = (ProgressWheel) rootView.findViewById(R.id.progress_wheel);
         Animation animFadeOut = AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out);
@@ -198,19 +199,6 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
         });
 
 
-
-        /*//TODO sistemare questa merda!
-        mSwipeRefreshLayout.setOnChildScrollUpCallback(new GazzettaSwipeRefreshLayout.OnChildScrollUpCallback()
-        {
-            @Override
-            public boolean canChildScrollUp()
-            {
-                Log.d("scroll", "canChildScrollUp called!");
-                //return gazzetteList.getFirstVisiblePosition() != 0;
-                return false;
-            }
-        });*/
-
         return rootView;
     }
 
@@ -221,7 +209,24 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
         fragmentListener.onHomeTransaction();
         gazzetteList.setAdapter(adapter);
         startProgressWheel();
-        if(emptySwipeRefreshLayout.getVisibility() == View.VISIBLE)
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+        Log.d("updateg", "Refreshing -> " + emptySwipeRefreshLayout.isRefreshing());
+
+        if(settings.getBoolean(getString(R.string.first_launch), true))
+        {
+            emptySwipeRefreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    emptySwipeRefreshLayout.setRefreshing(true);
+                }
+            });
+            settings.edit().putBoolean(getString(R.string.first_launch), false).apply();
+            updateGazzette();
+            Log.d("updateg", "Lista vuota first launch -> UPDATE GAZZETTE");
+
+        }
+        else if(savedInstanceState != null && savedInstanceState.getBoolean("isRefreshing"))
         {
             emptySwipeRefreshLayout.post(new Runnable() {
                 @Override
@@ -230,7 +235,17 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
                 }
             });
         }
-        updateGazzette();
+        //se ho svuotato il database allora non aggiorno
+        else if(settings.getBoolean(getString(R.string.key_clear_db), false))
+        {
+            Log.d("updateg", "lista vuota non aggiorno");
+
+        }
+        else
+        {
+            Log.d("updateg", "Lista piena -> UPDATE GAZZETTE");
+            updateGazzette();
+        }
     }
 
     @Override
@@ -239,6 +254,7 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
         if (resultCode == Activity.RESULT_OK)
         {
             getLoaderManager().initLoader(0, null, this);
+            PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean(getString(R.string.key_clear_db), false).apply();
         }
         else if (resultCode == Activity.RESULT_CANCELED)
         {
@@ -254,6 +270,14 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
         emptySwipeRefreshLayout.setRefreshing(false);
 
         stopProgressWheel();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState)
+    {
+        super.onSaveInstanceState(outState);
+        Log.d("updateg", "emptyIsRefreshing -> " + emptySwipeRefreshLayout.isRefreshing());
+        outState.putBoolean("isRefreshing", emptySwipeRefreshLayout.isRefreshing());
     }
 
     private void startProgressWheel()
@@ -307,11 +331,5 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
 
         //force restart for preference changed.
         getLoaderManager().restartLoader(0, args, this);
-    }
-
-    @Override
-    public boolean canChildScrollUp()
-    {
-        return gazzetteList.getFirstVisiblePosition() != 0;
     }
 }

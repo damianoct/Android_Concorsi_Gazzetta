@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.distesala.android_concorsi_gazzetta">
+    package="com.distesala.android_concorsi_gazzetta">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -13,37 +13,38 @@
         android:theme="@style/MyMaterialTheme">
         <service
             android:name=".services.JSONDownloader"
-            android:exported="false">
-        </service>
+            android:exported="false"/>
 
         <activity
             android:name=".ui.HomeActivity"
             android:windowSoftInputMode="adjustPan">
-
             <meta-data
                 android:name="android.app.searchable"
-                android:resource="@xml/searchable"/>
+                android:resource="@xml/searchable" />
 
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.SEARCH"/>
+                <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
         </activity>
 
         <provider
             android:name=".contentprovider.ConcorsiGazzettaContentProvider"
-            android:authorities="com.distesala.android_concorsi_gazzetta.contentprovider">
-        </provider>
+            android:authorities="com.distesala.android_concorsi_gazzetta.contentprovider"/>
 
-        <activity android:name=".ui.SettingsActivity"
-                  android:label="@string/settings_title"
-                  android:theme="@style/PreferenceTheme">
+        <activity
+            android:name=".ui.SettingsActivity"
+            android:label="@string/settings_title"
+            android:theme="@style/PreferenceTheme"/>
+
+        <activity
+            android:name=".ui.IntroActivity"
+            android:screenOrientation="portrait">
         </activity>
-
     </application>
 
 </manifest>

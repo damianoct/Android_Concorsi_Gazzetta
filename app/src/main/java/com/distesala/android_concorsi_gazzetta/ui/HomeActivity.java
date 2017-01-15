@@ -3,6 +3,7 @@ package com.distesala.android_concorsi_gazzetta.ui;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.preference.PreferenceManager;
@@ -160,6 +161,17 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener,
         appBarLayout = (AppBarLayout) findViewById(R.id.appbarlayout);
 
         initNavigationDrawer();
+
+
+        final String PREFS_NAME = "MyPrefsFile";
+
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+
+        if (settings.getBoolean(getString(R.string.first_launch), true))
+        {
+            startActivity(new Intent(this, IntroActivity.class));
+            //settings.edit().putBoolean(getString(R.string.first_launch), false).apply();
+        }
 
         /* restore state if needed */
 

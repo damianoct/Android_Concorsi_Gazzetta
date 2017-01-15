@@ -22,7 +22,6 @@
     <string name="banner_ad_unit_id">ca-app-pub-2687493560332770/1493294446</string>
 
 
-
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
     <string name="action_settings">Settings</string>
@@ -61,13 +60,22 @@
     <string name="filter_uni">Universit</string>
     <string name="condividiURL">Condividi il Link</string>
     <string name="subjectCondivisione">C\'è un concorso che potrebbe interessarti.</string>
-    <string name="filter_none"/>
+    <string name="filter_none" />
     <string name="pubblicazione">PUBBLICAZIONE</string>
     <string name="gazzetteListHint">Cerca per giorno, mese, anno</string>
     <string name="contestsListHint">Cerca per professione, località, azienda</string>
     <string name="empty_contest_list">Nessun concorso presente.</string>
     <string name="home_empty_contest_list">Scorri verso il basso per aggiornare la lista.</string>
     <string name="download_gazzette">Download gazzette in corso...</string>
+    <string name="first_launch">first_launch</string>
+    <string name="welcome_intro">Welcome!</string>
+    <string name="previous_text"><![CDATA[< Indietro]]></string>
+    <string name="intro_gazzette_title">Gazzette</string>
+    <string name="intro_gazzette_text">La sezione principale dell\'applicazione contiene tutte le ultime pubblicazioni delle Gazzette Ufficiali. Per ogni voce sono specificati il numero e la data di pubblicazione, il numero di annunci presenti e il numero di annunci che stanno scadendo in relazione alla soglia scelta nelle impostazioni.</string>
+    <string name="intro_concorsi_title">Concorsi</string>
+    <string name="intro_concorsi_text">I concorsi contenuti all\'interno di ogni gazzetta sono suddivisi per categoria. Ogni annuncio contiene l\'emettitore, il titolo e la data di scadenza. Inoltre puoi anche aggiungerlo ai preferiti!</string>
+    <string name="intro_end">Fine!</string>
+    <string name="intro_new_gazzette_text">Ogni gazzetta contiene il numero totale degli annunci presenti e il numero di quelli in scadenza in relazione alla soglia scelta nelle impostazioni.</string>
 
 
 </resources>

@@ -1,6 +1,7 @@
 package com.distesala.android_concorsi_gazzetta.ui;
 
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -44,5 +45,6 @@ public class SettingsActivity extends AppCompatActivity
     public void onClearDBButtonClick(View v)
     {
         getContentResolver().delete(ConcorsiGazzettaContentProvider.GAZZETTE_URI, null, null);
+        PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean(getString(R.string.key_clear_db), true).apply();
     }
 }

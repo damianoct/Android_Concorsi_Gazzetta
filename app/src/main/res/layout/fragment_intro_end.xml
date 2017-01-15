@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:id="@+id/intro_background">
+
+    <TextView
+        android:text="@string/intro_end"
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="28sp"
+        android:padding="32dp">
+    </TextView>
+
+    <ImageView
+        android:id="@+id/computer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:src="@drawable/check_green"/>
+
+    <Button
+        android:id="@+id/endIntroButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/computer"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="30dp"
+        android:layout_alignParentBottom="true"
+        android:text="INIZIA"
+        android:textColor="@color/colorPrimaryDark"
+        android:maxEms="18"
+        android:padding="20dp"
+        android:background="@android:color/transparent"
+        android:textSize="20sp"/>
+
+    <RelativeLayout
+        android:id="@+id/description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" >
+
+    </RelativeLayout>
+
+</RelativeLayout>

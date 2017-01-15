@@ -2,6 +2,11 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
                   xmlns:picker="http://schemas.android.com/apk/res-auto">
 
+    <Preference
+        android:key="@string/first_launch"
+        android:defaultValue="true"
+        />
+
     <PreferenceCategory
         android:title="@string/visualizzazione"
 
@@ -50,6 +55,7 @@
         <Preference android:layout="@layout/clear_db_pref_layout"
                     android:key="@string/key_clear_db"
                     android:title="@string/clear_db"
+                    android:defaultValue="true"
                     android:summary="Il database contiene attualmente 30 gazzette."/>
     </PreferenceCategory>
 
