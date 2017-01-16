@@ -21,7 +21,6 @@ public class IntroAdapter extends FragmentPagerAdapter
     @Override
     public Fragment getItem(int position)
     {
-        //return IntroFragment.newInstance(position == 0 || position == 3 ? Color.parseColor("#3089BD") : Color.parseColor("#F7E5D4"), position);
         switch (position)
         {
             case 0:
@@ -36,7 +35,7 @@ public class IntroAdapter extends FragmentPagerAdapter
     @Override
     public int getCount()
     {
-        return 4;
+        return 5;
     }
 
 }

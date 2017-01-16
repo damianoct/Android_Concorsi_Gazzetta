@@ -57,6 +57,9 @@ public class IntroFragment extends Fragment {
             case 2:
                 layoutResId = R.layout.fragment_intro_concorsi;
                 break;
+            case 3:
+                layoutResId = R.layout.fragment_intro_search;
+                break;
             default:
                 layoutResId = R.layout.fragment_intro_end;
                 break;
@@ -78,23 +81,7 @@ public class IntroFragment extends Fragment {
                     }
                 });
                 break;
-            case 1:
-                //view.findViewById(R.id.concept).setBackgroundColor(Color.TRANSPARENT);
-                String text;
-                text = "<html><body><p align=\"justify\" style=\"line-height:1.5\">";
-                text+= getString(R.string.intro_gazzette_text);
-                text+= "</p></body></html>";
-                //((WebView) view.findViewById(R.id.concept)).loadData(text, "text/html", "utf-8");
-                break;
-            case 2:
-                //view.findViewById(R.id.concept).setBackgroundColor(Color.TRANSPARENT);
-                text = "<html><body><p align=\"justify\" style=\"line-height:1.5\">";
-                text+= getString(R.string.intro_concorsi_text);
-                text+= "</p></body></html>";
-                //((WebView) view.findViewById(R.id.concept)).loadData(text, "text/html", "utf-8");
-                break;
-
-            case 3:
+            case 4:
                 view.findViewById(R.id.endIntroButton).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view)

@@ -119,7 +119,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener,
                 inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
             }
         };
-        drawerLayout.setDrawerListener(actionBarDrawerToggle);
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
 
 
         actionBarDrawerToggle.setToolbarNavigationClickListener(new View.OnClickListener() {
@@ -161,9 +161,6 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener,
         appBarLayout = (AppBarLayout) findViewById(R.id.appbarlayout);
 
         initNavigationDrawer();
-
-
-        final String PREFS_NAME = "MyPrefsFile";
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 

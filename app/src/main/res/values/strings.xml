@@ -71,11 +71,12 @@
     <string name="welcome_intro">Welcome!</string>
     <string name="previous_text"><![CDATA[< Indietro]]></string>
     <string name="intro_gazzette_title">Gazzette</string>
-    <string name="intro_gazzette_text">La sezione principale dell\'applicazione contiene tutte le ultime pubblicazioni delle Gazzette Ufficiali. Per ogni voce sono specificati il numero e la data di pubblicazione, il numero di annunci presenti e il numero di annunci che stanno scadendo in relazione alla soglia scelta nelle impostazioni.</string>
     <string name="intro_concorsi_title">Concorsi</string>
     <string name="intro_concorsi_text">I concorsi contenuti all\'interno di ogni gazzetta sono suddivisi per categoria. Ogni annuncio contiene l\'emettitore, il titolo e la data di scadenza. Inoltre puoi anche aggiungerlo ai preferiti!</string>
     <string name="intro_end">Fine!</string>
-    <string name="intro_new_gazzette_text">Ogni gazzetta contiene il numero totale degli annunci presenti e il numero di quelli in scadenza in relazione alla soglia scelta nelle impostazioni.</string>
+    <string name="intro_gazzette_text">Ogni gazzetta contiene il numero totale degli annunci presenti e il numero di quelli in scadenza in relazione alla soglia scelta nelle impostazioni.</string>
+    <string name="intro_search_title">Ricerca Intelligente</string>
+    <string name="intro_search_text">In Concorsi Gazzata la ricerca è intelligente. Qualsiasi ricerca si ripercuote automaticamente in tutte le categorie e qualsiasi filtro attivo influirà su di essa. </string>
 
 
 </resources>
