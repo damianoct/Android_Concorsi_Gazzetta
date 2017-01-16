@@ -224,7 +224,7 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
                     emptySwipeRefreshLayout.setRefreshing(true);
                 }
             });
-            //settings.edit().putBoolean(getString(R.string.first_launch), false).apply();
+            settings.edit().putBoolean(getString(R.string.first_launch), false).apply();
             updateGazzette();
             Log.d("updateg", "Lista vuota first launch -> UPDATE GAZZETTE");
 
