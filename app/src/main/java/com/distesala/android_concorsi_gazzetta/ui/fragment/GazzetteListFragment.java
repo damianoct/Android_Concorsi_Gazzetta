@@ -95,8 +95,11 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
         getLoaderManager().restartLoader(0, null, this);
     }
 
-    public GazzetteListFragment()
+    public static GazzetteListFragment newInstance(Bundle bundle)
     {
+        GazzetteListFragment f = new GazzetteListFragment();
+        f.setArguments(bundle);
+        return f;
     }
 
     @Override
@@ -254,7 +257,7 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
         if (resultCode == Activity.RESULT_OK)
         {
             getLoaderManager().initLoader(0, null, this);
-            PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean(getString(R.string.key_clear_db), false).apply();
+            //PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean(getString(R.string.key_clear_db), false).apply();
         }
         else if (resultCode == Activity.RESULT_CANCELED)
         {
@@ -314,6 +317,7 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
     {
         Cursor c = adapter.swapCursor(data);
         if(c != null) c.close();
+        if(data.getCount() > 0) PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean(getString(R.string.key_clear_db), false).apply();
     }
 
     @Override

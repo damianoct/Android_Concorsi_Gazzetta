@@ -89,9 +89,9 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener,
         switch (tag)
         {
             case R.id.gazzette:
-                return new GazzetteListFragment();
+                return GazzetteListFragment.newInstance(new Bundle());
             case R.id.concorsi:
-                return new ContestListFragment();
+                return ContestListFragment.newInstance(new Bundle());
             default:
                 return null;
         }
@@ -182,7 +182,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener,
         }
         else //default fragment, prima transazione con HOME FRAGMENT
         {
-            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, new GazzetteListFragment()
+            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, GazzetteListFragment.newInstance(new Bundle())
                     , HOME_FRAGMENT).commit();
         }
     }

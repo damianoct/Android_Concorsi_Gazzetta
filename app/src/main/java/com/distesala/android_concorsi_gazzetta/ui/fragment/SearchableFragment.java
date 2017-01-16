@@ -3,7 +3,6 @@ package com.distesala.android_concorsi_gazzetta.ui.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 
 /**
  * Created by damiano on 11/09/16.

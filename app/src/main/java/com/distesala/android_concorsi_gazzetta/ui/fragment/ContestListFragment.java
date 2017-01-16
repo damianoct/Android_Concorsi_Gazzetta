@@ -80,6 +80,13 @@ public class ContestListFragment extends HostSearchablesFragment
         return f;
     }
 
+    public static ContestListFragment newInstance(Bundle bundle)
+    {
+        ContestListFragment fragment = new ContestListFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
     private Bundle getQueryBundleForPosition(int position)
     {
         Bundle args = new Bundle(2);

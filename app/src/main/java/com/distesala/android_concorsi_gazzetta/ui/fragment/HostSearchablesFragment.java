@@ -57,8 +57,11 @@ public abstract class HostSearchablesFragment extends BaseFragment
 
     private void notifyChildrenForSearch()
     {
+        getChildFragmentManager().executePendingTransactions();
+        Log.d("notifyChild", "notify for [" + querySearch + "]");
+
         for(SearchableFragment sf: searchables)
-            if(sf.isAdded())
+            if (sf.isAdded())
                 sf.performSearch(querySearch);
     }
 
@@ -81,15 +84,12 @@ public abstract class HostSearchablesFragment extends BaseFragment
         searchables = new LinkedList<>();
     }
 
-    //TODO dopo che si ritorna indietro da un CONTENT fragment avviato dalla ricerca
-    //la ricerca si spegne
-
     @Override
     public void onResume()
     {
         super.onResume();
-        if(isSearchActive())
-            notifyChildrenForSearch();
+        /*if(isSearchActive())
+            notifyChildrenForSearch();*/
     }
 
     @Nullable
@@ -159,6 +159,8 @@ public abstract class HostSearchablesFragment extends BaseFragment
     private void addSearchable(SearchableFragment sf)
     {
         searchables.add(sf);
+        if(isSearchActive())
+            notifyChildrenForSearch();
     }
 
     private void removeSearchable(Object o)

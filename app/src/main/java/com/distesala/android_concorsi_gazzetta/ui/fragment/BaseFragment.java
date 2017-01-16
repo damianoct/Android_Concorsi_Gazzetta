@@ -1,6 +1,7 @@
 package com.distesala.android_concorsi_gazzetta.ui.fragment;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -31,7 +32,6 @@ public abstract class BaseFragment extends Fragment implements MenuItemCompat.On
     protected FragmentListener fragmentListener;
 
     protected String querySearch = null;
-    private String tmpSearch = null;
 
     private boolean isFromSegue = false;
 
@@ -49,6 +49,12 @@ public abstract class BaseFragment extends Fragment implements MenuItemCompat.On
     protected String getSearchHint()
     {
         return "Cerca";
+    }
+
+    private void saveQuerySearch(String querySearch)
+    {
+        if(getArguments() != null)
+            getArguments().putString(SEARCH_KEY, querySearch);
     }
 
     private void initSearchViewForMenu(Menu menu)
@@ -77,31 +83,32 @@ public abstract class BaseFragment extends Fragment implements MenuItemCompat.On
     public BaseFragment() { }
 
     @Override
-    public void onAttach(Activity activity)
+    public void onAttach(Context context)
     {
-        super.onAttach(activity);
+        super.onAttach(context);
 
-        if (activity instanceof FragmentListener)
+        if (getActivity() instanceof FragmentListener)
         {
-            fragmentListener = (FragmentListener) activity;
+            fragmentListener = (FragmentListener) getActivity();
         }
         else
         {
-            throw new RuntimeException(activity.toString()
+            throw new RuntimeException(getActivity().toString()
                     + " must implement FragmentListener");
         }
     }
 
-    @Override
+    /*@Override
     public void onSaveInstanceState(Bundle outState)
     {
         if (querySearch != null)
         {
             outState.putString(SEARCH_KEY, querySearch);
+            saveQuerySearch(querySearch);
         }
 
         super.onSaveInstanceState(outState);
-    }
+    }*/
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState)
@@ -110,16 +117,19 @@ public abstract class BaseFragment extends Fragment implements MenuItemCompat.On
         setHasOptionsMenu(true);
         Bundle bundle = this.getArguments();
         isFromSegue = bundle != null && bundle.getBoolean(IS_FROM_SEGUE);
-
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
+        //restore state
+        if (getArguments() != null)
+            querySearch = getArguments().getString(SEARCH_KEY, null);
 
-        if(savedInstanceState != null) //restore state
+        else if(savedInstanceState != null) //restore after rotation
             querySearch = savedInstanceState.getString(SEARCH_KEY);
+
         else
             querySearch = null;
 
@@ -149,6 +159,15 @@ public abstract class BaseFragment extends Fragment implements MenuItemCompat.On
             fragmentListener.onSegueTransaction();
     }
 
+
+    @Override
+    public void onDestroyView()
+    {
+        super.onDestroyView();
+        if(isSearchActive())
+            saveQuerySearch(querySearch);
+    }
+
     @Override
     public boolean onMenuItemActionExpand(MenuItem item)
     {
@@ -159,6 +178,7 @@ public abstract class BaseFragment extends Fragment implements MenuItemCompat.On
     public boolean onMenuItemActionCollapse(MenuItem item)
     {
         querySearch = null;
+        saveQuerySearch(null);
         onSearchFinished();
         return true;
     }
