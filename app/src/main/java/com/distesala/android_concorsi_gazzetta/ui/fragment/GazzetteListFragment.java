@@ -214,8 +214,6 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
         startProgressWheel();
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-        Log.d("updateg", "Refreshing -> " + emptySwipeRefreshLayout.isRefreshing());
-
         if(settings.getBoolean(getString(R.string.first_launch), true))
         {
             emptySwipeRefreshLayout.post(new Runnable() {
@@ -239,7 +237,7 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
             });
         }
         //se ho svuotato il database allora non aggiorno
-        else if(settings.getBoolean(getString(R.string.key_clear_db), false))
+        else if(settings.getBoolean(getString(R.string.key_clear_db), true))
         {
             Log.d("updateg", "lista vuota non aggiorno");
 
@@ -279,7 +277,6 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
     public void onSaveInstanceState(Bundle outState)
     {
         super.onSaveInstanceState(outState);
-        Log.d("updateg", "emptyIsRefreshing -> " + emptySwipeRefreshLayout.isRefreshing());
         outState.putBoolean("isRefreshing", emptySwipeRefreshLayout.isRefreshing());
     }
 
