@@ -158,13 +158,16 @@ public class JSONDownloader extends IntentService
                     }
                     else
                     {
-                        rec.send(Connectivity.CONNECTION_LOCKED, null);
+                        Bundle b = new Bundle(1);
+                        b.putString("connection_locked", "");
+                        rec.send(Connectivity.CONNECTION_LOCKED, b);
                     }
 
                 }
                 catch (Exception e)
                 {
                     e.printStackTrace();
+                    rec.send(Activity.RESULT_CANCELED, null);
                 }
             }
         }

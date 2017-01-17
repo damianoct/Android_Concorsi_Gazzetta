@@ -20,8 +20,6 @@ import com.distesala.android_concorsi_gazzetta.networking.Connectivity;
 import com.distesala.android_concorsi_gazzetta.services.JSONDownloader;
 import com.distesala.android_concorsi_gazzetta.services.JSONResultReceiver;
 import com.distesala.android_concorsi_gazzetta.utils.Helper;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +46,7 @@ public class TextContestFragment extends HostSearchablesFragment implements JSON
     private String mURL;
     private List<String> articles;
     private int nArticoli;
+    private boolean connectionFailed = false;
 
     public static TextContestFragment newInstance(Bundle bundle)
     {
@@ -69,7 +68,12 @@ public class TextContestFragment extends HostSearchablesFragment implements JSON
     @Override
     protected SearchableFragment getChild(int position)
     {
-        return ContentFragment.newInstance((articles != null && !articles.isEmpty()) ? articles.get(position) : "", emettitore);
+        if(articles != null && !articles.isEmpty() && !connectionFailed)
+            return ContentFragment.newInstance(articles.get(position), emettitore);
+        else if (connectionFailed)
+            return ContentFragment.newInstance("FAILED", emettitore);
+        else
+            return ContentFragment.newInstance("", emettitore);
     }
 
     @Override
@@ -93,20 +97,25 @@ public class TextContestFragment extends HostSearchablesFragment implements JSON
     {
         if (resultCode == Activity.RESULT_OK)
         {
+            connectionFailed = false;
             articles = resultData.getStringArrayList("articles");
             mURL = resultData.getString("url");
 
             //refresh adapter
-            viewPager.getAdapter().notifyDataSetChanged();
+            //viewPager.getAdapter().notifyDataSetChanged();
 
         } else if (resultCode == Activity.RESULT_CANCELED)
         {
             Toast.makeText(getActivity(), "ERROR", Toast.LENGTH_LONG).show();
+            connectionFailed = true;
         }
         else if (resultCode == Connectivity.CONNECTION_LOCKED)
         {
+            connectionFailed = true;
             Helper.showConnectionAlert(getActivity());
         }
+
+        viewPager.getAdapter().notifyDataSetChanged();
     }
 
     @Override
@@ -132,22 +141,48 @@ public class TextContestFragment extends HostSearchablesFragment implements JSON
         contestID = getArguments().getString(CONTEST_ID);
         emettitore = getArguments().getString(EMETTITORE);
 
+        /*if(savedInstanceState == null)
+        {
+            startContestDownload();
+        }
+        else
+        {
+            articles = savedInstanceState.getStringArrayList("articles");
+        }*/
+    }
+
+    public void startContestDownload()
+    {
+        connectionFailed = false; //restart connection check
+        mReceiver = new JSONResultReceiver(new Handler());
+        mReceiver.setReceiver(this);
+        Intent mServiceIntent = new Intent(getActivity(), JSONDownloader.class);
+        mServiceIntent.putExtra(Gazzetta.DATE_OF_PUBLICATION, dateOfPublication);
+        mServiceIntent.putExtra(Concorso.CONTEST_ID, contestID);
+        mServiceIntent.setAction(JSONDownloader.DOWNLOAD_CONTEST);
+        mServiceIntent.putExtra("receiverTag", mReceiver);
+
+        getActivity().startService(mServiceIntent);
+
+        viewPager.getAdapter().notifyDataSetChanged();
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
+    {
+        View v = super.onCreateView(inflater, container, savedInstanceState);
+
         if(savedInstanceState == null)
         {
-            mReceiver = new JSONResultReceiver(new Handler());
-            mReceiver.setReceiver(this);
-            Intent mServiceIntent = new Intent(getActivity(), JSONDownloader.class);
-            mServiceIntent.putExtra(Gazzetta.DATE_OF_PUBLICATION, dateOfPublication);
-            mServiceIntent.putExtra(Concorso.CONTEST_ID, contestID);
-            mServiceIntent.setAction(JSONDownloader.DOWNLOAD_CONTEST);
-            mServiceIntent.putExtra("receiverTag", mReceiver);
-
-            getActivity().startService(mServiceIntent);
+            startContestDownload();
         }
         else
         {
             articles = savedInstanceState.getStringArrayList("articles");
         }
+
+        return v;
     }
 
     @Override

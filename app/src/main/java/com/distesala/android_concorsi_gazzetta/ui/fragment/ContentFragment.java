@@ -3,11 +3,13 @@ package com.distesala.android_concorsi_gazzetta.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.distesala.android_concorsi_gazzetta.R;
@@ -19,8 +21,6 @@ public class ContentFragment extends SearchableFragment
     protected static final String EMETTITORE = "emettitore";
     private String content;
     private String emettitore;
-    private TextView contentTextView;
-    private TextView emettitoreTextView;
     private ProgressWheel progressWheel;
 
     public static ContentFragment newInstance(String content, String emettitore)
@@ -47,23 +47,37 @@ public class ContentFragment extends SearchableFragment
                              Bundle savedInstanceState)
     {
         View rootView = inflater.inflate(R.layout.fragment_cardview, container, false);
-        progressWheel = (ProgressWheel) rootView.findViewById(R.id.progress_wheel);
+        ProgressWheel progressWheel = (ProgressWheel) rootView.findViewById(R.id.progress_wheel);
         Animation animFadeOut = AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out);
         progressWheel.setAnimation(animFadeOut);
 
-        contentTextView = (TextView) rootView.findViewById(R.id.content);
-        emettitoreTextView = (TextView) rootView.findViewById(R.id.emettitore);
+        TextView contentTextView = (TextView) rootView.findViewById(R.id.content);
+        TextView emettitoreTextView = (TextView) rootView.findViewById(R.id.emettitore);
 
-        progressWheel.spin();
-        progressWheel.setVisibility(View.VISIBLE);
+        startProgressWheel(progressWheel);
 
         if(!content.isEmpty())
         {
-            progressWheel.setVisibility(View.GONE);
-            progressWheel.clearAnimation();
-            progressWheel.stopSpinning();
-            contentTextView.setText(content.replaceAll("\\s+", " "));
-            emettitoreTextView.setText(emettitore);
+            if(content.contains("FAILED"))
+            {
+                stopProgressWheel(progressWheel);
+                Button reloadButton = (Button) rootView.findViewById(R.id.reloadButton);
+                reloadButton.setVisibility(View.VISIBLE);
+                reloadButton.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        ((TextContestFragment) getParentFragment()).startContestDownload();
+                    }
+                });
+            }
+            else
+            {
+                stopProgressWheel(progressWheel);
+                contentTextView.setText(content.replaceAll("\\s+", " "));
+                emettitoreTextView.setText(emettitore);
+            }
         }
 
         return rootView;
@@ -73,6 +87,36 @@ public class ContentFragment extends SearchableFragment
     protected void performSearch(String querySearch)
     {
         //da implementare nelle future iterazioni per cercare all'interno del content.
+    }
+
+    private void startProgressWheel(final ProgressWheel progressWheel)
+    {
+        Log.d("pulsante", "START Progress Wheel");
+        progressWheel.post(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                progressWheel.spin();
+                progressWheel.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    private void stopProgressWheel(final ProgressWheel progressWheel)
+    {
+        Log.d("pulsante", "STOP Progress Wheel");
+
+        progressWheel.post(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                progressWheel.setVisibility(View.GONE);
+                progressWheel.clearAnimation();
+                progressWheel.stopSpinning();
+            }
+        });
     }
 
 }
