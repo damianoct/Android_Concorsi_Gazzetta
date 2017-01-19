@@ -171,6 +171,7 @@ public abstract class BaseFragment extends Fragment implements MenuItemCompat.On
     @Override
     public boolean onMenuItemActionExpand(MenuItem item)
     {
+        querySearch = "";
         return true;
     }
 
