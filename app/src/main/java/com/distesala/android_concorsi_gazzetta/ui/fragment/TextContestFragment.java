@@ -120,6 +120,7 @@ public class TextContestFragment extends HostSearchablesFragment implements JSON
     public void onSaveInstanceState(Bundle outState)
     {
         super.onSaveInstanceState(outState);
+        outState.putBoolean("connectionFailed", connectionFailed);
         if(articles != null && !articles.isEmpty())
             outState.putStringArrayList("articles", new ArrayList<>(articles));
     }
@@ -160,15 +161,28 @@ public class TextContestFragment extends HostSearchablesFragment implements JSON
     {
         View v = super.onCreateView(inflater, container, savedInstanceState);
 
-        if(savedInstanceState != null && savedInstanceState.getStringArrayList("articles") != null)
+        if(savedInstanceState != null)
+        {
+            connectionFailed = savedInstanceState.getBoolean("connectionFailed", false);
+            if(savedInstanceState.getStringArrayList("articles") != null)
+                articles = savedInstanceState.getStringArrayList("articles");
+            else if(!connectionFailed)
+                startContestDownload();
+        }
+        else
+            startContestDownload();
+
+        /*if(savedInstanceState != null && savedInstanceState.getStringArrayList("articles") != null)
         {
             articles = savedInstanceState.getStringArrayList("articles");
         }
         else
         {
-            Log.d("onCreateView", "startContestDownload");
-            startContestDownload();
-        }
+            //devo aggiornare la variabile connectionFailed.
+            if((savedInstanceState != null && !savedInstanceState.getBoolean("connectionFailed"))
+                    || savedInstanceState == null)
+                startContestDownload();
+        }*/
 
         return v;
     }

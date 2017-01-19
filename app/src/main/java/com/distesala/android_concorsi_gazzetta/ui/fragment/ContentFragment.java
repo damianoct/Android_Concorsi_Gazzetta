@@ -87,7 +87,6 @@ public class ContentFragment extends SearchableFragment
     public void onSaveInstanceState(Bundle outState)
     {
         super.onSaveInstanceState(outState);
-        outState.putBoolean("refreshing", content.isEmpty());
     }
 
     @Override

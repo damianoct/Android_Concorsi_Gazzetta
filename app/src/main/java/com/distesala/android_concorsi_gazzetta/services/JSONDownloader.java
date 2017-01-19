@@ -45,6 +45,7 @@ public class JSONDownloader extends IntentService
     private static final String GAZZETTA_URL = "http://www.gazzettaufficiale.it/eli/id/";
     public static final String DOWNLOAD_GAZZETTA = "DownloadGazzetta";
     public static final String DOWNLOAD_CONTEST = "DownloadContest";
+    public static final String SILENT_MODE = "silentMode";
 
     public JSONDownloader()
     {
@@ -110,13 +111,17 @@ public class JSONDownloader extends IntentService
                         catch (Exception e)
                         {
                             e.printStackTrace();
-                            rec.send(Activity.RESULT_CANCELED, null);
+                            Bundle b = new Bundle(1);
+                            b.putBoolean(SILENT_MODE, intent.getBooleanExtra(SILENT_MODE, false));
+                            rec.send(Activity.RESULT_CANCELED, b);
                         }
                     }
                 }
                 else
                 {
-                    rec.send(Connectivity.CONNECTION_LOCKED, null);
+                    Bundle b = new Bundle(1);
+                    b.putBoolean(SILENT_MODE, intent.getBooleanExtra(SILENT_MODE, false));
+                    rec.send(Connectivity.CONNECTION_LOCKED, b);
                 }
 
                 rec.send(Activity.RESULT_OK, null);

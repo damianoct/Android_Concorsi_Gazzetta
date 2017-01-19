@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -33,10 +32,6 @@ import com.distesala.android_concorsi_gazzetta.services.JSONResultReceiver;
 import com.distesala.android_concorsi_gazzetta.ui.HomeActivity;
 import com.distesala.android_concorsi_gazzetta.utils.Helper;
 import com.pnikosis.materialishprogress.ProgressWheel;
-
-/**
- * Un grazie spassionato a https://github.com/pnikosis/materialish-progress per la progress wheel
- */
 
 public class GazzetteListFragment extends BaseFragment implements JSONResultReceiver.Receiver,
                                                                     LoaderManager.LoaderCallbacks<Cursor>
@@ -122,11 +117,12 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
         return getActivity().getResources().getString(R.string.gazzetteListHint);
     }
 
-    private void updateGazzette()
+    private void updateGazzette(boolean silentMode)
     {
         Intent mServiceIntent = new Intent(getActivity(), JSONDownloader.class);
         mServiceIntent.setAction(JSONDownloader.DOWNLOAD_GAZZETTA);
         mServiceIntent.putExtra("receiverTag", mReceiver);
+        mServiceIntent.putExtra(JSONDownloader.SILENT_MODE, silentMode);
         getActivity().startService(mServiceIntent);
     }
 
@@ -187,7 +183,7 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
             @Override
             public void onRefresh()
             {
-                updateGazzette();
+                updateGazzette(false);
             }
         });
 
@@ -197,7 +193,7 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
             @Override
             public void onRefresh()
             {
-                updateGazzette();
+                updateGazzette(false);
             }
         });
 
@@ -211,7 +207,6 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
         appBarLayout.setElevation(10);
         fragmentListener.onHomeTransaction();
         gazzetteList.setAdapter(adapter);
-        startProgressWheel();
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         if(settings.getBoolean(getString(R.string.first_launch), true))
@@ -223,7 +218,7 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
                 }
             });
             settings.edit().putBoolean(getString(R.string.first_launch), false).apply();
-            updateGazzette();
+            updateGazzette(false);
             Log.d("updateg", "Lista vuota first launch -> UPDATE GAZZETTE");
 
         }
@@ -245,7 +240,7 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
         else
         {
             Log.d("updateg", "Lista piena -> UPDATE GAZZETTE");
-            updateGazzette();
+            updateGazzette(true);
         }
     }
 
@@ -264,13 +259,28 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
         }
         else if (resultCode == Connectivity.CONNECTION_LOCKED)
         {
-            Helper.showConnectionAlert(getActivity());
+            if(!resultData.getBoolean(JSONDownloader.SILENT_MODE, false))
+                Helper.showConnectionAlert(getActivity());
         }
 
-        mSwipeRefreshLayout.setRefreshing(false);
-        emptySwipeRefreshLayout.setRefreshing(false);
+        mSwipeRefreshLayout.post(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        });
 
-        stopProgressWheel();
+        emptySwipeRefreshLayout.post(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                emptySwipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
     }
 
     @Override
@@ -278,19 +288,6 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
     {
         super.onSaveInstanceState(outState);
         outState.putBoolean("isRefreshing", emptySwipeRefreshLayout.isRefreshing());
-    }
-
-    private void startProgressWheel()
-    {
-        //progressWheel.spin();
-        //progressWheel.setVisibility(View.VISIBLE);
-    }
-
-    private void stopProgressWheel()
-    {
-        //progressWheel.setVisibility(View.GONE);
-        //progressWheel.clearAnimation();
-        //progressWheel.stopSpinning();
     }
 
     @Override

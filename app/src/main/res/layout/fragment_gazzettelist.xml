@@ -33,45 +33,9 @@
 
             <include layout="@layout/empty_contest_list" />
 
-            <!--<TextView
-                android:id="@+id/emptyView"
-                android:text="EMPTY"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_gravity="center"
-                android:gravity="center" />-->
-
         </ScrollView>
 
     </android.support.v4.widget.SwipeRefreshLayout>
-
-    <!--<com.distesala.android_concorsi_gazzetta.ui.GazzettaSwipeRefreshLayout
-        android:id="@+id/swiperefresh"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <ListView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/gazzette_list"
-                android:clickable="true"
-                />
-
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <include layout="@layout/empty_contest_list" />
-
-            </ScrollView>
-
-        </FrameLayout>
-
-    </com.distesala.android_concorsi_gazzetta.ui.GazzettaSwipeRefreshLayout> -->
 
     <include layout="@layout/progress_wheel" />
 
