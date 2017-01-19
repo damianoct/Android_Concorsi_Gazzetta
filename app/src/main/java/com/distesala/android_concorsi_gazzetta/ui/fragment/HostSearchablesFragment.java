@@ -233,7 +233,7 @@ public abstract class HostSearchablesFragment extends BaseFragment
             }
             catch (NullPointerException nullPointerException)
             {
-               Log.d("nullpointer","Catch the NullPointerException in FragmentPagerAdapter.finishUpdate");
+                Log.d("nullpointer","Catch the NullPointerException in FragmentPagerAdapter.finishUpdate");
             }
         }
 

@@ -8,10 +8,10 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.distesala.android_concorsi_gazzetta.R;
 import com.distesala.android_concorsi_gazzetta.model.Concorso;
@@ -101,12 +101,9 @@ public class TextContestFragment extends HostSearchablesFragment implements JSON
             articles = resultData.getStringArrayList("articles");
             mURL = resultData.getString("url");
 
-            //refresh adapter
-            //viewPager.getAdapter().notifyDataSetChanged();
-
-        } else if (resultCode == Activity.RESULT_CANCELED)
+        }
+        else if (resultCode == Activity.RESULT_CANCELED)
         {
-            Toast.makeText(getActivity(), "ERROR", Toast.LENGTH_LONG).show();
             connectionFailed = true;
         }
         else if (resultCode == Connectivity.CONNECTION_LOCKED)
@@ -115,6 +112,7 @@ public class TextContestFragment extends HostSearchablesFragment implements JSON
             Helper.showConnectionAlert(getActivity());
         }
 
+        //refresh adapter
         viewPager.getAdapter().notifyDataSetChanged();
     }
 
@@ -123,9 +121,7 @@ public class TextContestFragment extends HostSearchablesFragment implements JSON
     {
         super.onSaveInstanceState(outState);
         if(articles != null && !articles.isEmpty())
-        {
             outState.putStringArrayList("articles", new ArrayList<>(articles));
-        }
     }
 
     @Override
@@ -140,15 +136,6 @@ public class TextContestFragment extends HostSearchablesFragment implements JSON
         numberOfPublication = getArguments().getString(GAZZETTA_NUM_OF_PUB);
         contestID = getArguments().getString(CONTEST_ID);
         emettitore = getArguments().getString(EMETTITORE);
-
-        /*if(savedInstanceState == null)
-        {
-            startContestDownload();
-        }
-        else
-        {
-            articles = savedInstanceState.getStringArrayList("articles");
-        }*/
     }
 
     public void startContestDownload()
@@ -173,13 +160,14 @@ public class TextContestFragment extends HostSearchablesFragment implements JSON
     {
         View v = super.onCreateView(inflater, container, savedInstanceState);
 
-        if(savedInstanceState == null)
+        if(savedInstanceState != null && savedInstanceState.getStringArrayList("articles") != null)
         {
-            startContestDownload();
+            articles = savedInstanceState.getStringArrayList("articles");
         }
         else
         {
-            articles = savedInstanceState.getStringArrayList("articles");
+            Log.d("onCreateView", "startContestDownload");
+            startContestDownload();
         }
 
         return v;

@@ -21,7 +21,6 @@ public class ContentFragment extends SearchableFragment
     protected static final String EMETTITORE = "emettitore";
     private String content;
     private String emettitore;
-    private ProgressWheel progressWheel;
 
     public static ContentFragment newInstance(String content, String emettitore)
     {
@@ -56,31 +55,39 @@ public class ContentFragment extends SearchableFragment
 
         startProgressWheel(progressWheel);
 
-        if(!content.isEmpty())
-        {
-            if(content.contains("FAILED"))
+            if (!content.isEmpty())
             {
-                stopProgressWheel(progressWheel);
-                Button reloadButton = (Button) rootView.findViewById(R.id.reloadButton);
-                reloadButton.setVisibility(View.VISIBLE);
-                reloadButton.setOnClickListener(new View.OnClickListener()
+                if (content.contains("FAILED"))
                 {
-                    @Override
-                    public void onClick(View view)
+                    stopProgressWheel(progressWheel);
+                    Button reloadButton = (Button) rootView.findViewById(R.id.reloadButton);
+                    reloadButton.setVisibility(View.VISIBLE);
+                    reloadButton.setOnClickListener(new View.OnClickListener()
                     {
-                        ((TextContestFragment) getParentFragment()).startContestDownload();
-                    }
-                });
+                        @Override
+                        public void onClick(View view)
+                        {
+                            ((TextContestFragment) getParentFragment()).startContestDownload();
+                        }
+                    });
+                }
+                else
+                {
+                    stopProgressWheel(progressWheel);
+                    contentTextView.setText(content.replaceAll("\\s+", " "));
+                    emettitoreTextView.setText(emettitore);
+                }
             }
-            else
-            {
-                stopProgressWheel(progressWheel);
-                contentTextView.setText(content.replaceAll("\\s+", " "));
-                emettitoreTextView.setText(emettitore);
-            }
-        }
+
 
         return rootView;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState)
+    {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("refreshing", content.isEmpty());
     }
 
     @Override
