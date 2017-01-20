@@ -82,8 +82,9 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener,
         if (fragmentToAdd == null)
             fragmentToAdd = createFragmentForTag(tag);
 
-        if(fragmentToAdd instanceof BaseFragment)
+        /*if(fragmentToAdd instanceof BaseFragment)
             ((BaseFragment) fragmentToAdd).onDrawerTransaction();
+            */
 
         transaction.addToBackStack(backStackTag).replace(R.id.content_frame, fragmentToAdd, String.valueOf(tag)).commit();
     }
@@ -300,9 +301,20 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener,
     @Override
     public boolean onNavigationItemSelected(MenuItem menuItem)
     {
-        //String fragName = getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName();
+        /*Fragment f = getSupportFragmentManager().findFragmentByTag(String.valueOf(R.id.gazzette));
 
-        Log.d("fragment", String.valueOf(getSupportFragmentManager().getBackStackEntryCount()));
+        if (f != null && f.isVisible() && f instanceof BaseFragment)
+            ((BaseFragment) f).onDrawerTransaction();
+
+        f = getSupportFragmentManager().findFragmentByTag(String.valueOf(R.id.concorsi));
+
+        if (f != null && f.isVisible() && f instanceof BaseFragment)
+            ((BaseFragment) f).onDrawerTransaction();*/
+
+
+        for(Fragment f: getSupportFragmentManager().getFragments())
+            if(f != null && f.isMenuVisible() && f instanceof BaseFragment)
+                ((BaseFragment) f).onDrawerTransaction();
 
         if(!menuItem.isChecked())
         {
