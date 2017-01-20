@@ -40,14 +40,12 @@ public class ContestFragment extends SearchableFragment implements LoaderManager
     {
         ContestFragment f = new ContestFragment();
         f.setArguments(queryBundle);
-        Log.d("instance", ">>>>>>>>>> contest fragment new instance");
         return f;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState)
     {
-        Log.d("LIFECYCLE", "onCreate");
         super.onCreate(savedInstanceState);
         cursorAdapter = new ContestCursorAdapter(getActivity(), null);
     }
@@ -107,15 +105,10 @@ public class ContestFragment extends SearchableFragment implements LoaderManager
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
     {
-        Log.d("LIFECYCLE", "onViewCreated");
         super.onViewCreated(view, savedInstanceState);
         contestsList.setAdapter(cursorAdapter);
         progressWheel.spin();
         progressWheel.setVisibility(View.VISIBLE);
-        if(searchBundle != null)
-            Log.d("bundleg", "ESISTE searchBundle");
-        else
-            Log.d("bundleg", "NO searchBundle");
         getLoaderManager().restartLoader(0, searchBundle != null ? concatenateBundles() : queryBundle, this);
     }
 
@@ -171,10 +164,6 @@ public class ContestFragment extends SearchableFragment implements LoaderManager
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args)
     {
-        Log.d("bundleg", args.getString(BaseFragment.WHERE_CLAUSE));
-        for(String s: args.getStringArray(BaseFragment.WHERE_ARGS))
-            Log.d("bundleg", s);
-
         return new CursorLoader(getActivity().getApplicationContext(), //context
                 ConcorsiGazzettaContentProvider.CONTESTS_URI, //uri
                 null, //ALL COLUMNS

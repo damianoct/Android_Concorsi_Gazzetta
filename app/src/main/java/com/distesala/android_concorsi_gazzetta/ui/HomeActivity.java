@@ -82,8 +82,6 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener,
         if (fragmentToAdd == null)
             fragmentToAdd = createFragmentForTag(tag);
 
-        //TODO quando clicco su impostazioni devo comunicarlo al fragment in cima allo stack.
-
         if(fragmentToAdd instanceof BaseFragment)
             ((BaseFragment) fragmentToAdd).onDrawerTransaction();
 
@@ -302,6 +300,10 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener,
     @Override
     public boolean onNavigationItemSelected(MenuItem menuItem)
     {
+        //String fragName = getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName();
+
+        Log.d("fragment", String.valueOf(getSupportFragmentManager().getBackStackEntryCount()));
+
         if(!menuItem.isChecked())
         {
             menuItem.setChecked(true);

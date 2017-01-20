@@ -144,8 +144,6 @@ public class ContestListFragment extends HostSearchablesFragment
     {
         super.onViewCreated(view, savedInstanceState);
         tabLayout.setTabMode(TabLayout.MODE_FIXED);
-        Log.d("suca", "onViewCreated");
-
     }
 
     @Override
@@ -176,27 +174,20 @@ public class ContestListFragment extends HostSearchablesFragment
     }
 
     @Override
-    public void onPause()
-    {
-        super.onPause();
-        Log.d("suca", "onPause");
-    }
-
-    @Override
     public void onResume()
     {
         super.onResume();
 
         String key = getString(R.string.key_scadenza_threshold);
         int newThreshold = PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt(key, 0);
-
-        //TODO quando dalle impostazioni torno indietro e mi trovo in concorsi allora il notify ricrea tutto
-        //se sono nelle gazzette e poi nei concorsi non funziona na minchia!
-        Log.d("bundleg", "onResume");
         if(threshold != newThreshold)
         {
-            Log.d("suca", "NUOVA SOGLIA!!!!!");
-            viewPager.getAdapter().notifyDataSetChanged();
+            viewPager.post(new Runnable() {
+                @Override
+                public void run() {
+                    viewPager.getAdapter().notifyDataSetChanged();
+                }
+            });
         }
 
     }
