@@ -1,6 +1,5 @@
 package com.distesala.android_concorsi_gazzetta.ui.fragment;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,7 +8,6 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -98,18 +96,6 @@ public abstract class BaseFragment extends Fragment implements MenuItemCompat.On
         }
     }
 
-    /*@Override
-    public void onSaveInstanceState(Bundle outState)
-    {
-        if (querySearch != null)
-        {
-            outState.putString(SEARCH_KEY, querySearch);
-            saveQuerySearch(querySearch);
-        }
-
-        super.onSaveInstanceState(outState);
-    }*/
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState)
     {
@@ -126,10 +112,6 @@ public abstract class BaseFragment extends Fragment implements MenuItemCompat.On
         //restore state
         if (getArguments() != null)
             querySearch = getArguments().getString(SEARCH_KEY, null);
-
-        else if(savedInstanceState != null) //restore after rotation
-            querySearch = savedInstanceState.getString(SEARCH_KEY);
-
         else
             querySearch = null;
 
@@ -140,7 +122,7 @@ public abstract class BaseFragment extends Fragment implements MenuItemCompat.On
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
     {
         super.onCreateOptionsMenu(menu, inflater);
-        final ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if(actionBar != null)
         {
             actionBar.setTitle(getFragmentTitle());
@@ -164,7 +146,6 @@ public abstract class BaseFragment extends Fragment implements MenuItemCompat.On
     public void onDestroyView()
     {
         super.onDestroyView();
-        if(isSearchActive())
             saveQuerySearch(querySearch);
     }
 

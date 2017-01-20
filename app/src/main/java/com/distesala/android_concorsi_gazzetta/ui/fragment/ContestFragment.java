@@ -42,15 +42,6 @@ public class ContestFragment extends SearchableFragment implements LoaderManager
         return f;
     }
 
-    public ContestFragment() { }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState)
-    {
-        super.onActivityCreated(savedInstanceState);
-        getLoaderManager().initLoader(0, searchBundle != null ? concatenateBundles() : getArguments(), this);
-    }
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState)
     {
@@ -121,20 +112,8 @@ public class ContestFragment extends SearchableFragment implements LoaderManager
     }
 
     @Override
-    public void onResume()
-    {
-        super.onResume();
-        //force restart for preference changed.
-
-        /*progressWheel.spin();
-        progressWheel.setVisibility(View.VISIBLE);
-        getLoaderManager().restartLoader(0, searchBundle != null ? concatenateBundles() : queryBundle, this);*/
-    }
-
-    @Override
     public void performSearch(String s)
     {
-        //Bundle args = getSearchBundle(s);
         searchBundle = getSearchBundle(s);
 
         getLoaderManager().restartLoader(0, concatenateBundles(), this);
@@ -156,12 +135,6 @@ public class ContestFragment extends SearchableFragment implements LoaderManager
 
             listArgs.add("%" + s + "%");
             listArgs.add("%" + s + "%");
-
-            //aggiungo tutte quelle originarie, che ho avuto al momento dell'inizializzazione
-
-            //whereClause += queryBundle.getString(BaseFragment.WHERE_CLAUSE);
-
-            //listArgs.addAll(Arrays.asList(queryBundle.getStringArray(BaseFragment.WHERE_ARGS)));
 
             args.putString(BaseFragment.WHERE_CLAUSE, whereClause);
             args.putStringArray(BaseFragment.WHERE_ARGS, listArgs.toArray(new String[0]));
@@ -186,50 +159,6 @@ public class ContestFragment extends SearchableFragment implements LoaderManager
 
         return args;
     }
-
-    /*@Nullable
-    private Bundle getSearchBundle(String s)
-    {
-        Bundle args = null;
-
-        if(s != null)
-        {
-            args = new Bundle(2);
-
-            List<String> listArgs = new ArrayList<>();
-
-            String whereClause = "(" +
-                    ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_EMETTITORE + " LIKE? OR " +
-                    ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_TITOLO + " LIKE? ) ";
-
-            listArgs.add("%" + s + "%");
-            listArgs.add("%" + s + "%");
-
-            if(queryBundle.getStringArray(BaseFragment.WHERE_ARGS).length > 1) //filter for category
-            {
-                String category = queryBundle.getStringArray(BaseFragment.WHERE_ARGS)[1];
-                String filter = queryBundle.getStringArray(BaseFragment.WHERE_ARGS)[2];
-                whereClause += "AND " + ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_TIPOLOGIA + " LIKE? ";
-                listArgs.add(category);
-                listArgs.add(filter);
-            }
-
-            else
-            {
-                String filter = queryBundle.getStringArray(BaseFragment.WHERE_ARGS)[0];
-                listArgs.add(filter);
-            }
-
-            whereClause += "AND " + ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_AREA + " LIKE? ";
-
-
-            args.putString(BaseFragment.WHERE_CLAUSE, whereClause);
-            args.putStringArray(BaseFragment.WHERE_ARGS, listArgs.toArray(new String[0]));
-
-        }
-
-        return args;
-    }*/
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args)

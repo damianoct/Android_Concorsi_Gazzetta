@@ -10,10 +10,7 @@ import android.support.v4.app.Fragment;
 
 public abstract class SearchableFragment extends Fragment
 {
-    //ogni SearchableFragment possiede un Bundle che utilizza per indirizzare il loader inizialmente.
-    //si può sostituire con getArguments()
     protected Bundle queryBundle;
-    //il bundle per indirizzare la ricerca
     protected Bundle searchBundle;
 
     protected abstract void performSearch(String querySearch);
@@ -23,10 +20,7 @@ public abstract class SearchableFragment extends Fragment
     {
         super.onCreate(savedInstanceState);
         queryBundle = getArguments();
-        if(savedInstanceState != null)
-        {
-            searchBundle = savedInstanceState.getBundle("searchBundle");
-        }
+        searchBundle = getArguments().getBundle("searchBundle");
     }
 
     @Override
@@ -35,5 +29,12 @@ public abstract class SearchableFragment extends Fragment
         super.onSaveInstanceState(outState);
         if(searchBundle != null)
             outState.putBundle("searchBundle", searchBundle);
+    }
+
+    @Override
+    public void onDestroyView()
+    {
+        super.onDestroyView();
+        getArguments().putBundle("searchBundle", searchBundle);
     }
 }

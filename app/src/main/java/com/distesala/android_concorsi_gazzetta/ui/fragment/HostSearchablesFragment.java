@@ -58,7 +58,6 @@ public abstract class HostSearchablesFragment extends BaseFragment
     private void notifyChildrenForSearch()
     {
         getChildFragmentManager().executePendingTransactions();
-        Log.d("notifyChild", "notify for [" + querySearch + "]");
 
         for(SearchableFragment sf: searchables)
             if (sf.isAdded())
@@ -82,14 +81,6 @@ public abstract class HostSearchablesFragment extends BaseFragment
     {
         super.onCreate(savedInstanceState);
         searchables = new LinkedList<>();
-    }
-
-    @Override
-    public void onResume()
-    {
-        super.onResume();
-        /*if(isSearchActive())
-            notifyChildrenForSearch();*/
     }
 
     @Nullable
@@ -130,18 +121,23 @@ public abstract class HostSearchablesFragment extends BaseFragment
             }
         });
 
-        //restore viewpager selected item.
-        if (savedInstanceState != null)
-        {
-            final int position = savedInstanceState.getInt("currentViewPagerItem");
-            viewPager.postDelayed(new Runnable() {
+        final int position;
+        if(getArguments() != null)
+            position = getArguments().getInt("currentViewPagerItem",0);
+        else if (savedInstanceState != null)
+            position = savedInstanceState.getInt("currentViewPagerItem",0);
+        else
+            position = 0;
 
-                @Override
-                public void run() {
-                    viewPager.setCurrentItem(position);
-                }
-            }, 100);
-        }
+        viewPager.post(new Runnable() {
+
+            @Override
+            public void run() {
+                viewPager.setCurrentItem(position, true);
+                tabLayout.getTabAt(position).select();
+            }
+        });
+
 
         appBarLayout.setElevation(0);
     }
@@ -149,18 +145,23 @@ public abstract class HostSearchablesFragment extends BaseFragment
     @Override
     public void onSaveInstanceState(Bundle outState)
     {
-        //check if viewpager is null for entry in backstack.
         if (viewPager != null)
             outState.putInt("currentViewPagerItem", viewPager.getCurrentItem());
 
         super.onSaveInstanceState(outState);
     }
 
+    @Override
+    public void onDestroyView()
+    {
+        super.onDestroyView();
+        if (viewPager != null)
+            getArguments().putInt("currentViewPagerItem", viewPager.getCurrentItem());
+    }
+
     private void addSearchable(SearchableFragment sf)
     {
         searchables.add(sf);
-        if(isSearchActive())
-            notifyChildrenForSearch();
     }
 
     private void removeSearchable(Object o)
