@@ -8,6 +8,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,6 +33,7 @@ public abstract class BaseFragment extends Fragment implements MenuItemCompat.On
     protected String querySearch = null;
 
     private boolean isFromSegue = false;
+    private boolean isDrawerTransaction = false;
 
     //ogni implementazione di BaseFragment possiede una searchViewItem nell'appbar.
     private MenuItem searchViewItem;
@@ -146,7 +148,14 @@ public abstract class BaseFragment extends Fragment implements MenuItemCompat.On
     public void onDestroyView()
     {
         super.onDestroyView();
+        if(isDrawerTransaction)
+        {
+            isDrawerTransaction = false;
+            saveQuerySearch(null);
+        }
+        else
             saveQuerySearch(querySearch);
+
     }
 
     @Override
@@ -185,5 +194,10 @@ public abstract class BaseFragment extends Fragment implements MenuItemCompat.On
         searchFor(newText);
 
         return true;
+    }
+
+    public final void onDrawerTransaction()
+    {
+        isDrawerTransaction = true;
     }
 }

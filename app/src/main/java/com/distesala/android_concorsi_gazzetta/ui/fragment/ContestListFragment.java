@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -143,6 +144,8 @@ public class ContestListFragment extends HostSearchablesFragment
     {
         super.onViewCreated(view, savedInstanceState);
         tabLayout.setTabMode(TabLayout.MODE_FIXED);
+        Log.d("suca", "onViewCreated");
+
     }
 
     @Override
@@ -172,7 +175,12 @@ public class ContestListFragment extends HostSearchablesFragment
             return super.onOptionsItemSelected(item);
     }
 
-
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+        Log.d("suca", "onPause");
+    }
 
     @Override
     public void onResume()
@@ -181,7 +189,15 @@ public class ContestListFragment extends HostSearchablesFragment
 
         String key = getString(R.string.key_scadenza_threshold);
         int newThreshold = PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt(key, 0);
+
+        //TODO quando dalle impostazioni torno indietro e mi trovo in concorsi allora il notify ricrea tutto
+        //se sono nelle gazzette e poi nei concorsi non funziona na minchia!
+        Log.d("bundleg", "onResume");
         if(threshold != newThreshold)
+        {
+            Log.d("suca", "NUOVA SOGLIA!!!!!");
             viewPager.getAdapter().notifyDataSetChanged();
+        }
+
     }
 }

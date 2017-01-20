@@ -29,6 +29,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.distesala.android_concorsi_gazzetta.R;
+import com.distesala.android_concorsi_gazzetta.ui.fragment.BaseFragment;
 import com.distesala.android_concorsi_gazzetta.ui.fragment.ContestListFragment;
 import com.distesala.android_concorsi_gazzetta.ui.fragment.FragmentListener;
 import com.distesala.android_concorsi_gazzetta.ui.fragment.GazzetteListFragment;
@@ -80,6 +81,11 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener,
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         if (fragmentToAdd == null)
             fragmentToAdd = createFragmentForTag(tag);
+
+        //TODO quando clicco su impostazioni devo comunicarlo al fragment in cima allo stack.
+
+        if(fragmentToAdd instanceof BaseFragment)
+            ((BaseFragment) fragmentToAdd).onDrawerTransaction();
 
         transaction.addToBackStack(backStackTag).replace(R.id.content_frame, fragmentToAdd, String.valueOf(tag)).commit();
     }

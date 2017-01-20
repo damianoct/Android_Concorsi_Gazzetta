@@ -57,7 +57,7 @@ public abstract class HostSearchablesFragment extends BaseFragment
 
     private void notifyChildrenForSearch()
     {
-        getChildFragmentManager().executePendingTransactions();
+        //getChildFragmentManager().executePendingTransactions();
 
         for(SearchableFragment sf: searchables)
             if (sf.isAdded())
