@@ -82,10 +82,6 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener,
         if (fragmentToAdd == null)
             fragmentToAdd = createFragmentForTag(tag);
 
-        /*if(fragmentToAdd instanceof BaseFragment)
-            ((BaseFragment) fragmentToAdd).onDrawerTransaction();
-            */
-
         transaction.addToBackStack(backStackTag).replace(R.id.content_frame, fragmentToAdd, String.valueOf(tag)).commit();
     }
 

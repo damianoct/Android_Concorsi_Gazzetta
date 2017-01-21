@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.CursorAdapter;
@@ -72,6 +73,7 @@ public class ContestFragment extends SearchableFragment implements LoaderManager
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
+                Log.d("parent", "parentFragment " + ((HostSearchablesFragment) getParentFragment()).getFragmentName());
                 Cursor c = ((CursorAdapter) parent.getAdapter()).getCursor();
 
                 String dateOfPublication = c.getString(c.getColumnIndex(ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_GAZZETTA_DATE_OF_PUBLICATION));
@@ -80,7 +82,8 @@ public class ContestFragment extends SearchableFragment implements LoaderManager
                 String emettitore = c.getString(c.getColumnIndex(ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_EMETTITORE));
                 int nArticoli = c.getInt(c.getColumnIndex(ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_N_ARTICOLI));
 
-                Bundle creationBundle = new Bundle(4);
+                Bundle creationBundle = new Bundle(5);
+                creationBundle.putString("fragmentName", ((HostSearchablesFragment) getParentFragment()).getFragmentName());
                 creationBundle.putBoolean(GazzetteListFragment.IS_FROM_SEGUE, true);
                 creationBundle.putInt(TextContestFragment.N_ARTICOLI, nArticoli);
                 creationBundle.putString(TextContestFragment.GAZZETTA_DATE_OF_PUB, dateOfPublication);

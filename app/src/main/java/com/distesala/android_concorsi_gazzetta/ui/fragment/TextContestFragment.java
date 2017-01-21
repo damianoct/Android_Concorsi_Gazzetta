@@ -57,7 +57,7 @@ public class TextContestFragment extends HostSearchablesFragment implements JSON
 
     public String getFragmentName()
     {
-        return String.valueOf(R.id.concorsi);
+        return getArguments().getString("fragmentName");
     }
 
     public String getFragmentTitle()

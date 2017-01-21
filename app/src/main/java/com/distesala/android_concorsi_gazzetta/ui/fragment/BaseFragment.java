@@ -199,7 +199,6 @@ public abstract class BaseFragment extends Fragment implements MenuItemCompat.On
 
     public final void onDrawerTransaction()
     {
-        Log.d("drawer", "onDrawerTransaction");
         isDrawerTransaction = true;
         if(isSearchActive())
             MenuItemCompat.collapseActionView(searchViewItem);
