@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -103,9 +102,7 @@ public class TextContestFragment extends HostSearchablesFragment implements JSON
 
         }
         else if (resultCode == Activity.RESULT_CANCELED)
-        {
             connectionFailed = true;
-        }
         else if (resultCode == Connectivity.CONNECTION_LOCKED)
         {
             connectionFailed = true;
@@ -132,7 +129,6 @@ public class TextContestFragment extends HostSearchablesFragment implements JSON
         //tolgo la searchview momentaneamente, sarà abilitato nelle future iterazioni.
         setHasOptionsMenu(false);
         nArticoli = getArguments().getInt(N_ARTICOLI);
-        //dateOfPublication = Helper.formatDate(getArguments().getString(GAZZETTA_DATE_OF_PUB), "dd MMMM yyyy");
         dateOfPublication = getArguments().getString(GAZZETTA_DATE_OF_PUB);
         numberOfPublication = getArguments().getString(GAZZETTA_NUM_OF_PUB);
         contestID = getArguments().getString(CONTEST_ID);
@@ -171,18 +167,6 @@ public class TextContestFragment extends HostSearchablesFragment implements JSON
         }
         else
             startContestDownload();
-
-        /*if(savedInstanceState != null && savedInstanceState.getStringArrayList("articles") != null)
-        {
-            articles = savedInstanceState.getStringArrayList("articles");
-        }
-        else
-        {
-            //devo aggiornare la variabile connectionFailed.
-            if((savedInstanceState != null && !savedInstanceState.getBoolean("connectionFailed"))
-                    || savedInstanceState == null)
-                startContestDownload();
-        }*/
 
         return v;
     }

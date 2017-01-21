@@ -3,10 +3,6 @@ package com.distesala.android_concorsi_gazzetta;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 
-/**
- * Created by damiano on 13/01/17.
- */
-
 public class IntroPageTransformer implements ViewPager.PageTransformer
 {
 

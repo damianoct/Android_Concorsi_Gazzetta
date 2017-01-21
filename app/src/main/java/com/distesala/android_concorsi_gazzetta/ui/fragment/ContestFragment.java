@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.CursorAdapter;
@@ -41,77 +40,6 @@ public class ContestFragment extends SearchableFragment implements LoaderManager
         ContestFragment f = new ContestFragment();
         f.setArguments(queryBundle);
         return f;
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-        cursorAdapter = new ContestCursorAdapter(getActivity(), null);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState)
-    {
-        View rootView = inflater.inflate(R.layout.fragment_contest, container, false);
-
-        progressWheel = (ProgressWheel) rootView.findViewById(R.id.progress_wheel);
-        Animation animFadeOut = AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out);
-        progressWheel.setAnimation(animFadeOut);
-
-        emptyView = rootView.findViewById(R.id.emptyView);
-        emptyView.setVisibility(View.INVISIBLE);
-
-        contestsList = (ListView) rootView.findViewById(R.id.contestsList);
-
-        //necessary to hide appbar when scrolling
-        contestsList.setNestedScrollingEnabled(true);
-
-        contestsList.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-            {
-                Log.d("parent", "parentFragment " + ((HostSearchablesFragment) getParentFragment()).getFragmentName());
-                Cursor c = ((CursorAdapter) parent.getAdapter()).getCursor();
-
-                String dateOfPublication = c.getString(c.getColumnIndex(ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_GAZZETTA_DATE_OF_PUBLICATION));
-                String contestID = c.getString(c.getColumnIndex(ConcorsiGazzetteSQLiteHelper.ContestEntry._ID));
-                String numberOfPublication = c.getString(c.getColumnIndex(ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_GAZZETTA_NUMBER_OF_PUBLICATION));
-                String emettitore = c.getString(c.getColumnIndex(ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_EMETTITORE));
-                int nArticoli = c.getInt(c.getColumnIndex(ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_N_ARTICOLI));
-
-                Bundle creationBundle = new Bundle(5);
-                creationBundle.putString("fragmentName", ((HostSearchablesFragment) getParentFragment()).getFragmentName());
-                creationBundle.putBoolean(GazzetteListFragment.IS_FROM_SEGUE, true);
-                creationBundle.putInt(TextContestFragment.N_ARTICOLI, nArticoli);
-                creationBundle.putString(TextContestFragment.GAZZETTA_DATE_OF_PUB, dateOfPublication);
-                creationBundle.putString(TextContestFragment.GAZZETTA_NUM_OF_PUB, numberOfPublication);
-                creationBundle.putString(TextContestFragment.CONTEST_ID, contestID);
-                creationBundle.putString(TextContestFragment.EMETTITORE, emettitore);
-
-                TextContestFragment textContestFragment = TextContestFragment.newInstance(creationBundle);
-
-                getActivity().getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.content_frame, textContestFragment)
-                        .addToBackStack(HomeActivity.SEGUE_TRANSACTION)
-                        .commit();
-            }
-        });
-
-        return rootView;
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
-    {
-        super.onViewCreated(view, savedInstanceState);
-        contestsList.setAdapter(cursorAdapter);
-        progressWheel.spin();
-        progressWheel.setVisibility(View.VISIBLE);
-        getLoaderManager().restartLoader(0, searchBundle != null ? concatenateBundles() : queryBundle, this);
     }
 
     @Override
@@ -161,6 +89,76 @@ public class ContestFragment extends SearchableFragment implements LoaderManager
         args.putStringArray(BaseFragment.WHERE_ARGS, listArgs.toArray(new String[0]));
 
         return args;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        cursorAdapter = new ContestCursorAdapter(getActivity(), null);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState)
+    {
+        View rootView = inflater.inflate(R.layout.fragment_contest, container, false);
+
+        progressWheel = (ProgressWheel) rootView.findViewById(R.id.progress_wheel);
+        Animation animFadeOut = AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out);
+        progressWheel.setAnimation(animFadeOut);
+
+        emptyView = rootView.findViewById(R.id.emptyView);
+        emptyView.setVisibility(View.INVISIBLE);
+
+        contestsList = (ListView) rootView.findViewById(R.id.contestsList);
+
+        //necessary to hide appbar when scrolling
+        contestsList.setNestedScrollingEnabled(true);
+
+        contestsList.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+            {
+                Cursor c = ((CursorAdapter) parent.getAdapter()).getCursor();
+
+                String dateOfPublication = c.getString(c.getColumnIndex(ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_GAZZETTA_DATE_OF_PUBLICATION));
+                String contestID = c.getString(c.getColumnIndex(ConcorsiGazzetteSQLiteHelper.ContestEntry._ID));
+                String numberOfPublication = c.getString(c.getColumnIndex(ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_GAZZETTA_NUMBER_OF_PUBLICATION));
+                String emettitore = c.getString(c.getColumnIndex(ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_EMETTITORE));
+                int nArticoli = c.getInt(c.getColumnIndex(ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_N_ARTICOLI));
+
+                Bundle creationBundle = new Bundle(5);
+                creationBundle.putString("fragmentName", ((HostSearchablesFragment) getParentFragment()).getFragmentName());
+                creationBundle.putBoolean(GazzetteListFragment.IS_FROM_SEGUE, true);
+                creationBundle.putInt(TextContestFragment.N_ARTICOLI, nArticoli);
+                creationBundle.putString(TextContestFragment.GAZZETTA_DATE_OF_PUB, dateOfPublication);
+                creationBundle.putString(TextContestFragment.GAZZETTA_NUM_OF_PUB, numberOfPublication);
+                creationBundle.putString(TextContestFragment.CONTEST_ID, contestID);
+                creationBundle.putString(TextContestFragment.EMETTITORE, emettitore);
+
+                TextContestFragment textContestFragment = TextContestFragment.newInstance(creationBundle);
+
+                getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.content_frame, textContestFragment)
+                        .addToBackStack(HomeActivity.SEGUE_TRANSACTION)
+                        .commit();
+            }
+        });
+
+        return rootView;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
+    {
+        super.onViewCreated(view, savedInstanceState);
+        contestsList.setAdapter(cursorAdapter);
+        progressWheel.spin();
+        progressWheel.setVisibility(View.VISIBLE);
+        getLoaderManager().restartLoader(0, searchBundle != null ? concatenateBundles() : queryBundle, this);
     }
 
     @Override

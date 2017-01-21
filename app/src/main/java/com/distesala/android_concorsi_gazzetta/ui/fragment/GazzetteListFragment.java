@@ -12,7 +12,6 @@ import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import android.widget.CursorAdapter;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
@@ -104,7 +103,6 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
 
         mReceiver = new JSONResultReceiver(new Handler());
         mReceiver.setReceiver(this);
-        //updateGazzette();
 
         adapter = new GazzettaCursorAdapter(getActivity(), null);
 
@@ -140,12 +138,6 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
 
         ((TextView) rootView.findViewById(R.id.emptyTextView)).setText(R.string.home_empty_contest_list);
 
-
-
-        /*progressWheel = (ProgressWheel) rootView.findViewById(R.id.progress_wheel);
-        Animation animFadeOut = AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out);
-        progressWheel.setAnimation(animFadeOut);*/
-
         gazzetteList = (ListView) rootView.findViewById(R.id.gazzetteList);
 
         gazzetteList.setNestedScrollingEnabled(true);
@@ -156,7 +148,6 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3)
             {
-                //if(progressWheel.isSpinning()) stopProgressWheel();
 
                 CursorAdapter adapter = (CursorAdapter) arg0.getAdapter();
                 CharSequence numberOfPublication = adapter.getCursor().getString(adapter.getCursor().getColumnIndex(ConcorsiGazzetteSQLiteHelper.GazzettaEntry.COLUMN_NUMBER_OF_PUBLICATION));
@@ -219,9 +210,8 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
             });
             settings.edit().putBoolean(getString(R.string.first_launch), false).apply();
             updateGazzette(false);
-            Log.d("updateg", "Lista vuota first launch -> UPDATE GAZZETTE");
-
         }
+
         else if(savedInstanceState != null && savedInstanceState.getBoolean("isRefreshing"))
         {
             emptySwipeRefreshLayout.post(new Runnable() {
@@ -231,17 +221,11 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
                 }
             });
         }
-        //se ho svuotato il database allora non aggiorno
-        else if(settings.getBoolean(getString(R.string.key_clear_db), true))
-        {
-            Log.d("updateg", "lista vuota non aggiorno");
 
-        }
+        //se ho svuotato il database allora non aggiorno
+        else if(settings.getBoolean(getString(R.string.key_clear_db), true)) {}
         else
-        {
-            Log.d("updateg", "Lista piena -> UPDATE GAZZETTE");
             updateGazzette(true);
-        }
     }
 
     @Override
@@ -250,11 +234,9 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
         if (resultCode == Activity.RESULT_OK)
         {
             getLoaderManager().initLoader(0, null, this);
-            //PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean(getString(R.string.key_clear_db), false).apply();
         }
         else if (resultCode == Activity.RESULT_CANCELED)
         {
-            //Toast.makeText(getActivity(), "ERROR", Toast.LENGTH_LONG).show();
             getLoaderManager().initLoader(0, null, this);
         }
         else if (resultCode == Connectivity.CONNECTION_LOCKED)

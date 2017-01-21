@@ -1,7 +1,5 @@
 package com.distesala.android_concorsi_gazzetta.adapter;
 
-import android.util.Log;
-
 import com.distesala.android_concorsi_gazzetta.model.Concorso;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;

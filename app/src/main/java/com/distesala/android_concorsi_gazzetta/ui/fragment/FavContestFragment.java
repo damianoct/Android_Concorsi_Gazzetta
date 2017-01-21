@@ -9,7 +9,6 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
@@ -80,10 +79,6 @@ public class FavContestFragment extends SearchableFragment implements LoaderMana
             listArgs.add("%" + s + "%");
             listArgs.add("%" + s + "%");
 
-            //listArgs.addAll(Arrays.asList(querySearch.getStringArray(BaseFragment.WHERE_ARGS)));
-
-            //whereClause += getArguments().getString(BaseFragment.WHERE_CLAUSE);
-
             args.putString(BaseFragment.WHERE_CLAUSE, whereClause);
             args.putStringArray(BaseFragment.WHERE_ARGS, listArgs.toArray(new String[0]));
 
@@ -107,14 +102,6 @@ public class FavContestFragment extends SearchableFragment implements LoaderMana
         args.putStringArray(BaseFragment.WHERE_ARGS, listArgs.toArray(new String[0]));
 
         return args;
-    }
-    
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState)
-    {
-        super.onActivityCreated(savedInstanceState);
-
-        //getLoaderManager().initLoader(0, searchBundle != null ? concatenateBundles() : getArguments(), this);
     }
 
     @Override
@@ -155,7 +142,8 @@ public class FavContestFragment extends SearchableFragment implements LoaderMana
                 String emettitore = c.getString(c.getColumnIndex(ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_EMETTITORE));
                 int nArticoli = c.getInt(c.getColumnIndex(ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_N_ARTICOLI));
 
-                Bundle creationBundle = new Bundle(6);
+                Bundle creationBundle = new Bundle(5);
+                creationBundle.putString("fragmentName", ((HostSearchablesFragment) getParentFragment()).getFragmentName());
                 creationBundle.putBoolean(GazzetteListFragment.IS_FROM_SEGUE, true);
                 creationBundle.putInt(TextContestFragment.N_ARTICOLI, nArticoli);
                 creationBundle.putString(TextContestFragment.GAZZETTA_DATE_OF_PUB, dateOfPublication);
@@ -212,7 +200,6 @@ public class FavContestFragment extends SearchableFragment implements LoaderMana
     @Override
     public void onLoaderReset(Loader<Cursor> loader)
     {
-        //cursorAdapter.swapCursor(null);
         cursorAdapter.changeCursor(null);
     }
 

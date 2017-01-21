@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.design.widget.AppBarLayout;
@@ -18,7 +17,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,7 +24,6 @@ import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.distesala.android_concorsi_gazzetta.R;
 import com.distesala.android_concorsi_gazzetta.ui.fragment.BaseFragment;
@@ -151,8 +148,6 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener,
 
         setContentView(R.layout.activity_home);
 
-        //setupAdAtBottom();
-
         //solo al PRIMO avvio dell'app setto le preferences di default.
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
@@ -166,10 +161,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener,
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 
         if (settings.getBoolean(getString(R.string.first_launch), true))
-        {
             startActivity(new Intent(this, IntroActivity.class));
-            //settings.edit().putBoolean(getString(R.string.first_launch), false).apply();
-        }
 
         /* restore state if needed */
 
@@ -297,17 +289,6 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener,
     @Override
     public boolean onNavigationItemSelected(MenuItem menuItem)
     {
-        /*Fragment f = getSupportFragmentManager().findFragmentByTag(String.valueOf(R.id.gazzette));
-
-        if (f != null && f.isVisible() && f instanceof BaseFragment)
-            ((BaseFragment) f).onDrawerTransaction();
-
-        f = getSupportFragmentManager().findFragmentByTag(String.valueOf(R.id.concorsi));
-
-        if (f != null && f.isVisible() && f instanceof BaseFragment)
-            ((BaseFragment) f).onDrawerTransaction();*/
-
-
         for(Fragment f: getSupportFragmentManager().getFragments())
             if(f != null && f.isMenuVisible() && f instanceof BaseFragment)
                 ((BaseFragment) f).onDrawerTransaction();
