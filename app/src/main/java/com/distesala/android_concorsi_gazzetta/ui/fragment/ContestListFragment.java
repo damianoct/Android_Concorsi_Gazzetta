@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -30,35 +31,17 @@ public class ContestListFragment extends HostSearchablesFragment
     private int threshold;
     private int filterAreaId = R.id.action_no_filter;
 
-
-    @Override
-    protected String[] getTabTitles()
+    public static ContestListFragment newInstance(Bundle bundle)
     {
-        return childTitles;
-    }
-
-    @Override
-    public String getFragmentName()
-    {
-        return CONCORSI_FRAGMENT;
-    }
-
-    @Override
-    public String getFragmentTitle()
-    {
-        return APPBAR_TITLE;
+        ContestListFragment fragment = new ContestListFragment();
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
     @Override
     protected int getLayoutResource()
     {
         return R.layout.fragment_contest_host;
-    }
-
-    @Override
-    protected String getSearchHint()
-    {
-        return getActivity().getResources().getString(R.string.contestsListHint);
     }
 
     @Override
@@ -80,11 +63,107 @@ public class ContestListFragment extends HostSearchablesFragment
         return f;
     }
 
-    public static ContestListFragment newInstance(Bundle bundle)
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState)
     {
-        ContestListFragment fragment = new ContestListFragment();
-        fragment.setArguments(bundle);
-        return fragment;
+        super.onCreate(savedInstanceState);
+
+
+        if(savedInstanceState != null)
+        {
+            filterAreaId = savedInstanceState.getInt(FILTER_AREA);
+        }
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        Log.d("onResume", String.valueOf(isSearchActive()));
+
+        String key = getString(R.string.key_scadenza_threshold);
+        int newThreshold = PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt(key, 0);
+
+        if(getArguments().getInt("threshold") != 0 && getArguments().getInt("threshold") != newThreshold)
+        {
+            viewPager.post(new Runnable() {
+                @Override
+                public void run() {
+                    viewPager.getAdapter().notifyDataSetChanged();
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onDestroyView()
+    {
+        super.onDestroyView();
+        getArguments().putInt("threshold", threshold);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState)
+    {
+        outState.putInt(FILTER_AREA, filterAreaId);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
+    {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_filtering, menu);
+        filterMenu = menu;
+        Helper.selectItem(filterMenu, filterAreaId);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        if(item.getItemId() != R.id.menu_item_filtering
+                && item.getItemId() != R.id.action_search
+                && !item.isChecked())
+        {
+            Helper.selectItem(filterMenu, item.getItemId());
+            filterAreaId = item.getItemId();
+
+            viewPager.post(new Runnable() {
+                @Override
+                public void run() {
+                    viewPager.getAdapter().notifyDataSetChanged();
+                }
+            });
+
+            return true;
+        }
+
+        else
+            return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected String[] getTabTitles()
+    {
+        return childTitles;
+    }
+
+    @Override
+    public String getFragmentName()
+    {
+        return CONCORSI_FRAGMENT;
+    }
+
+    @Override
+    public String getFragmentTitle()
+    {
+        return APPBAR_TITLE;
+    }
+
+    @Override
+    protected String getSearchHint()
+    {
+        return getActivity().getResources().getString(R.string.contestsListHint);
     }
 
     private Bundle getQueryBundleForPosition(int position)
@@ -121,73 +200,11 @@ public class ContestListFragment extends HostSearchablesFragment
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-
-        if(savedInstanceState != null)
-        {
-            filterAreaId = savedInstanceState.getInt(FILTER_AREA);
-        }
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState)
-    {
-        outState.putInt(FILTER_AREA, filterAreaId);
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
+        fragmentListener.onHomeTransaction();
         tabLayout.setTabMode(TabLayout.MODE_FIXED);
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
-    {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_filtering, menu);
-        filterMenu = menu;
-        Helper.selectItem(filterMenu, filterAreaId);
-
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        if(item.getItemId() != R.id.menu_item_filtering
-                && item.getItemId() != R.id.action_search
-                && !item.isChecked())
-        {
-            Helper.selectItem(filterMenu, item.getItemId());
-            filterAreaId = item.getItemId();
-            viewPager.getAdapter().notifyDataSetChanged();
-            return true;
-        }
-
-        else
-            return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onResume()
-    {
-        super.onResume();
-
-        String key = getString(R.string.key_scadenza_threshold);
-        int newThreshold = PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt(key, 0);
-        if(threshold != newThreshold)
-        {
-            viewPager.post(new Runnable() {
-                @Override
-                public void run() {
-                    viewPager.getAdapter().notifyDataSetChanged();
-                }
-            });
-        }
-
-    }
 }

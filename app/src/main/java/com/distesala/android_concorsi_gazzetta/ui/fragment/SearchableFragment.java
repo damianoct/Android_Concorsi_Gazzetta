@@ -20,7 +20,23 @@ public abstract class SearchableFragment extends Fragment
     {
         super.onCreate(savedInstanceState);
         queryBundle = getArguments();
-        searchBundle = getArguments().getBundle("searchBundle");
+
+
+        if(getArguments().getBundle("searchBundle") != null)
+            searchBundle = getArguments().getBundle("searchBundle");
+        else if(savedInstanceState != null && savedInstanceState.getBundle("searchBundle") != null)
+            searchBundle = savedInstanceState.getBundle("searchBundle");
+        else
+            searchBundle = null;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState)
+    {
+        super.onSaveInstanceState(outState);
+
+        if(searchBundle != null)
+            outState.putBundle("searchBundle", searchBundle);
     }
 
     @Override

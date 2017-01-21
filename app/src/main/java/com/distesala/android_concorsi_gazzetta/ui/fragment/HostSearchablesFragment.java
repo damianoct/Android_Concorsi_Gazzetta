@@ -57,7 +57,7 @@ public abstract class HostSearchablesFragment extends BaseFragment
 
     private void notifyChildrenForSearch()
     {
-        //getChildFragmentManager().executePendingTransactions();
+        getChildFragmentManager().executePendingTransactions();
 
         for(SearchableFragment sf: searchables)
             if (sf.isAdded())
@@ -74,6 +74,14 @@ public abstract class HostSearchablesFragment extends BaseFragment
     public final void onSearchFinished() //final!
     {
         //Future implementations
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        if(isSearchActive())
+            notifyChildrenForSearch();
     }
 
     @Override
