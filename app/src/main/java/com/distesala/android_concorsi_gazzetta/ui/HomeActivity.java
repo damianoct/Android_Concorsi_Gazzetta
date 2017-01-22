@@ -30,6 +30,7 @@ import com.distesala.android_concorsi_gazzetta.ui.fragment.BaseFragment;
 import com.distesala.android_concorsi_gazzetta.ui.fragment.ContestListFragment;
 import com.distesala.android_concorsi_gazzetta.ui.fragment.FragmentListener;
 import com.distesala.android_concorsi_gazzetta.ui.fragment.GazzetteListFragment;
+import com.distesala.android_concorsi_gazzetta.utils.AppRater;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -159,6 +160,8 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener,
         initNavigationDrawer();
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+
+        AppRater.app_launched(this);
 
         if (settings.getBoolean(getString(R.string.first_launch), true))
             startActivity(new Intent(this, IntroActivity.class));
