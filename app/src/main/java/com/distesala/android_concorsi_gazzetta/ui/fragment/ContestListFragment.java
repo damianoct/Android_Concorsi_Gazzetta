@@ -79,20 +79,12 @@ public class ContestListFragment extends HostSearchablesFragment
     public void onResume()
     {
         super.onResume();
-        Log.d("onResume", String.valueOf(isSearchActive()));
-
-        String key = getString(R.string.key_scadenza_threshold);
-        int newThreshold = PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt(key, 0);
-
-        if(getArguments().getInt("threshold") != 0 && getArguments().getInt("threshold") != newThreshold)
-        {
-            viewPager.post(new Runnable() {
-                @Override
-                public void run() {
-                    viewPager.getAdapter().notifyDataSetChanged();
-                }
-            });
-        }
+        viewPager.post(new Runnable() {
+            @Override
+            public void run() {
+                viewPager.getAdapter().notifyDataSetChanged();
+            }
+        });
     }
 
     @Override
