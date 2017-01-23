@@ -113,6 +113,9 @@ public abstract class HostSearchablesFragment extends BaseFragment
         setupViewPager();
         setupTabLayout();
 
+        //bug tablayout support design v22 -> workaround stackoverflow
+
+
         return rootView;
     }
 
@@ -120,14 +123,6 @@ public abstract class HostSearchablesFragment extends BaseFragment
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-
-        //bug tablayout support design v22 -> workaround stackoverflow
-        tabLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                tabLayout.setupWithViewPager(viewPager);
-            }
-        });
 
         final int position;
         if(getArguments() != null)
@@ -137,14 +132,21 @@ public abstract class HostSearchablesFragment extends BaseFragment
         else
             position = 0;
 
-        viewPager.post(new Runnable() {
+        tabLayout.setupWithViewPager(viewPager);
+
+        tabLayout.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                tabLayout.setupWithViewPager(viewPager);
+            }
+        }, 100);
+        viewPager.postDelayed(new Runnable() {
 
             @Override
             public void run() {
                 viewPager.setCurrentItem(position, true);
-                tabLayout.getTabAt(position).select();
             }
-        });
+        },150);
 
 
         appBarLayout.setElevation(0);
