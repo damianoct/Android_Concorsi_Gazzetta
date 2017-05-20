@@ -19,7 +19,7 @@
           "client_type": 1,
           "android_info": {
             "package_name": "com.distesala.android_concorsi_gazzetta",
-            "certificate_hash": "B4E45F440C3C43C0297CB0582BACD7B41F11BC06"
+            "certificate_hash": "b4e45f440c3c43c0297cb0582bacd7b41f11bc06"
           }
         },
         {
@@ -27,7 +27,7 @@
           "client_type": 1,
           "android_info": {
             "package_name": "com.distesala.android_concorsi_gazzetta",
-            "certificate_hash": "0525793D2E13137DC7818ED3C1A0FD91F75C6F52"
+            "certificate_hash": "0525793d2e13137dc7818ed3c1a0fd91f75c6f52"
           }
         },
         {
@@ -35,9 +35,40 @@
           "client_type": 1,
           "android_info": {
             "package_name": "com.distesala.android_concorsi_gazzetta",
-            "certificate_hash": "F4931F1F504C8D3DDD19013CD8281E323D1F8844"
+            "certificate_hash": "f4931f1f504c8d3ddd19013cd8281e323d1f8844"
           }
         },
+        {
+          "client_id": "753434325891-qh5mg5jmfui6el9u3f7bhse9edngd8eg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDf7iRzBgY-EvpxOBs7DlgbR5FhKY88doM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:753434325891:android:e9c3428d21050cb5",
+        "android_client_info": {
+          "package_name": "com.distesala.android_concorsi_gazzetta.debug"
+        }
+      },
+      "oauth_client": [
         {
           "client_id": "753434325891-qh5mg5jmfui6el9u3f7bhse9edngd8eg.apps.googleusercontent.com",
           "client_type": 3

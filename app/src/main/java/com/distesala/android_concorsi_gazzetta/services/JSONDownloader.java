@@ -223,6 +223,7 @@ public class JSONDownloader extends IntentService
 
         try
         {
+            Log.d("Download", "Download JSON started.");
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             int statusCode = urlConnection.getResponseCode();
             if (statusCode == 200)
@@ -245,6 +246,9 @@ public class JSONDownloader extends IntentService
         {
             e.printStackTrace();
         }
+
+        Log.d("Download", "Download JSON finished.");
+
 
         return json;
     }
