@@ -11,6 +11,6 @@
         />
 
     <include layout="@layout/progress_wheel" />
-    <!--<include layout="@layout/empty_contest_list" />-->
+    <include layout="@layout/empty_contest_list" />
 
 </FrameLayout>

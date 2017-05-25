@@ -110,8 +110,8 @@ public class ContestFragment extends SearchableFragment implements LoaderManager
         Animation animFadeOut = AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out);
         progressWheel.setAnimation(animFadeOut);
 
-        //emptyView = rootView.findViewById(R.id.emptyView);
-        //emptyView.setVisibility(View.INVISIBLE);
+        emptyView = rootView.findViewById(R.id.emptyView);
+        emptyView.setVisibility(View.INVISIBLE);
 
         contestsList = (ListView) rootView.findViewById(R.id.contestsList);
 
@@ -158,12 +158,6 @@ public class ContestFragment extends SearchableFragment implements LoaderManager
     {
         super.onViewCreated(view, savedInstanceState);
         contestsList.setAdapter(cursorAdapter);
-        List<String> arr = new ArrayList<String>();
-        arr.add("ciao");
-        arr.add("testo");
-        ArrayAdapter<String> itemsAdapter =
-                new ArrayAdapter<String>(getActivity().getApplicationContext(), R.layout.simple_item, arr);
-        //contestsList.setAdapter(itemsAdapter);
         progressWheel.spin();
         progressWheel.setVisibility(View.VISIBLE);
         getLoaderManager().restartLoader(0, searchBundle != null ? concatenateBundles() : queryBundle, this);
@@ -188,7 +182,7 @@ public class ContestFragment extends SearchableFragment implements LoaderManager
         progressWheel.clearAnimation();
         progressWheel.stopSpinning();
         cursorAdapter.changeCursor(data);
-        //emptyView.setVisibility(data.getCount() > 0 ? View.INVISIBLE : View.VISIBLE);
+        emptyView.setVisibility(data.getCount() > 0 ? View.INVISIBLE : View.VISIBLE);
     }
 
     @Override

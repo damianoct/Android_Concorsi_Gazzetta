@@ -1,5 +1,7 @@
 package com.distesala.android_concorsi_gazzetta.ui.fragment;
 
+import android.animation.ObjectAnimator;
+import android.animation.StateListAnimator;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -100,6 +102,10 @@ public abstract class HostSearchablesFragment extends BaseFragment
         View rootView = inflater.inflate(getLayoutResource(), container, false);
         appBarLayout = (AppBarLayout) getActivity().findViewById(R.id.appbarlayout);
 
+        StateListAnimator stateListAnimator = new StateListAnimator();
+        stateListAnimator.addState(new int[0], ObjectAnimator.ofFloat(rootView, "elevation", 0));
+        appBarLayout.setStateListAnimator(stateListAnimator);
+
         try
         {
             viewPager = getViewPager(rootView);
@@ -112,9 +118,6 @@ public abstract class HostSearchablesFragment extends BaseFragment
 
         setupViewPager();
         setupTabLayout();
-
-        //bug tablayout support design v22 -> workaround stackoverflow
-
 
         return rootView;
     }
@@ -148,8 +151,16 @@ public abstract class HostSearchablesFragment extends BaseFragment
             }
         },150);*/
 
+        /*appBarLayout.postDelayed(new Runnable() {
 
-        appBarLayout.setElevation(0);
+            @Override
+            public void run()
+            {
+                appBarLayout.setElevation(0);
+            }
+        },150);*/
+
+
     }
 
     @Override
@@ -234,7 +245,7 @@ public abstract class HostSearchablesFragment extends BaseFragment
             return f;
         }
 
-        /*@Override
+        @Override
         public void finishUpdate(ViewGroup container)
         {
             //poor solution -> http://stackoverflow.com/questions/41650721/attempt-to-invoke-virtual-method-android-os-handler-android-support-v4-app-frag
@@ -246,7 +257,7 @@ public abstract class HostSearchablesFragment extends BaseFragment
             {
                 Log.d("nullpointer","Catch the NullPointerException in FragmentPagerAdapter.finishUpdate");
             }
-        }*/
+        }
 
         //questa callback viene richiamata SEMPRE anche in seguito alla rotazione.
         @Override
