@@ -9,6 +9,7 @@ import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ArrayAdapter;
 import android.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -109,8 +110,8 @@ public class ContestFragment extends SearchableFragment implements LoaderManager
         Animation animFadeOut = AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out);
         progressWheel.setAnimation(animFadeOut);
 
-        emptyView = rootView.findViewById(R.id.emptyView);
-        emptyView.setVisibility(View.INVISIBLE);
+        //emptyView = rootView.findViewById(R.id.emptyView);
+        //emptyView.setVisibility(View.INVISIBLE);
 
         contestsList = (ListView) rootView.findViewById(R.id.contestsList);
 
@@ -157,6 +158,12 @@ public class ContestFragment extends SearchableFragment implements LoaderManager
     {
         super.onViewCreated(view, savedInstanceState);
         contestsList.setAdapter(cursorAdapter);
+        List<String> arr = new ArrayList<String>();
+        arr.add("ciao");
+        arr.add("testo");
+        ArrayAdapter<String> itemsAdapter =
+                new ArrayAdapter<String>(getActivity().getApplicationContext(), R.layout.simple_item, arr);
+        //contestsList.setAdapter(itemsAdapter);
         progressWheel.spin();
         progressWheel.setVisibility(View.VISIBLE);
         getLoaderManager().restartLoader(0, searchBundle != null ? concatenateBundles() : queryBundle, this);
@@ -176,11 +183,12 @@ public class ContestFragment extends SearchableFragment implements LoaderManager
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data)
     {
+        Log.d("onLoadFinished", "Cursor Loader finished -> " + data.getCount());
         progressWheel.setVisibility(View.GONE);
         progressWheel.clearAnimation();
         progressWheel.stopSpinning();
         cursorAdapter.changeCursor(data);
-        emptyView.setVisibility(data.getCount() > 0 ? View.INVISIBLE : View.VISIBLE);
+        //emptyView.setVisibility(data.getCount() > 0 ? View.INVISIBLE : View.VISIBLE);
     }
 
     @Override

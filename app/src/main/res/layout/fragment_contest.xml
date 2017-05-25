@@ -8,10 +8,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/contestsList"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"/>
+        />
 
     <include layout="@layout/progress_wheel" />
-    <include layout="@layout/empty_contest_list" />
+    <!--<include layout="@layout/empty_contest_list" />-->
 
 </FrameLayout>

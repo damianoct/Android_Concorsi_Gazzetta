@@ -134,7 +134,7 @@ public abstract class HostSearchablesFragment extends BaseFragment
 
         tabLayout.setupWithViewPager(viewPager);
 
-        tabLayout.postDelayed(new Runnable() {
+        /*tabLayout.postDelayed(new Runnable() {
             @Override
             public void run() {
                 tabLayout.setupWithViewPager(viewPager);
@@ -146,7 +146,7 @@ public abstract class HostSearchablesFragment extends BaseFragment
             public void run() {
                 viewPager.setCurrentItem(position, true);
             }
-        },150);
+        },150);*/
 
 
         appBarLayout.setElevation(0);
@@ -234,7 +234,7 @@ public abstract class HostSearchablesFragment extends BaseFragment
             return f;
         }
 
-        @Override
+        /*@Override
         public void finishUpdate(ViewGroup container)
         {
             //poor solution -> http://stackoverflow.com/questions/41650721/attempt-to-invoke-virtual-method-android-os-handler-android-support-v4-app-frag
@@ -246,7 +246,7 @@ public abstract class HostSearchablesFragment extends BaseFragment
             {
                 Log.d("nullpointer","Catch the NullPointerException in FragmentPagerAdapter.finishUpdate");
             }
-        }
+        }*/
 
         //questa callback viene richiamata SEMPRE anche in seguito alla rotazione.
         @Override
