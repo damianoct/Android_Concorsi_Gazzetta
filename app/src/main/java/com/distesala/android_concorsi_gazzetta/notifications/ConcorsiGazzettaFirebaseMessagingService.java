@@ -18,7 +18,7 @@ import static com.google.android.gms.internal.zzt.TAG;
 public class ConcorsiGazzettaFirebaseMessagingService extends FirebaseMessagingService
 {
 
-    private static final String TAG = "MyFirebaseMsgService";
+    private static final String TAG = "CGNotification";
 
     // [START receive_message]
     @Override

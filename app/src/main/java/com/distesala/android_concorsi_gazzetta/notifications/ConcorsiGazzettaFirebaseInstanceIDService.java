@@ -15,7 +15,7 @@ import com.google.firebase.iid.FirebaseInstanceIdService;
 
 public class ConcorsiGazzettaFirebaseInstanceIDService extends FirebaseInstanceIdService
 {
-    private static final String TAG = "ConcorGazzettaFirebase";
+    private static final String TAG = "CGNotification";
 
     /**
      * Called if InstanceID token is updated. This may occur if the security of

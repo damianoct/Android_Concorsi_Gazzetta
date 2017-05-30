@@ -34,6 +34,7 @@ import com.distesala.android_concorsi_gazzetta.utils.AppRater;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class HomeActivity extends AppCompatActivity implements FragmentListener,
                                                                 NavigationView.OnNavigationItemSelectedListener
@@ -151,6 +152,8 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener,
 
         //solo al PRIMO avvio dell'app setto le preferences di default.
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+
+        FirebaseMessaging.getInstance().subscribeToTopic("newGazzetta");
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
