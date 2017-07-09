@@ -17,6 +17,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -178,7 +179,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener,
         }
         else //default fragment, prima transazione con HOME FRAGMENT
         {
-            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, GazzetteListFragment.newInstance(new Bundle())
+            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, GazzetteListFragment.newInstance(getIntent().getExtras() != null ? getIntent().getExtras() : new Bundle())
                     , HOME_FRAGMENT).commit();
         }
     }

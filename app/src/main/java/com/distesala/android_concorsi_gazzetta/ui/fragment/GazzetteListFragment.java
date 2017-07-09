@@ -12,6 +12,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.widget.CursorAdapter;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
@@ -209,6 +210,18 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
                 }
             });
             settings.edit().putBoolean(getString(R.string.first_launch), false).apply();
+            updateGazzette(false);
+        }
+
+        else if(getArguments().get("Date") != null) //notification
+        {
+            mSwipeRefreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    mSwipeRefreshLayout.setRefreshing(true);
+                }
+            });
+
             updateGazzette(false);
         }
 

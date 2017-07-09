@@ -9,8 +9,6 @@ import android.util.Log;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
-import static com.google.android.gms.internal.zzt.TAG;
-
 /**
  * Created by damiano on 08/05/17.
  */
