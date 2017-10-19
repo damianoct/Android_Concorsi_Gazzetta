@@ -244,11 +244,11 @@ public class GazzetteListFragment extends BaseFragment implements JSONResultRece
     @Override
     public void onReceiveResult(int resultCode, Bundle resultData)
     {
-        if (resultCode == Activity.RESULT_OK)
+        if (resultCode == Activity.RESULT_OK && isVisible() && isAdded())
         {
             getLoaderManager().initLoader(0, null, this);
         }
-        else if (resultCode == Activity.RESULT_CANCELED)
+        else if (resultCode == Activity.RESULT_CANCELED && isVisible() && isAdded())
         {
             getLoaderManager().initLoader(0, null, this);
         }
