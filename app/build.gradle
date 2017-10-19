@@ -15,8 +15,8 @@ android {
         applicationId "com.distesala.android_concorsi_gazzetta"
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 15
-        versionName "1.1"
+        versionCode 17
+        versionName "1.2"
     }
     buildTypes {
         debug {
@@ -47,10 +47,10 @@ dependencies {
     compile 'com.victor:lib:1.0.4'
     compile 'com.pnikosis:materialish-progress:1.7'
     compile 'de.hdodenhof:circleimageview:2.1.0'
-    compile 'com.google.firebase:firebase-core:11.0.1'
-    compile 'com.google.firebase:firebase-ads:11.0.1'
-    compile 'com.google.firebase:firebase-messaging:11.0.1'
-    compile 'com.google.android.gms:play-services-auth:11.0.1'
+    compile 'com.google.firebase:firebase-core:11.0.4'
+    compile 'com.google.firebase:firebase-ads:11.0.4'
+    compile 'com.google.firebase:firebase-messaging:11.0.4'
+    compile 'com.google.android.gms:play-services-auth:11.0.4'
 
     testCompile 'junit:junit:4.12'
 }
