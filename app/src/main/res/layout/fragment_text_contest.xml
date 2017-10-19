@@ -65,14 +65,29 @@
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab"
+            app:layout_anchor="@id/viewpager"
+            app:layout_anchorGravity="bottom|end"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:src="@drawable/sharing_floating_button"
+            android:theme="@style/FloatingButtonTheme"
+            android:layout_marginEnd="@dimen/fab_margin"
+            android:layout_marginBottom="60dp"
+            android:elevation="@dimen/fab_elevation"
+            app:fabSize="normal" />
+
+        <!--<android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
             android:layout_width="@dimen/fab_size_normal"
             android:layout_height="@dimen/fab_size_normal"
             android:src="@drawable/sharing_floating_button"
             android:theme="@style/FloatingButtonTheme"
             android:elevation="@dimen/fab_elevation"
-            android:layout_gravity="end|bottom"
+            android:layout_gravity="bottom|end"
             android:layout_marginRight="@dimen/fab_margin"
-            android:layout_marginBottom="24dp"/>
+            android:layout_marginBottom="24dp"/>-->
+
+
 
         <!-- from values/dimens.xml
 
