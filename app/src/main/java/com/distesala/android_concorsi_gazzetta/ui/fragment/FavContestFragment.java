@@ -23,6 +23,7 @@ import com.distesala.android_concorsi_gazzetta.adapter.FavContestCursorAdapter;
 import com.distesala.android_concorsi_gazzetta.contentprovider.ConcorsiGazzettaContentProvider;
 import com.distesala.android_concorsi_gazzetta.database.ConcorsiGazzetteSQLiteHelper;
 import com.distesala.android_concorsi_gazzetta.ui.HomeActivity;
+import com.distesala.android_concorsi_gazzetta.utils.Helper;
 import com.pnikosis.materialishprogress.ProgressWheel;
 
 import java.util.ArrayList;
@@ -150,6 +151,10 @@ public class FavContestFragment extends SearchableFragment implements LoaderMana
                 creationBundle.putString(TextContestFragment.GAZZETTA_NUM_OF_PUB, numberOfPublication);
                 creationBundle.putString(TextContestFragment.CONTEST_ID, contestID);
                 creationBundle.putString(TextContestFragment.EMETTITORE, emettitore);
+
+                //log event to Firebase
+
+                Helper.logEvent(getContext(),"contestClick", creationBundle);
 
                 TextContestFragment textContestFragment = TextContestFragment.newInstance(creationBundle);
 

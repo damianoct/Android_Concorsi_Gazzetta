@@ -22,6 +22,8 @@ import com.distesala.android_concorsi_gazzetta.adapter.ContestCursorAdapter;
 import com.distesala.android_concorsi_gazzetta.contentprovider.ConcorsiGazzettaContentProvider;
 import com.distesala.android_concorsi_gazzetta.database.ConcorsiGazzetteSQLiteHelper;
 import com.distesala.android_concorsi_gazzetta.ui.HomeActivity;
+import com.distesala.android_concorsi_gazzetta.utils.Helper;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.pnikosis.materialishprogress.ProgressWheel;
 
 import java.util.ArrayList;
@@ -35,6 +37,7 @@ public class ContestFragment extends SearchableFragment implements LoaderManager
     private CursorAdapter cursorAdapter;
     private View emptyView;
     private ProgressWheel progressWheel;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
 
     public static ContestFragment newInstance(Bundle queryBundle)
@@ -113,6 +116,8 @@ public class ContestFragment extends SearchableFragment implements LoaderManager
         emptyView = rootView.findViewById(R.id.emptyView);
         emptyView.setVisibility(View.INVISIBLE);
 
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this.getContext());
+
         contestsList = (ListView) rootView.findViewById(R.id.contestsList);
 
         //necessary to hide appbar when scrolling
@@ -123,6 +128,8 @@ public class ContestFragment extends SearchableFragment implements LoaderManager
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
+
+
                 Cursor c = ((CursorAdapter) parent.getAdapter()).getCursor();
 
                 String dateOfPublication = c.getString(c.getColumnIndex(ConcorsiGazzetteSQLiteHelper.ContestEntry.COLUMN_GAZZETTA_DATE_OF_PUBLICATION));
@@ -139,6 +146,10 @@ public class ContestFragment extends SearchableFragment implements LoaderManager
                 creationBundle.putString(TextContestFragment.GAZZETTA_NUM_OF_PUB, numberOfPublication);
                 creationBundle.putString(TextContestFragment.CONTEST_ID, contestID);
                 creationBundle.putString(TextContestFragment.EMETTITORE, emettitore);
+
+                //log event to Firebase
+
+                Helper.logEvent(getContext(),"contestClick", creationBundle);
 
                 TextContestFragment textContestFragment = TextContestFragment.newInstance(creationBundle);
 

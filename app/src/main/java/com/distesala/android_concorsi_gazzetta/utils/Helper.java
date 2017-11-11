@@ -2,12 +2,14 @@ package com.distesala.android_concorsi_gazzetta.utils;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.util.SparseIntArray;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.distesala.android_concorsi_gazzetta.R;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -69,6 +71,13 @@ public class Helper
         else
             return null;
     }
+
+    public static void logEvent(Context context, String eventName, Bundle params)
+    {
+        FirebaseAnalytics.getInstance(context).logEvent(eventName, params);
+
+    }
+
 
     public static void showConnectionAlert(Context context)
     {
