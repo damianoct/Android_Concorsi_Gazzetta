@@ -155,6 +155,7 @@ public class FavContestFragment extends SearchableFragment implements LoaderMana
                 //log event to Firebase
 
                 Helper.logEvent(getContext(),"contestClick", creationBundle);
+                fragmentListener.showInterstitialAd();
 
                 TextContestFragment textContestFragment = TextContestFragment.newInstance(creationBundle);
 

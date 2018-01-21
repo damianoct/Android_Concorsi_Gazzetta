@@ -29,7 +29,6 @@ import java.util.List;
 public abstract class HostSearchablesFragment extends BaseFragment
 {
     private List<SearchableFragment> searchables;
-    private SearchableViewPagerAdapter adapter;
 
     protected ViewPager viewPager;
     protected TabLayout tabLayout;
@@ -193,7 +192,7 @@ public abstract class HostSearchablesFragment extends BaseFragment
     private void setupViewPager()
     {
         //sono già dentro un fragment, quindi devo usare getChildFragmentManager.
-        adapter = new SearchableViewPagerAdapter(getChildFragmentManager(),
+        SearchableViewPagerAdapter adapter = new SearchableViewPagerAdapter(getChildFragmentManager(),
                 getTabTitles());
         viewPager.setAdapter(adapter);
 

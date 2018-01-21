@@ -51,7 +51,7 @@ public class AppRater
             }
         }
 
-        editor.commit();
+        editor.apply();
     }
 
     public static void showRateDialog(final Context mContext, final SharedPreferences.Editor editor)

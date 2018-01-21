@@ -35,6 +35,7 @@ import com.distesala.android_concorsi_gazzetta.utils.AppRater;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 public class HomeActivity extends AppCompatActivity implements FragmentListener,
@@ -56,16 +57,14 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener,
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private AppBarLayout appBarLayout;
     private NavigationView navigationView;
+    private InterstitialAd mInterstitialAd;
+
 
     //nelle support library 23 è presente la funzione setExpanded()
     //nelle v22 si è costretti a dichiarare questo metodo
     private void expandAppBarLayout()
     {
-        CoordinatorLayout rootLayout = (CoordinatorLayout) findViewById(R.id.coordinator);
-        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
-        AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) params.getBehavior();
-        if(behavior != null)
-            behavior.onNestedFling(rootLayout, appBarLayout, null, 0, -10000, true);
+        appBarLayout.setExpanded(true);
     }
 
     private void setFragment(int tag)
@@ -155,6 +154,10 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener,
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
         FirebaseMessaging.getInstance().subscribeToTopic("newGazzetta");
+
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId(getString(R.string.banner_ad_unit_id));
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -267,6 +270,25 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener,
     }
 
     @Override
+    public void showInterstitialAd()
+    {
+        int actionsCount = PreferenceManager.getDefaultSharedPreferences((this)).getInt(getString(R.string.actions_count), 0);
+        if((actionsCount + 1) % 5 == 0)
+        {
+            if(mInterstitialAd.isLoaded())
+                mInterstitialAd.show();
+            PreferenceManager.getDefaultSharedPreferences(this).edit().putInt(getString(R.string.actions_count), 0).apply();
+            if(!mInterstitialAd.isLoading())
+                mInterstitialAd.loadAd(new AdRequest.Builder().build());
+        }
+        else
+        {
+            if(!mInterstitialAd.isLoading())
+                mInterstitialAd.loadAd(new AdRequest.Builder().build());
+            PreferenceManager.getDefaultSharedPreferences(this).edit().putInt(getString(R.string.actions_count), actionsCount + 1).apply();
+        }
+    }
+    @Override
     public void onSegueTransaction()
     {
         enableBackButton();
@@ -293,6 +315,8 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener,
         expandAppBarLayout();
     }
 
+
+    @SuppressLint("RestrictedApi")
     @Override
     public boolean onNavigationItemSelected(MenuItem menuItem)
     {
@@ -332,6 +356,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener,
             @Override
             public void onGlobalLayout() {
                 if (Build.VERSION.SDK_INT < 16) {
+                    //noinspection deprecation
                     adLayout.getViewTreeObserver().removeGlobalOnLayoutListener(this);
                 } else {
                     adLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);

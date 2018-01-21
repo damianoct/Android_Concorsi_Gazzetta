@@ -12,6 +12,7 @@ public abstract class SearchableFragment extends Fragment
 {
     protected Bundle queryBundle;
     protected Bundle searchBundle;
+    protected FragmentListener fragmentListener;
 
     protected abstract void performSearch(String querySearch);
 
@@ -21,6 +22,15 @@ public abstract class SearchableFragment extends Fragment
         super.onCreate(savedInstanceState);
         queryBundle = getArguments();
 
+        if (getActivity() instanceof FragmentListener)
+        {
+            fragmentListener = (FragmentListener) getActivity();
+        }
+        else
+        {
+            throw new RuntimeException(getActivity().toString()
+                    + " must implement FragmentListener");
+        }
 
         if(getArguments().getBundle("searchBundle") != null)
             searchBundle = getArguments().getBundle("searchBundle");

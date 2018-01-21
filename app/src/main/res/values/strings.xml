@@ -68,6 +68,7 @@
     <string name="home_empty_contest_list">Scorri verso il basso per aggiornare la lista.</string>
     <string name="download_gazzette">Download gazzette in corso...</string>
     <string name="first_launch">first_launch</string>
+    <string name="actions_count">actions_count</string>
     <string name="welcome_intro">Welcome!</string>
     <string name="previous_text"><![CDATA[< Indietro]]></string>
     <string name="intro_gazzette_title">Gazzette</string>

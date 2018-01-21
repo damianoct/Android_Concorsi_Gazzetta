@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 
 import com.distesala.android_concorsi_gazzetta.R;
 
-public abstract class BaseFragment extends Fragment implements MenuItemCompat.OnActionExpandListener,
+public abstract class BaseFragment extends Fragment implements MenuItem.OnActionExpandListener,
                                                                 SearchView.OnQueryTextListener
 {
     protected static final String IS_FROM_SEGUE = "isFromSegue";
@@ -69,11 +69,11 @@ public abstract class BaseFragment extends Fragment implements MenuItemCompat.On
 
         if(querySearch != null)
         {
-            MenuItemCompat.expandActionView(searchViewItem);
+            searchViewItem.expandActionView();
             searchViewAndroidActionBar.setQuery(querySearch, true);
         }
 
-        MenuItemCompat.setOnActionExpandListener(searchViewItem, this);
+        searchViewItem.setOnActionExpandListener(this);
 
         searchViewAndroidActionBar.setOnQueryTextListener(this);
 

@@ -7,6 +7,12 @@
         android:defaultValue="true"
         />
 
+    <Preference
+        android:key="@string/actions_count"
+        android:defaultValue="0"
+        />
+
+
     <PreferenceCategory
         android:title="@string/visualizzazione"
 

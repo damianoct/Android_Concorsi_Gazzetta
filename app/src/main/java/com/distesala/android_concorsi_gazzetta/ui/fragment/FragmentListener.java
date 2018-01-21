@@ -9,4 +9,5 @@ public interface FragmentListener
     void onHomeTransaction();
     void onFragmentDisplayed(String fragmentTag);
     void expandAppBar();
+    void showInterstitialAd();
 }

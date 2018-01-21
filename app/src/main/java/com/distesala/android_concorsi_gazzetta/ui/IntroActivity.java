@@ -12,9 +12,6 @@ import com.distesala.android_concorsi_gazzetta.adapter.IntroAdapter;
 public class IntroActivity extends AppCompatActivity
 {
 
-    private ViewPager mViewPager;
-    private TabLayout mTabLayout;
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -22,8 +19,8 @@ public class IntroActivity extends AppCompatActivity
 
         setContentView(R.layout.activity_intro);
 
-        mViewPager = (ViewPager) findViewById(R.id.viewpager);
-        mTabLayout = (TabLayout) findViewById(R.id.tabDots);
+        ViewPager mViewPager = (ViewPager) findViewById(R.id.viewpager);
+        TabLayout mTabLayout = (TabLayout) findViewById(R.id.tabDots);
 
         // Set an Adapter on the ViewPager
         mViewPager.setAdapter(new IntroAdapter(getSupportFragmentManager()));

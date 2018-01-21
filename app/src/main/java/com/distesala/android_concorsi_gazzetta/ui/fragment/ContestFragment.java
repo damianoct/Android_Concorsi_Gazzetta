@@ -37,7 +37,6 @@ public class ContestFragment extends SearchableFragment implements LoaderManager
     private CursorAdapter cursorAdapter;
     private View emptyView;
     private ProgressWheel progressWheel;
-    private FirebaseAnalytics mFirebaseAnalytics;
 
 
     public static ContestFragment newInstance(Bundle queryBundle)
@@ -116,7 +115,7 @@ public class ContestFragment extends SearchableFragment implements LoaderManager
         emptyView = rootView.findViewById(R.id.emptyView);
         emptyView.setVisibility(View.INVISIBLE);
 
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this.getContext());
+        FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(this.getContext());
 
         contestsList = (ListView) rootView.findViewById(R.id.contestsList);
 
@@ -150,6 +149,7 @@ public class ContestFragment extends SearchableFragment implements LoaderManager
                 //log event to Firebase
 
                 Helper.logEvent(getContext(),"contestClick", creationBundle);
+                fragmentListener.showInterstitialAd();
 
                 TextContestFragment textContestFragment = TextContestFragment.newInstance(creationBundle);
 
