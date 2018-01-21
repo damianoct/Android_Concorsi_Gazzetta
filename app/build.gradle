@@ -14,7 +14,7 @@ android {
     defaultConfig {
         applicationId "com.distesala.android_concorsi_gazzetta"
         minSdkVersion 21
-        targetSdkVersion 26
+        targetSdkVersion 27
         versionCode 18
         versionName "1.2"
     }
