@@ -14,8 +14,9 @@ android {
     defaultConfig {
         applicationId "com.distesala.android_concorsi_gazzetta"
         minSdkVersion 21
-        targetSdkVersion 27
-        versionCode 22
+        //ricordarsi il problema dell'orientation su Android Oreo -> https://stackoverflow.com/questions/46992843/interstitial-admob-ads-illegalstateexception-only-fullscreen-activities-can-r
+        targetSdkVersion 26
+        versionCode 23
         versionName "1.3"
     }
     buildTypes {
