@@ -156,7 +156,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener,
         FirebaseMessaging.getInstance().subscribeToTopic("newGazzetta");
 
         mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdUnitId(getString(R.string.banner_ad_unit_id));
+        mInterstitialAd.setAdUnitId(getString(R.string.interstitial_ad_unit_id));
         mInterstitialAd.loadAd(new AdRequest.Builder().build());
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);

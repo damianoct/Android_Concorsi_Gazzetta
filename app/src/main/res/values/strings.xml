@@ -20,6 +20,7 @@
     </string-array>
 
     <string name="banner_ad_unit_id">ca-app-pub-2687493560332770/1493294446</string>
+    <string name="interstitial_ad_unit_id">ca-app-pub-2687493560332770/2052709669</string>
 
 
     <string name="drawer_open">Open</string>
