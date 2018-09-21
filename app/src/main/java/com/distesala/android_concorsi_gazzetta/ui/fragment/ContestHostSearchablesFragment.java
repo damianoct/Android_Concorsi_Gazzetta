@@ -24,10 +24,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Created by damiano on 11/09/16.
+ * Created by damiano on 01/07/18.
  */
 
-public abstract class HostSearchablesFragment extends BaseFragment
+public abstract class ContestHostSearchablesFragment extends BaseFragment
 {
     private List<SearchableFragment> searchables;
 
@@ -193,8 +193,7 @@ public abstract class HostSearchablesFragment extends BaseFragment
     private void setupViewPager()
     {
         //sono già dentro un fragment, quindi devo usare getChildFragmentManager.
-        SearchableViewPagerAdapter adapter = new SearchableViewPagerAdapter(getChildFragmentManager(),
-                getTabTitles());
+        SearchableViewPagerAdapter adapter = new SearchableViewPagerAdapter(getChildFragmentManager());
         viewPager.setAdapter(adapter);
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener()
@@ -219,6 +218,19 @@ public abstract class HostSearchablesFragment extends BaseFragment
         });
     }
 
+    protected void deleteLoadingTab()
+    {
+        SearchableViewPagerAdapter adapter = (SearchableViewPagerAdapter) viewPager.getAdapter();
+        adapter.deleteTemporaryTab();
+    }
+
+
+    protected void addTab(String title)
+    {
+        SearchableViewPagerAdapter adapter = (SearchableViewPagerAdapter) viewPager.getAdapter();
+        adapter.addTab((title));
+    }
+
     private void setupTabLayout()
     {
         if (getTabTitles().length > 10) //MAGIC NUMBER....
@@ -229,13 +241,13 @@ public abstract class HostSearchablesFragment extends BaseFragment
 
     private class SearchableViewPagerAdapter extends FragmentStatePagerAdapter
     {
-        String[] titles;
+        private final ArrayList<CharSequence> titles = new ArrayList<>();
 
 
-        public SearchableViewPagerAdapter(FragmentManager fm, String[] titles)
+
+        public SearchableViewPagerAdapter(FragmentManager fm)
         {
             super(fm);
-            this.titles = titles;
         }
 
         //questa callback NON viene richiamata in seguito alla rotazione.
@@ -278,13 +290,13 @@ public abstract class HostSearchablesFragment extends BaseFragment
         @Override
         public int getCount()
         {
-            return titles.length;
+            return titles.size();
         }
 
         @Override
         public CharSequence getPageTitle(int position)
         {
-            return titles[position];
+            return titles.get(position);
         }
 
         @Override
@@ -294,6 +306,20 @@ public abstract class HostSearchablesFragment extends BaseFragment
             removeSearchable(object);
         }
 
+        private void deleteTemporaryTab()
+        {
+            titles.remove(0);
+            notifyDataSetChanged();
+        }
+
+        private void addTab(String title)
+        {
+            titles.add(title);
+            if(titles.size() > 10)
+                tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+            //notifyDataSetChanged();
+
+        }
     }
 
 }

@@ -27,11 +27,13 @@
                 <!--<include layout="@layout/header_content"/>-->
 
                 <ImageView
+                    android:id="@+id/headerImage"
                     android:layout_width="match_parent"
                     android:layout_height="180dp"
                     android:scaleType="fitCenter"
                     app:layout_collapseMode="parallax"
                     android:src="@drawable/roma"/>
+
 
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/toolbar"

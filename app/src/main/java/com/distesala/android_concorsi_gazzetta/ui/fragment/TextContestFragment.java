@@ -2,6 +2,7 @@ package com.distesala.android_concorsi_gazzetta.ui.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -23,7 +24,7 @@ import com.distesala.android_concorsi_gazzetta.utils.Helper;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TextContestFragment extends HostSearchablesFragment implements JSONResultReceiver.Receiver,
+public class TextContestFragment extends ContestHostSearchablesFragment implements JSONResultReceiver.Receiver,
                                                                             AppBarLayout.OnOffsetChangedListener
 {
     protected static final String N_ARTICOLI = "nArticoli";
@@ -91,13 +92,31 @@ public class TextContestFragment extends HostSearchablesFragment implements JSON
         return R.layout.fragment_text_contest;
     }
 
+    private void setupContest(List articles)
+    {
+        for (int i=0; i<articles.size(); i++)
+        {
+            tabLayout.addTab(tabLayout.newTab().setText(String.valueOf(i + 1)));
+            addTab(String.valueOf(i + 1));
+        }
+    }
+
     @Override
     public void onReceiveResult(int resultCode, Bundle resultData)
     {
+
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+
+
         if (resultCode == Activity.RESULT_OK)
         {
+            tabLayout.removeAllTabs();
+            deleteLoadingTab();
             connectionFailed = false;
+
             articles = resultData.getStringArrayList("articles");
+            setupContest(articles);
+
             mURL = resultData.getString("url");
 
         }
@@ -137,6 +156,9 @@ public class TextContestFragment extends HostSearchablesFragment implements JSON
 
     public void startContestDownload()
     {
+
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         connectionFailed = false; //restart connection check
         mReceiver = new JSONResultReceiver(new Handler());
         mReceiver.setReceiver(this);
@@ -147,6 +169,9 @@ public class TextContestFragment extends HostSearchablesFragment implements JSON
         mServiceIntent.putExtra("receiverTag", mReceiver);
 
         getActivity().startService(mServiceIntent);
+
+        tabLayout.addTab(tabLayout.newTab().setText(emettitore));
+        addTab(emettitore);
 
         viewPager.getAdapter().notifyDataSetChanged();
     }
@@ -161,7 +186,12 @@ public class TextContestFragment extends HostSearchablesFragment implements JSON
         {
             connectionFailed = savedInstanceState.getBoolean("connectionFailed", false);
             if(savedInstanceState.getStringArrayList("articles") != null)
+            {
                 articles = savedInstanceState.getStringArrayList("articles");
+                setupContest(articles);
+                viewPager.getAdapter().notifyDataSetChanged();
+            }
+
             else if(!connectionFailed)
                 startContestDownload();
         }

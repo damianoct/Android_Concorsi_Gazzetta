@@ -17,19 +17,15 @@
 
         <service
             android:name=".services.JSONDownloader"
-            android:exported="false"/>
-
-        <service
-            android:name=".notifications.ConcorsiGazzettaFirebaseMessagingService">
+            android:exported="false" />
+        <service android:name=".notifications.ConcorsiGazzettaFirebaseMessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
-        <service
-            android:name=".notifications.ConcorsiGazzettaFirebaseInstanceIDService">
+        <service android:name=".notifications.ConcorsiGazzettaFirebaseInstanceIDService">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
 
@@ -52,17 +48,19 @@
 
         <provider
             android:name=".contentprovider.ConcorsiGazzettaContentProvider"
-            android:authorities="com.distesala.android_concorsi_gazzetta.contentprovider"/>
+            android:authorities="com.distesala.android_concorsi_gazzetta.contentprovider" />
 
         <activity
             android:name=".ui.SettingsActivity"
             android:label="@string/settings_title"
-            android:theme="@style/PreferenceTheme"/>
-
+            android:theme="@style/PreferenceTheme" />
         <activity
             android:name=".ui.IntroActivity"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.PrivacyPolicyActivity"
+            android:label="@string/title_activity_privacy_policy"
+            android:theme="@style/MyMaterialTheme"></activity>
     </application>
 
 </manifest>

@@ -329,10 +329,12 @@ public class HomeActivity extends AppCompatActivity implements FragmentListener,
             menuItem.setChecked(true);
             expandAppBarLayout();
 
-            if(menuItem.getItemId() != R.id.settings)
+            if(menuItem.getItemId() != R.id.settings && menuItem.getItemId() != R.id.privacy)
                 setFragment(menuItem.getItemId());
-            else
+            else if(menuItem.getItemId() == R.id.settings)
                 startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+            else
+                startActivity(new Intent(getApplicationContext(), PrivacyPolicyActivity.class));
         }
         drawerLayout.closeDrawers();
         return true;

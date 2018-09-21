@@ -15,5 +15,9 @@
             android:id="@+id/settings"
             android:icon="@drawable/settings_drawer"
             android:title="Impostazioni"/>
+        <item
+            android:id="@+id/privacy"
+            android:icon="@drawable/lock"
+            android:title="Privacy"/>
     </group>
 </menu>
